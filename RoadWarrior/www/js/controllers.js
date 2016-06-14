@@ -1,6 +1,15 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['starter.services','ui.bootstrap'])
 
-.controller('DashCtrl', function($scope) {})
+.controller('TodayCtrl', ['$scope', function($scope) {
+$scope.dayName = "Tuesday";
+$scope.date = "June 14th, 2016";
+$scope.event = {
+  venue: "Paramount Theater",
+  city: "Seattle, WA",
+}
+
+}])
+
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called

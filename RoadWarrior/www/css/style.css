@@ -1,1 +1,521 @@
+
+
+
+a.settings-button{
+    background: #ECECEC;
+    border-radius: 15px;
+    padding: 14px 20px;
+    display: block;
+    font-family: arial;
+    font-weight: bold;
+    color:#565656;
+    text-decoration: none;
+    text-shadow:0px 1px 0px #fff;
+    border:1px solid #a7a7a7;
+    width: 220px;
+    margin:0px auto;
+    box-shadow: 0px 2px 1px white inset, 0px -2px 8px white, 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 10px rgba(0, 0, 0, 0.1);
+    -webkit-transition:box-shadow 0.5s;
+  }
+  a.settings-button i{
+    float: right;
+    margin-top: 2px;
+  }
+  a.settings-button:hover{
+    box-shadow: 0px 2px 1px white inset, 0px -2px 20px white, 0px 2px 5px rgba(0, 0, 0, 0.1), 0px 8px 10px rgba(0, 0, 0, 0.1);
+  }
+  a.settings-button:active{
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5) inset, 0px -2px 20px white, 0px 1px 5px rgba(0, 0, 0, 0.1), 0px 2px 10px rgba(0, 0, 0, 0.1);
+    background:-webkit-linear-gradient(top, #d1d1d1 0%,#ECECEC 100%);
+  }
+
+
+
+.navbar-inverse {
+  background: -webkit-linear-gradient(top, rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%) !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#button-link {
+    text-decoration: none;
+  }
+
+.back-button-margin {
+  margin-bottom: 20px;
+}
+
+.small-underlined-header {
+  text-decoration: underline;
+  font-size:16px;
+  font-weight:bold;
+}  
+
+.slick-slider { 
+  display: table; 
+  table-layout: fixed; 
+  width: 100%; 
+}
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
+}
+
+#top-wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
+}
+
+/* Set the fixed height of the footer here */
+#footer {
+  height: 100px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+#wrap > .container {
+  padding: 10px 15px 0;
+}
+
+#footer > .container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+
+
+.navbar-header {
+  float:none;
+    width:100%;
+    padding:10px;
+}
+
+#bottomNav {
+  padding:10px;
+}
+#bottomNav a {
+    font-size:24pt;
+    color:#ddd;
+    text-decoration:none;
+}
+#bottomNav a:hover {
+    color:#fff;
+}
+
+/*     Brent CSS
+------------------------------------------------------------- */
+
+.loadinggif 
+{
+  background:
+  url('/img/load-dots.gif')
+  no-repeat
+  right center;
+  margin-right: 15px;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+.right-inner-addon input {
+    padding-right: 30px;    
+}
+.right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+#venue-address-group {
+  z-index: 1;
+}
+
+
+.btn-clear-text {
+  margin-bottom: 5px;
+  background: #efefef;
+  color: #555555;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-left: none;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+.gradient-footer {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  bottom: 57px;
+  left: 0px;
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 45%,rgba(255,255,255,1) 58%,rgba(255,255,255,1) 100%);
+}
+
+.venue-suggestions {
+  background: rgba(253, 253, 253, 0.9);
+  width: 98%;
+  display:block;
+  overflow:auto;
+  position: absolute;
+  z-index: 99;
+  top: 147px;
+  left: 3px;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+}
+
+.venue-suggestions a{
+  color: #555555;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.venue-suggestion-table {
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+
+
+
+#myCarousel {
+  height: 540px;
+}
+
+#myCarousel li {
+  color: black;
+  background-color: #666666;
+}
+
+
+
+.carousel-indicators {
+  position: fixed;
+  bottom: 70px;
+}
+
+.invisible-link, .invisible-link:active .invisible-link:focus{
+  border: none;
+  text-decoration: none;
+  color: black;
+  outline: none;
+}
+
+.invisible-link:hover {
+  color: #999999;
+  border: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.carousel-spacer {
+  position: absolute;
+  height: 40px;
+  width: 100%;
+}
+
+.yelp-powered {
+  background: url('/img/yelp_powered.png');
+  background-size: 100%;
+  margin: -12px auto 0px auto;
+  height: 23px;
+  width: 100px;
+  background-repeat: no-repeat;
+    
+}
+
+.yelp-logo {
+  width: 35px;
+  vertical-align: bottom;
+}
+
+.transparent-btn {
+  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 12px;
+  color: white;
+}
+
+.transparent-btn:hover {
+  background-color: rgba(206, 209, 211, 0.39);
+  border: 1px solid white;
+  color: white;
+}
+
+
+.transparent-btn:active {
+  background-color: rgba(0, 0, 0, .5);
+  border: 1px solid white;
+  color: white;
+}
+
+
+
+
+
+.recommendation-table td {
+  line-height: 1 !important;
+  padding: 5px !important;
+}
+
+.pending-table td {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 2.8 !important;
+  padding: 8px !important;
+}
+
+.yelp-name {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.yelp-address {
+  font-size: 10px;
+  color: #555555;
+}
+
+.yelp-review {
+  display: inline-block; 
+}
+
+.yelp-review img {
+  vertical-align: bottom;
+}
+
+.yelp-review-count {
+  display: inline-block; 
+  font-size: 10px;
+  color: #555555; 
+}
+
+.yelp-distance {
+    color: #555555;
+    font-size: 11px;
+    font-weight: 700; 
+}
+
+.yelp-category {
+  color: #555555;
+  font-size: 12px;
+}
+
+.yelp-phone {
+  color: #555555;
+  font-size: 12px;
+}
+
+
+input, label {
+  display:block;
+  margin-bottom: 5px;
+}
+.date-name h4 {
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.roadwarrior {
+  background-image: url('/img/roadwarrior.png') !important;
+  background-size:contain;
+  background-repeat:no-repeat;
+  width:340px;
+  height: 100px;
+  margin : 25px auto 0 auto; }
+}
+
+.itin-delete-table {
+  font-size: 12pt !important;
+}
+
+.itin-delete-table a {
+  font-size: 12px;
+  font-weight: bold;
+  color: #555555;
+  border: 1px solid #555555;
+  border-radius: 4px;
+  padding: 4px 4px;
+}
+.auth-page {
+  width: 100%;
+  height: 100%;
+  background-image: url('/img/group-img.jpg');
+  background-size: cover;
+}
+
+.auth-page button {
+  font-size: 24px; 
+}
+
+.auth-page a {
+  font-size: 16px; 
+  color: white;
+}
+
+.auth-page h4 {
+  font-size: 14px; 
+  color: white;
+}
+
+.settings button {
+  font-weight: bold;
+  border: 1px solid black;
+}
+
+.settings span {
+  font-size: 13px;
+}
+
+.settings h4 {
+  font-weight: bold;
+}
+
+.settings a {
+  text-decoration: none;
+}
+
+
+#topNav {
+  padding:15px;
+}
+#topNav a {
+    font-size:16pt;
+    color:#ddd;
+    text-decoration:none;
+}
+#topNav a:hover {
+    color:#fff;
+}
+
+.inline {
+  display: inline;
+}
+
+.bullet-pill {
+  margin: 0 auto;
+  display: inline;
+  text-align: center;
+}
+
+.bullet-pill li {
+  display: inline;
+  text-decoration: none;
+}
+
+#venue-list {
+  list-style-type: none;
+}
+
+.datepicker {
+  padding: 6px 12px;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 4px;
+  color: #555555;
+  border: 1px solid #cccccc
+}
+
+.center-text {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.center {
+  margin: 0 auto;
+}
+
+.center-button {
+  margin-bottom: 15px;
+  text-align: center;
+  display: block;
+}
+
+.my-heading {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+#weatherText {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;
+  padding-left: 0px;
+}
+
+#weather {
+  padding-right: 0px;
+}
+
+#weatherExtra {
+  color: #aaaaaa;
+  font-size: 12px;
+}
+
+#add-venue-form input {
+  margin-bottom: 5px;
+}
+/* external css: flickity.css */
+
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body { font-family: sans-serif; }
+
+.gallery {
+  background: #EEE;
+}
+
+.gallery-cell {
+  width: 100%;
+  height: 500px;
+  margin-right: 10px;
+  background: #8C8;
+  counter-increment: gallery-cell;
+}
+
+/* cell number */
+.gallery-cell:before {
+  display: block;
+  text-align: center;
+  content: counter(gallery-cell);
+  line-height: 200px;
+  font-size: 80px;
+  color: white;
+}
+
+
 /* Empty. Add your own CSS if you like */
