@@ -1,0 +1,31 @@
+<ion-view title="Create an Account">
+    <ion-content overflow-scroll="true" padding="'false'" scroll="false" class="has-header">
+        <!-- show if there is no current user -->
+        <form class="list" ng-hide="authData">
+            <ion-list>
+                <label class="item item-input">
+                    <span class="input-label">Name</span>
+                    <input type="text" ng-model="user.name" placeholder="your name">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Email</span>
+                    <input type="text" ng-model="user.email" placeholder="your email">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password</span>
+                    <input type="password" ng-model="user.password" placeholder="your password">
+                </label>
+            </ion-list>
+            <button class="button button-block"  ng-click="signup()">Sign up!</button>
+        </form>
+        <!-- Show if user is already logged in -->
+        <div class="card" ng-show="authData">
+            <div class="item item-text-wrap">
+                You are logged in as {{ currentUser.name }}!
+            </div>
+            <button class="item" ng-click="logout()">
+                Log out
+            </button>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['starter.services','ui.bootstrap'])
+angular.module('roadWarrior.controllers', [])
 
 .controller('TodayCtrl', ['$scope', function($scope) {
 $scope.dayName = "Tuesday";
@@ -7,34 +7,6 @@ $scope.event = {
   venue: "Paramount Theater",
   city: "Seattle, WA",
 }
-
-// $scope.login = function() {
-//     Auth.$authWithOAuthRedirect("facebook").then(function(authData) {
-//       // User successfully logged in
-//     }).catch(function(error) {
-//       if (error.code === "TRANSPORT_UNAVAILABLE") {
-//         Auth.$authWithOAuthPopup("facebook").then(function(authData) {
-//           // User successfully logged in. We can log to the console
-//           // since we’re using a popup here
-//           console.log(authData);
-//         });
-//       } else {
-//         // Another error occurred
-//         console.log(error);
-//       }
-//     });
-// };
-
-// Auth.$onAuth(function(authData) {
-//   if (authData === null) {
-//     console.log("Not logged in yet");
-//   } else {
-//     console.log("Logged in as", authData.uid);
-//   }
-//   $scope.authData = authData; // This will display the user's name in our view
-// });
-
-
 
 
 }])
@@ -65,4 +37,119 @@ $scope.event = {
   $scope.settings = {
     enableFriends: true
   };
-});
+})
+
+.controller('SignupCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
+  var usersRef = new Firebase("https://project-7678014583389197058.firebaseio.com/users");
+  // check if user is logged in
+  Auth.$onAuth(function(authData) {
+    if (authData === null) {
+      console.log("Not logged in yet");
+    } else {
+      console.log("Logged in as", authData.uid);
+      // get current user info
+      usersRef.child(authData.uid).on("value", function(user){
+        $scope.currentUser = user.val();
+      }, function (errorObject) {
+        alert("Sorry! There was an error getting your data:" + errorObject.code);
+      });
+    }
+    $scope.authData = authData;
+  });
+  // bind form data to user model
+  $scope.user = {
+    name: '',
+    email: '',
+    password: ''
+  }
+  // create a new user from form data
+  $scope.signup = function(){
+    usersRef.createUser({
+      name: $scope.user.name,
+      email: $scope.user.email,
+      password: $scope.user.password,
+    }, function(error, userData) {
+      if (error) {
+        alert("Error creating user:", error);
+      } else {
+        console.log("Successfully created user account with uid:", userData.uid);
+        // log in the new user
+        usersRef.authWithPassword({
+          email: $scope.user.email,
+          password: $scope.user.password
+        }, function(error, authData) {
+          if (error) {
+            alert("Login Failed!", error);
+          } else {
+            console.log("Authenticated successfully with payload:", authData);
+            if (authData) {
+              // save the user's profile into Firebase
+              usersRef.child(authData.uid).set({
+                provider: authData.provider,
+                name: $scope.user.name
+              });
+            };
+            // redirect user to select state
+            $state.go("start");
+          }
+        });
+      }
+    });
+  };
+  $scope.logout = function(){
+    usersRef.unauth();
+  };
+}])
+
+.controller('LoginCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
+  var usersRef = new Firebase("https://project-7678014583389197058.firebaseio.com/users");
+  // check if user is logged in
+  Auth.$onAuth(function(authData){
+    if (authData === null) {
+      console.log("Not logged in yet.");
+    } else {
+      console.log("Logged in as", authData.uid);
+      // get current user info
+      usersRef.child(authData.uid).on("value", function(user){
+        $scope.currentUser = user.val();
+      }, function (errorObject){
+        alert("Sorry! There was an error getting your data:" + errorObject.code);
+      });
+    }
+    $scope.authData = authData;
+  });
+  // bind form data to user model
+  $scope.user = {
+    email: '',
+    password: ''
+  }
+  $scope.fbLogin = function() {
+    Auth.$authWithOAuthRedirect("facebook").then(function(authData){
+    }).catch(function(error) {
+      if (error.code === "TRANSPORT_UNAVAILABLE") {
+        Auth.$authWithOAuthPopup("facebook").then(function(authData){
+          console.log("Login Successful!", authData);
+          $state.go("tab.home");
+        });
+      } else {
+        console.log(error);
+      }
+    });
+  };
+  $scope.login = function(){
+    usersRef.authWithPassword({
+      email: $scope.user.email,
+      password: $scope.user.password
+    }, function(error, authData) {
+      if (error) {
+        console.log("Login Failed!", error);
+      } else {
+        console.log("Login Successful!", authData);
+        $state.go("tab.home");
+      }
+    });
+  };
+  $scope.logout = function(){
+    usersRef.unauth();
+  };
+}])

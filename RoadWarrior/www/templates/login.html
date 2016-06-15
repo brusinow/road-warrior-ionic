@@ -1,0 +1,38 @@
+<ion-view title="Log in to RoadWarrior">
+    <ion-content overflow-scroll="true" padding="'true'" scroll="false" class="has-header">
+        <!-- Show if there is no current user -->
+        <div ng-hide="authData">
+            <form class="list">
+                <ion-list>
+                    <label class="item item-input">
+                        <span class="input-label">Email</span>
+                        <input type="text" ng-model="user.email" placeholder="">
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Password</span>
+                        <input type="password" ng-model="user.password" placeholder="">
+                    </label>
+                </ion-list>
+                <button class="button button-block" ng-click="login()">
+                    Log in!
+                </button>
+            </form>
+            <div class="button-block text-center">Or</div>
+            <button class="button button-positive button-block" ng-click="fbLogin()">
+                Log in with Facebook
+            </button>
+            <a href="#/signup" class="button button-positive button-clear button-block ">
+                Need an account?
+            </a>
+        </div>
+        <!-- Show if user is already logged in -->
+        <div class="card" ng-show="authData">
+            <div class="item item-text-wrap">
+                You are logged in as {{ currentUser.name }}!
+            </div>
+            <button class="item" ng-click="logout()">
+                Log out
+            </button>
+        </div>
+    </ion-content>
+</ion-view>

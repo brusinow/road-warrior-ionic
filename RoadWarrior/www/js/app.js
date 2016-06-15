@@ -5,23 +5,33 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','ui.bootstrap'])
+var authWait = ["Auth", function(Auth) { return Auth.$waitForAuth(); }]
+var authRequire = ["Auth", function(Auth) { return Auth.$requireAuth(); }]
 
-.run(function($ionicPlatform) {
+angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','roadWarrior.services','ui.bootstrap',])
+
+
+
+.run(['$ionicPlatform', '$rootScope', '$state', function($ionicPlatform, $rootScope, $state) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
   });
-})
+  $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
+    // catch the error thrown when the $requireAuth promise is rejected and redirect user back to the home page
+    if (error === "AUTH_REQUIRED") {
+      $state.go("login");
+    }
+  });
+}])
 
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -32,10 +42,36 @@ angular.module('starter', ['ionic', 'starter.controllers','ui.bootstrap'])
   $stateProvider
 
   // setup an abstract state for the tabs directive
+   .state('signup', {
+    cache: false,
+    url: '/signup',
+    templateUrl: 'templates/signup.html',
+    controller: 'SignupCtrl',
+    resolve: {
+      "currentAuth": authWait
+    }
+  })
+
+  .state('login', {
+    cache: false,
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl',
+    resolve: {
+      "currentAuth": authWait
+    }
+  })
+
+
+
+
     .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/tabs.html',
+    resolve: {
+      "currentAuth": authRequire
+    }
   })
 
   // Each tab has its own nav history stack:
@@ -47,6 +83,9 @@ angular.module('starter', ['ionic', 'starter.controllers','ui.bootstrap'])
         templateUrl: 'templates/tab-today.html',
         controller: 'TodayCtrl'
       }
+    },
+    resolve: {
+      "currentAuth": authRequire
     }
   })
   .state('tab.list', {
@@ -56,7 +95,10 @@ angular.module('starter', ['ionic', 'starter.controllers','ui.bootstrap'])
           templateUrl: 'templates/tab-list.html',
           controller: 'ListCtrl'
         }
-      }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
     })
 
   .state('tab.chats', {
@@ -66,7 +108,10 @@ angular.module('starter', ['ionic', 'starter.controllers','ui.bootstrap'])
           templateUrl: 'templates/tab-chats.html',
           controller: 'ChatsCtrl'
         }
-      }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
     })
     .state('tab.chat-detail', {
       url: '/chats/:chatId',
@@ -75,7 +120,10 @@ angular.module('starter', ['ionic', 'starter.controllers','ui.bootstrap'])
           templateUrl: 'templates/chat-detail.html',
           controller: 'ChatDetailCtrl'
         }
-      }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
     })
 
   .state('tab.account', {
@@ -85,6 +133,9 @@ angular.module('starter', ['ionic', 'starter.controllers','ui.bootstrap'])
         templateUrl: 'templates/tab-account.html',
         controller: 'AccountCtrl'
       }
+    },
+    resolve: {
+      "currentAuth": authRequire
     }
   });
 

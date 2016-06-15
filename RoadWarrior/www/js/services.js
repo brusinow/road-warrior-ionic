@@ -1,4 +1,11 @@
-angular.module('starter.services', [])
+angular.module('roadWarrior.services', [])
+
+
+.factory("Auth", function($firebaseAuth) {
+  var usersRef = new Firebase("https://project-7678014583389197058.firebaseio.com/users");
+  return $firebaseAuth(usersRef);
+})
+
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
