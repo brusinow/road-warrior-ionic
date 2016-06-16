@@ -40,7 +40,7 @@ $scope.event = {
 })
 
 .controller('SignupCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
-  var usersRef = new Firebase("https://project-7678014583389197058.firebaseio.com/users");
+  var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
   // check if user is logged in
   Auth.$onAuth(function(authData) {
     if (authData === null) {
@@ -70,7 +70,7 @@ $scope.event = {
       password: $scope.user.password,
     }, function(error, userData) {
       if (error) {
-        alert("Error creating user:", error);
+        console.log("Error creating user:", error);
       } else {
         console.log("Successfully created user account with uid:", userData.uid);
         // log in the new user
@@ -90,7 +90,7 @@ $scope.event = {
               });
             };
             // redirect user to select state
-            $state.go("start");
+            $state.go("tab.today");
           }
         });
       }
@@ -102,7 +102,7 @@ $scope.event = {
 }])
 
 .controller('LoginCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
-  var usersRef = new Firebase("https://project-7678014583389197058.firebaseio.com/users");
+  var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
   // check if user is logged in
   Auth.$onAuth(function(authData){
     if (authData === null) {
@@ -129,7 +129,7 @@ $scope.event = {
       if (error.code === "TRANSPORT_UNAVAILABLE") {
         Auth.$authWithOAuthPopup("facebook").then(function(authData){
           console.log("Login Successful!", authData);
-          $state.go("tab.home");
+          $state.go("tab.today");
         });
       } else {
         console.log(error);
@@ -145,7 +145,7 @@ $scope.event = {
         console.log("Login Failed!", error);
       } else {
         console.log("Login Successful!", authData);
-        $state.go("tab.home");
+        $state.go("tab.today");
       }
     });
   };
