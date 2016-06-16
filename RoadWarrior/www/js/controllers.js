@@ -115,7 +115,7 @@ $scope.event = {
               });
             };
             // redirect user to select state
-            $state.go("start");
+            $state.go("groups");
           }
         });
       }

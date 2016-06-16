@@ -75,7 +75,28 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   })
 
   // Each tab has its own nav history stack:
-
+  .state('groups', {
+    url: '/groups',
+    views: {
+      'groups': {
+        templateUrl: 'templates/groups.html',
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+  .state('groups/new', {
+    url: '/groups/new',
+    views: {
+      'groups/new': {
+        templateUrl: 'templates/groupsNew.html',
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
   .state('tab.today', {
     url: '/today',
     views: {
