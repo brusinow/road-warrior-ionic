@@ -33,11 +33,36 @@ $scope.event = {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-})
+.controller('AccountCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
+  $scope.$on('$ionicView.beforeEnter', function(){
+    // get current user info
+    var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+    $scope.currentAuth = currentAuth;
+    usersRef.child(currentAuth.uid).on("value", function(user){
+           if (currentAuth.facebook){
+            console.log("facebook",currentAuth);
+        $scope.user = currentAuth.facebook.displayName;
+      } else {
+            console.log("not facebook",currentAuth);
+        $scope.user = currentAuth.auth.token.email;
+      }
+      $scope.currentUser = user.val();
+     
+    }, function (errorObject) {
+      console.log("Sorry! There was an error getting your data:" + errorObject.code);
+    });
+    $scope.logout = function(){
+      usersRef.unauth();
+      $state.go("login");
+    };
+    $scope.create = function(){
+      $state.go("create");
+    };
+  
+ 
+    
+  });
+}])
 
 .controller('SignupCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
@@ -51,7 +76,7 @@ $scope.event = {
       usersRef.child(authData.uid).on("value", function(user){
         $scope.currentUser = user.val();
       }, function (errorObject) {
-        alert("Sorry! There was an error getting your data:" + errorObject.code);
+        console.log("Sorry! There was an error getting your data:" + errorObject.code);
       });
     }
     $scope.authData = authData;
@@ -70,7 +95,7 @@ $scope.event = {
       password: $scope.user.password,
     }, function(error, userData) {
       if (error) {
-        console.log("Error creating user:", error);
+        alert("Error creating user:", error);
       } else {
         console.log("Successfully created user account with uid:", userData.uid);
         // log in the new user
@@ -90,7 +115,7 @@ $scope.event = {
               });
             };
             // redirect user to select state
-            $state.go("tab.today");
+            $state.go("start");
           }
         });
       }
@@ -108,15 +133,17 @@ $scope.event = {
     if (authData === null) {
       console.log("Not logged in yet.");
     } else {
-      console.log("Logged in as", authData.uid);
+      console.log("Logged in as", authData);
       // get current user info
       usersRef.child(authData.uid).on("value", function(user){
         $scope.currentUser = user.val();
+        console.log($scope.currentUser);
       }, function (errorObject){
-        alert("Sorry! There was an error getting your data:" + errorObject.code);
+        console.log("Sorry! There was an error getting your data:" + errorObject.code);
       });
     }
     $scope.authData = authData;
+    $state.go("tab.today");
   });
   // bind form data to user model
   $scope.user = {
@@ -124,6 +151,7 @@ $scope.event = {
     password: ''
   }
   $scope.fbLogin = function() {
+    console.log("entering fb login route");
     Auth.$authWithOAuthRedirect("facebook").then(function(authData){
     }).catch(function(error) {
       if (error.code === "TRANSPORT_UNAVAILABLE") {
