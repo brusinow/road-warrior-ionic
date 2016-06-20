@@ -1,11 +1,8 @@
-<ion-view title="Groups">
-<ion-content>
-<button class="button button-block" href="/groups/new">
-                Add a Group
-</button>
-
-<button class="button button-block" href="/groups/join">
-                Join a Group
-</button>
-</ion-content>
+<ion-view cache-view="false" title="Groups">
+    <ion-content overflow-scroll="false" padding="'true'" scroll="true" class="has-header">
+       <h2>GROUPSSSSssssssssssss!</h2>
+       <h3>{{currentUser.name}}</h3>
+        <button class="button button-block" ng-click="toNewGroup()">Join Group</button>
+        <button class="button button-block" ng-click="toJoinGroup()">Join Group</button>
+    </ion-content>
 </ion-view>

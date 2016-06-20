@@ -1,0 +1,14 @@
+<ion-view title="Create a Group">
+    <ion-content overflow-scroll="true" padding="'false'" scroll="false" class="has-header">
+        <!-- show if there is no current user -->
+        <form>
+        
+                <label class="item item-input">
+                    <span class="input-label">Group Name</span>
+                    <input type="text" ng-model="group.name" placeholder="Group Name">
+                </label>
+            
+            <button class="button button-block"  ng-click="newGroup()">Create Group</button>
+        </form>
+    </ion-content>
+</ion-view>

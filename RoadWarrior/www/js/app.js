@@ -28,6 +28,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
     // catch the error thrown when the $requireAuth promise is rejected and redirect user back to the home page
     if (error === "AUTH_REQUIRED") {
+      console.log("state change error");
       $state.go("login");
     }
   });
@@ -61,8 +62,33 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
       "currentAuth": authWait
     }
   })
-
-
+  .state('groups', {
+    cache: false,
+    url: '/groups',
+    templateUrl: 'templates/groups.html',
+    controller: 'GroupsCtrl',
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+   .state('newGroup', {
+    cache: false,
+    url: '/groups/new',
+    templateUrl: 'templates/newGroup.html',
+    controller: 'NewGroupsCtrl',
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+    .state('joinGroup', {
+    cache: false,
+    url: '/groups/join',
+    templateUrl: 'templates/joinGroup.html',
+    controller: 'JoinGroupsCtrl',
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
 
 
     .state('tab', {
@@ -75,28 +101,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   })
 
   // Each tab has its own nav history stack:
-  .state('groups', {
-    url: '/groups',
-    views: {
-      'groups': {
-        templateUrl: 'templates/groups.html',
-      }
-    },
-    resolve: {
-      "currentAuth": authRequire
-    }
-  })
-  .state('groups/new', {
-    url: '/groups/new',
-    views: {
-      'groups/new': {
-        templateUrl: 'templates/groupsNew.html',
-      }
-    },
-    resolve: {
-      "currentAuth": authRequire
-    }
-  })
+  
   .state('tab.today', {
     url: '/today',
     views: {
