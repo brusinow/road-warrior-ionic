@@ -66,22 +66,28 @@ $scope.event = {
     console.log("current user is: ",$scope.currentUser);
     })
     $scope.newGroup = function(){
-    var newGroupRef = groupsRef.push();
-    var groupID = newGroupRef.key();
-    var memberEntry = {}
-    memberEntry[currentAuth.uid] = {
-      "name": $scope.currentUser.name,
-      "email": $scope.currentUser.email,
-      "userType": "admin"
+      var newGroupRef = groupsRef.push();
+      var groupID = newGroupRef.key();
+      var memberEntry = {}
+      memberEntry[currentAuth.uid] = {
+        "name": $scope.currentUser.name,
+        "email": $scope.currentUser.email,
+        "userType": "admin"
+      };
+      var searchGroup = $scope.group.name;
+      groupsRef.child(groupID).set({
+        "name": searchGroup,
+        "members": memberEntry
+      })
+      var userGroupEntry = {};
+      userGroupEntry[groupID] = {
+        "name": searchGroup,
+        "access": true
+      }
+      currentUserGroupsRef.update(userGroupEntry);
+      $state.go("tab.today");
     };
 
-    console.log("groupID is: ",groupID);
-    var searchGroup = $scope.group.name;
-    groupsRef.child(groupID).set({
-      "name": searchGroup,
-      "members": memberEntry
-    })
-    };
     // var groupEntry = {};
     // groupEntry[groupNumber] = {
     //   "name": searchGroup,
@@ -216,6 +222,9 @@ usersRef.createUser({
 .controller('LoginCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
 var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
 
+
+
+
 Auth.$onAuth(function(authData){
     if (authData === null) {
       console.log("Not logged in yet.");
@@ -224,6 +233,12 @@ Auth.$onAuth(function(authData){
       // get current user info
       usersRef.child(authData.uid).on("value", function(user){
         $scope.currentUser = user.val();
+        console.log("current user is: ",$scope.currentUser);
+        if ($scope.currentUser.groups){
+        $state.go("tab.today");
+      } else {
+        $state.go("groups");
+      }
       }, function (errorObject){
         alert("Sorry! There was an error getting your data:" + errorObject.code);
       });
@@ -236,6 +251,7 @@ Auth.$onAuth(function(authData){
     password: ''
   }
   $scope.login = function(){
+    console.log("current auth is: ",currentAuth);
     usersRef.authWithPassword({
       email: $scope.user.email,
       password: $scope.user.password
@@ -244,11 +260,7 @@ Auth.$onAuth(function(authData){
         console.log("Login Failed!", error);
       } else {
         console.log("Login Successful!", authData);
-        if (authData.auth.token.group){
-        $state.go("tab.today");
-      } else {
-        $state.go("groups");
-      }
+      
       }
     });
   };
