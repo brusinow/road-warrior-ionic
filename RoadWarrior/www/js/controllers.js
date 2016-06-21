@@ -31,6 +31,10 @@ $scope.event = {
 }])
 
 .controller('JoinGroupsCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
+  $scope.noResults = {
+    bool: false
+  }
+  console.log("boolean on page load: ",$scope.noResults);
   $scope.admin = {};
 
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
@@ -42,21 +46,31 @@ $scope.event = {
    //  $scope.currentUser = user.val();
    //  })
     $scope.joinGroup = function(){
+    $scope.noResults.bool = false;
+    console.log("boolean entering click: ",$scope.noResults);
     var searchEmail = $scope.admin.email;
-    adminsRef.orderByChild('email').startAt(searchEmail).endAt(searchEmail).on('child_added', function(snap){
-      console.log("entering callback");
-     var foundAdmin = snap.val();
-     var foundKey = snap.key();   
-
-     // var foundAdminKey = snap.child("email").key();
-     console.log("found admin is: ",foundAdmin) // output is correct now
-     console.log("found email is: ",foundAdmin.email);
-     console.log("found group is: ",foundAdmin.groupName);
-     console.log("key is: ",foundKey);
-  }, function(error) {
-  // The callback failed.
-  console.error(error);
-});
+    adminsRef.orderByChild('email').startAt(searchEmail).endAt(searchEmail).once('value', function(snapshot) {
+      console.log("snapshot is: ",snapshot.val());
+      var adminResponse = snapshot.val();
+      if (adminResponse !== null){
+        console.log("response is not null");
+        adminsRef.orderByChild('email').startAt(searchEmail).endAt(searchEmail).on('child_added', function(snap){
+          console.log("entering callback");
+          var foundAdmin = snap.val();
+          var foundKey = snap.key();   
+          console.log("found admin is: ",foundAdmin) // output is correct now
+          console.log("found email is: ",foundAdmin.email);
+          console.log("found group is: ",foundAdmin.groupName);
+          console.log("key is: ",foundKey);
+        });
+      } else {
+        console.log("No results. Search again.");
+        $scope.noResults.bool = true;
+        console.log("boolean after else: ",$scope.noResults);
+      }
+    })
+   
+ 
     //   console.log("scope.groupName is: ",$scope.group.name);
    
     // var groupNumber = "2896395735";
