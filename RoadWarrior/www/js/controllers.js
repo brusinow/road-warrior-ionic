@@ -31,25 +31,42 @@ $scope.event = {
 }])
 
 .controller('JoinGroupsCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
-  $scope.group = {};
+  $scope.admin = {};
 
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+  var adminsRef = new Firebase("https://roadwarrior.firebaseio.com/admins");
+  var groupsRef = new Firebase("https://roadwarrior.firebaseio.com/groups");
   var currentRef = usersRef.child(currentAuth.uid);
-  var groupRef = currentRef.child("groups");
+  var userGroupRef = currentRef.child("groups");
    // usersRef.child(currentAuth.uid).on("value", function(user){
    //  $scope.currentUser = user.val();
    //  })
     $scope.joinGroup = function(){
-      console.log("scope.groupName is: ",$scope.group.name);
-    var searchGroup = $scope.group.name;
-    var groupNumber = "2896395735";
-    var groupEntry = {};
-    groupEntry[groupNumber] = {
-      "name": searchGroup,
-      "access": false
-    };
-    console.log("searchGroup is: ",searchGroup);
-    groupRef.update(groupEntry);
+    var searchEmail = $scope.admin.email;
+    adminsRef.orderByChild('email').startAt(searchEmail).endAt(searchEmail).on('child_added', function(snap){
+      console.log("entering callback");
+     var foundAdmin = snap.val();
+     var foundKey = snap.key();   
+
+     // var foundAdminKey = snap.child("email").key();
+     console.log("found admin is: ",foundAdmin) // output is correct now
+     console.log("found email is: ",foundAdmin.email);
+     console.log("found group is: ",foundAdmin.groupName);
+     console.log("key is: ",foundKey);
+  }, function(error) {
+  // The callback failed.
+  console.error(error);
+});
+    //   console.log("scope.groupName is: ",$scope.group.name);
+   
+    // var groupNumber = "2896395735";
+    // var groupEntry = {};
+    // groupEntry[groupNumber] = {
+    //   "name": searchGroup,
+    //   "access": false
+    // };
+    // console.log("searchGroup is: ",searchGroup);
+    // groupRef.update(groupEntry);
     };   
 }])
 
@@ -57,6 +74,7 @@ $scope.event = {
   $scope.group = {};
 
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+  var adminsRef = new Firebase("https://roadwarrior.firebaseio.com/admins");
   var groupsRef = new Firebase("https://roadwarrior.firebaseio.com/groups");
   var currentUserRef = usersRef.child(currentAuth.uid);
   var currentUserGroupsRef = currentUserRef.child("groups");
@@ -68,13 +86,20 @@ $scope.event = {
     $scope.newGroup = function(){
       var newGroupRef = groupsRef.push();
       var groupID = newGroupRef.key();
-      var memberEntry = {}
+      var memberEntry = {};
+      var adminEntry = {};
+      var searchGroup = $scope.group.name;
       memberEntry[currentAuth.uid] = {
         "name": $scope.currentUser.name,
         "email": $scope.currentUser.email,
         "userType": "admin"
       };
-      var searchGroup = $scope.group.name;
+      adminEntry[currentAuth.uid] = {
+        "name": $scope.currentUser.name,
+        "email": $scope.currentUser.email,
+        "groupName": searchGroup,
+        "groupId": groupID
+      }
       groupsRef.child(groupID).set({
         "name": searchGroup,
         "members": memberEntry
@@ -84,6 +109,7 @@ $scope.event = {
         "name": searchGroup,
         "access": true
       }
+      adminsRef.update(adminEntry);
       currentUserGroupsRef.update(userGroupEntry);
       $state.go("tab.today");
     };
@@ -222,9 +248,6 @@ usersRef.createUser({
 .controller('LoginCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
 var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
 
-
-
-
 Auth.$onAuth(function(authData){
     if (authData === null) {
       console.log("Not logged in yet.");
@@ -234,16 +257,16 @@ Auth.$onAuth(function(authData){
       usersRef.child(authData.uid).on("value", function(user){
         $scope.currentUser = user.val();
         console.log("current user is: ",$scope.currentUser);
-        if ($scope.currentUser.groups){
-        $state.go("tab.today");
-      } else {
-        $state.go("groups");
-      }
+          if ($scope.currentUser.groups){
+            $state.go("tab.today");
+          } else {
+            $state.go("groups");
+            }
       }, function (errorObject){
-        alert("Sorry! There was an error getting your data:" + errorObject.code);
-      });
-    }
-    $scope.authData = authData;
+          alert("Sorry! There was an error getting your data:" + errorObject.code);
+        });
+      } 
+      $scope.authData = authData;
   });
   // bind form data to user model
   $scope.user = {
