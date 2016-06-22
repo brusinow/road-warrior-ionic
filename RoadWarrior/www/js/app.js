@@ -90,6 +90,14 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
     }
   })
 
+    .state('pending', {
+    cache: false,
+    url: '/pending',
+    templateUrl: 'templates/pending.html',
+    resolve: {
+      "currentAuth": authRequire
+    }
+    })
 
     .state('tab', {
     url: '/tab',

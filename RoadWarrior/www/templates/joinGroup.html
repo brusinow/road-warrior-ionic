@@ -1,15 +1,21 @@
 <ion-view title="Join a Group">
     <ion-content overflow-scroll="true" padding="'false'" scroll="false" class="has-header">
         <!-- show if there is no current user -->
+        <p>Please enter the exact group name and administrator email address of the group you would like to join:</p>
         <form>
-        
+
+
                 <label class="item item-input">
-                    <span class="input-label">Group Admin Email Address</span>
-                    <input type="email" ng-model="admin.email" placeholder="Group Name">
+                    <span class="input-label">Group Name</span>
+                    <input type="text" ng-model="admin.groupName" placeholder="Group Name">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Email Address</span>
+                    <input type="email" ng-model="admin.email" placeholder="Admin Email">
                 </label>
             
             <button class="button button-block"  ng-click="joinGroup()">Join Group</button>
         </form>
-        <div ng-show="noResults.bool">No results. please enter a valid email address.</div>
+        <div ng-show="noResults.bool">No results. Please try again.</div>
     </ion-content>
 </ion-view>

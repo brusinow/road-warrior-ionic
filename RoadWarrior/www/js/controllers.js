@@ -31,56 +31,70 @@ $scope.event = {
 }])
 
 .controller('JoinGroupsCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
-  $scope.noResults = {
-    bool: false
-  }
-  console.log("boolean on page load: ",$scope.noResults);
-  $scope.admin = {};
+  $scope.noResults = {};
+  $scope.admin = { email: ""};
 
+   console.log("initial load: ",$scope);
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
   var adminsRef = new Firebase("https://roadwarrior.firebaseio.com/admins");
   var groupsRef = new Firebase("https://roadwarrior.firebaseio.com/groups");
   var currentRef = usersRef.child(currentAuth.uid);
   var userGroupRef = currentRef.child("groups");
-   // usersRef.child(currentAuth.uid).on("value", function(user){
-   //  $scope.currentUser = user.val();
-   //  })
+   usersRef.child(currentAuth.uid).on("value", function(user){
+    $scope.currentUser = user.val();
+    })
     $scope.joinGroup = function(){
-    $scope.noResults.bool = false;
-    console.log("boolean entering click: ",$scope.noResults);
+     $scope.noResults = {}; 
+     console.log("inside function: ",$scope);
     var searchEmail = $scope.admin.email;
     adminsRef.orderByChild('email').startAt(searchEmail).endAt(searchEmail).once('value', function(snapshot) {
       console.log("snapshot is: ",snapshot.val());
-      var adminResponse = snapshot.val();
-      if (adminResponse !== null){
+      
+      $scope.results = snapshot.val();
+      if ($scope.results !== null){
         console.log("response is not null");
         adminsRef.orderByChild('email').startAt(searchEmail).endAt(searchEmail).on('child_added', function(snap){
           console.log("entering callback");
           var foundAdmin = snap.val();
-          var foundKey = snap.key();   
+          var foundKey = snap.key();
+          var groupId = foundAdmin.groupId;  
           console.log("found admin is: ",foundAdmin) // output is correct now
-          console.log("found email is: ",foundAdmin.email);
+          // console.log("found email is: ",foundAdmin.email);
           console.log("found group is: ",foundAdmin.groupName);
           console.log("key is: ",foundKey);
+          if (foundAdmin.groupName === $scope.admin.groupName ){
+            console.log("Yaaaaas! "+foundAdmin.groupName+" is a go!");
+            var memberEntry = {};
+            memberEntry[currentAuth.uid] = {
+            "name": $scope.currentUser.name,
+            "email": $scope.currentUser.email,
+            "userType": "pending"
+            };
+            groupsRef.child(groupId).push({
+            "members": memberEntry
+            })
+            var userGroupEntry = {};
+            userGroupEntry[groupId] = {
+              "name": foundAdmin.groupName,
+              "access": "pending"
+            }
+            userGroupRef.update(userGroupEntry);  
+            $state.go("pending");
+          } else {
+            $scope.$apply(function() {
+            $scope.noResults = {"bool": true};
+            console.log("Mwah mwah. Email found but group name didn't match.");
+          });
+          }
         });
-      } else {
+        } else {
         console.log("No results. Search again.");
-        $scope.noResults.bool = true;
-        console.log("boolean after else: ",$scope.noResults);
-      }
-    })
-   
- 
-    //   console.log("scope.groupName is: ",$scope.group.name);
-   
-    // var groupNumber = "2896395735";
-    // var groupEntry = {};
-    // groupEntry[groupNumber] = {
-    //   "name": searchGroup,
-    //   "access": false
-    // };
-    // console.log("searchGroup is: ",searchGroup);
-    // groupRef.update(groupEntry);
+          $scope.$apply(function() {
+            $scope.noResults = {"bool": true};
+            console.log("after no results: ",$scope);
+          })
+        }
+      })
     };   
 }])
 
@@ -99,7 +113,7 @@ $scope.event = {
     })
     $scope.newGroup = function(){
       var newGroupRef = groupsRef.push();
-      var groupID = newGroupRef.key();
+      var groupId = newGroupRef.key();
       var memberEntry = {};
       var adminEntry = {};
       var searchGroup = $scope.group.name;
@@ -112,14 +126,14 @@ $scope.event = {
         "name": $scope.currentUser.name,
         "email": $scope.currentUser.email,
         "groupName": searchGroup,
-        "groupId": groupID
+        "groupId": groupId
       }
-      groupsRef.child(groupID).set({
+      groupsRef.child(groupId).set({
         "name": searchGroup,
         "members": memberEntry
       })
       var userGroupEntry = {};
-      userGroupEntry[groupID] = {
+      userGroupEntry[groupId] = {
         "name": searchGroup,
         "access": true
       }
