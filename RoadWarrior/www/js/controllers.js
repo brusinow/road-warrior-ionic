@@ -64,15 +64,12 @@ $scope.event = {
           console.log("key is: ",foundKey);
           if (foundAdmin.groupName === $scope.admin.groupName ){
             console.log("Yaaaaas! "+foundAdmin.groupName+" is a go!");
-            var memberEntry = {};
-            memberEntry[currentAuth.uid] = {
+            var memberEntry = {
             "name": $scope.currentUser.name,
             "email": $scope.currentUser.email,
             "userType": "pending"
             };
-            groupsRef.child(groupId).push({
-            "members": memberEntry
-            })
+            groupsRef.child(groupId+"/members").push(memberEntry)
             var userGroupEntry = {};
             userGroupEntry[groupId] = {
               "name": foundAdmin.groupName,
