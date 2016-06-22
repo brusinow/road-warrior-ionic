@@ -1,9 +1,13 @@
 <ion-view view-title="Today">
   <ion-content class="padding">
+    <div ng-hide="currentGroup.access === 'pending'">
     <h4 class="center-text">{{dayName}}</h4>
     <h3 class="center-text">{{date}}</h3>
     <h4 class="center-text">{{event.venue}}</h4>
     <h5 class="center-text">{{event.city}}</h5>
- 
+    </div>
+    <div ng-show="currentGroup.access === 'pending'">
+    <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
+    </div>
   </ion-content>
 </ion-view>

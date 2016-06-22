@@ -1,6 +1,21 @@
 angular.module('roadWarrior.controllers', [])
 
-.controller('TodayCtrl', ['$scope', function($scope) {
+.controller('TodayCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
+var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+   console.log("made it to groups");
+   console.log("current Auth is: ",currentAuth);
+   usersRef.child(currentAuth.uid).child("groups").on("child_added", function(group){
+    $scope.currentGroup = group.val();
+    var groupKey = group.key();
+        console.log("current group is: ",$scope.currentGroup);
+        console.log("current group key is: ",groupKey);
+        if ($scope.currentGroup.access === true){
+          console.log("show stuff");
+        } else 
+          console.log("don't show stuff");
+  }, function (errorObject) {
+    alert("Sorry! There was an error getting your data:" + errorObject.code);
+  });
 $scope.dayName = "Tuesday";
 $scope.date = "June 14th, 2016";
 $scope.event = {
@@ -76,7 +91,7 @@ $scope.event = {
               "access": "pending"
             }
             userGroupRef.update(userGroupEntry);  
-            $state.go("pending");
+            $state.go("tab.today");
           } else {
             $scope.$apply(function() {
             $scope.noResults = {"bool": true};
@@ -180,7 +195,6 @@ $scope.event = {
 })
 
 .controller('AccountCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
-  $scope.$on('$ionicView.beforeEnter', function(){
     // get current user info
     var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
     $scope.currentAuth = currentAuth;
@@ -202,9 +216,6 @@ $scope.event = {
       $state.go("login");
     };
   
- 
-    
-  });
 }])
 
 .controller('SignupCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
