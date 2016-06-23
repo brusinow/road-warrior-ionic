@@ -1,0 +1,34 @@
+<ion-modal-view>
+   <ion-header-bar>
+      <h1 class = "title">Create a New Event</h1>
+   </ion-header-bar>
+  
+   <ion-content class="padding">
+        <div class="list">        
+         
+            <label class="item item-input">
+             <span class="input-label">Date: </span>
+            <input ng-model="event.date" style="padding-top: 0px;" type="date">
+          </label>     
+          <label class="item item-input">
+            <input ng-model="event.venue" type="text" placeholder="Venue/Event Name">
+          </label>
+          <label class="item item-input">
+           
+            <input ng-model="event.city" type="text" placeholder="City/State/Country (What will display in ListView)">
+          </label>
+          <label  class="item item-input">
+            <input ng-model="event.address" ng-click="getVenueAddress()" type="text" placeholder="Complete Address">
+          </label>
+         
+          <label class="item item-input">
+            <textarea ng-model="event.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
+          </label> 
+        </div>
+        <div class="row">
+         <div class="col col-50 col-offset-25"><a class = "my-button my-button-raised my-button-block my-button-pill settings-buttons" ng-click = "submitNewEventModal()">Submit</a></div>
+        </div>
+          <button class = "button icon icon-left ion-ios-close-outline"
+         ng-click = "closeNewEventModal()">Close Modal</button>
+      </ion-content>
+</ion-modal-view>

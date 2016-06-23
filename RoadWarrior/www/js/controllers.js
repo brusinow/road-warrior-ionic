@@ -194,19 +194,26 @@ $scope.event = {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
+.controller('AccountCtrl', ['$scope', '$http','currentAuth', '$state','$ionicModal', function($scope, $http, currentAuth, $state,$ionicModal){
     // get current user info
+    $scope.event = {};
+    var geocoder = new google.maps.Geocoder();
     var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+    var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
     $scope.currentAuth = currentAuth;
-    usersRef.child(currentAuth.uid).on("value", function(user){
+    usersRef.child(currentAuth.uid).child("groups").on("child_added", function(group){
            if (currentAuth.facebook){
             console.log("facebook",currentAuth);
         $scope.user = currentAuth.facebook.displayName;
       } else {
             console.log("not facebook",currentAuth);
+            console.log("current group: ",group.val());
+            var currentGroup = group.val();
+            $scope.event.groupId = group.key();
+            $scope.event.groupName = currentGroup.name;
         $scope.user = currentAuth.auth.token.email;
       }
-      $scope.currentUser = user.val();
+      
      
     }, function (errorObject) {
       console.log("Sorry! There was an error getting your data:" + errorObject.code);
@@ -215,6 +222,80 @@ $scope.event = {
       usersRef.unauth();
       $state.go("login");
     };
+
+     $ionicModal.fromTemplateUrl('templates/newEventModal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.newEventModal = modal;
+   
+    
+  });
+  $scope.openNewEventModal = function() {
+    $scope.newEventModal.show();
+  };
+  $scope.closeNewEventModal = function() {
+    $scope.newEventModal.hide();
+  };
+  $scope.getVenueAddress = function() {
+    var fullQuery = '/api/place/textsearch/json?query=' + $scope.event.venue +" "+ $scope.event.city + '&key=AIzaSyCJpKi0u-5QY2pbNgURwwbJLTQ-rXRkEv8';
+    console.log(fullQuery);
+    var req = {
+    url: fullQuery,
+    method: 'GET',
+    }
+    $http(req).then(function success(res) {
+    console.log(res)
+    $scope.results = res.data;
+    console.log($scope.results);
+    }, function error(res) {
+    //do something if the response has an error
+    console.log(res);
+  });
+  };
+  $scope.submitNewEventModal = function() {
+    console.log("event to be submitted is: ",$scope.event);
+
+    
+  
+  
+        // if ($scope.event.address && $scope.event.address.length > 0) {
+        //     if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+        //     this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
+        //         if (status == google.maps.GeocoderStatus.OK) {
+        //           console.log("results are: ",results)
+        //           $scope.event.lat = results[0].geometry.location.lat();
+        //           $scope.event.lng = results[0].geometry.location.lng();
+        //           $scope.event.address = results[0].formatted_address;
+        //           console.log("formatted address is: ",$scope.event.address);
+        //           console.log("latitude is: ",$scope.event.lat);
+        //           console.log("longitude is: ",$scope.event.lng);
+        //         } else {
+        //             alert("Sorry, this search produced no results.");
+        //         }
+        //     });
+        // }
+    
+    console.log("event should include coordinates: ",$scope.event);
+    var newEventEntry = {};
+    var newEventRef = eventsRef.push();
+    var eventId = newEventRef.key();
+    newEventEntry[eventId] = $scope.event;
+    // eventsRef.update(newEventEntry);
+    $scope.newEventModal.hide();
+  };
+  // Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.newEventModal.remove();
+  });
+  // Execute action on hide modal
+  $scope.$on('newEventModal.hidden', function() {
+    // Execute action
+  });
+  // Execute action on remove modal
+  $scope.$on('newEventModal.removed', function() {
+    // Execute action
+  });
   
 }])
 
