@@ -5,5 +5,14 @@
     {
       "path": "/api",
       "proxyUrl": "https://maps.googleapis.com/maps/api"
-    }]
+    }
+  ],
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
 }

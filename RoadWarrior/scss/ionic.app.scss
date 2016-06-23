@@ -15,9 +15,30 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+.platform-ios .popover-arrow {
+    display: none;
+}
+
+.platform-ios .popover-arrow:after {
+    display: none;
+}
+
+.platform-ios .popover {
+ max-width: 100%;
+ width: 92%;
+ left:4% !important;
+}
+
+.item a {
+    text-decoration: none;
+    font-weight: inherit;
+}
+
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
+
 

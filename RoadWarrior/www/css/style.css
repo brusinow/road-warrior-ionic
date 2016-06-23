@@ -519,3 +519,6 @@ body { font-family: sans-serif; }
 
 
 /* Empty. Add your own CSS if you like */
+.popover-arrow {
+  display: none;
+}

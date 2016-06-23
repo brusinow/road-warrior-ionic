@@ -1,0 +1,11 @@
+<ion-popover-view>
+  <ion-content>
+    <ion-list ng-if="results">
+      <ion-item style="font-size: 13px; text-align: center;" ng-repeat="result in results">
+        <a href="#" ng-click="selectAddress(result)"><span style="font-weight: bold;">{{result.name}}</span><br>
+        {{result.formatted_address}}</a>
+      </ion-item>
+    </ion-list>
+    <div ng-if="!results">No results</div>
+  </ion-content>
+</ion-popover-view>

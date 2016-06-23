@@ -194,7 +194,7 @@ $scope.event = {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', ['$scope', '$http','currentAuth', '$state','$ionicModal', function($scope, $http, currentAuth, $state,$ionicModal){
+.controller('AccountCtrl', ['$scope', '$http','currentAuth', '$state','$ionicModal','$ionicPopover', function($scope, $http, currentAuth, $state, $ionicModal, $ionicPopover){
     // get current user info
     $scope.event = {};
     var geocoder = new google.maps.Geocoder();
@@ -223,6 +223,7 @@ $scope.event = {
       $state.go("login");
     };
 
+    // New Event Modal
      $ionicModal.fromTemplateUrl('templates/newEventModal.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -232,26 +233,11 @@ $scope.event = {
     
   });
   $scope.openNewEventModal = function() {
+    $scope.event = {};
     $scope.newEventModal.show();
   };
   $scope.closeNewEventModal = function() {
     $scope.newEventModal.hide();
-  };
-  $scope.getVenueAddress = function() {
-    var fullQuery = '/api/place/textsearch/json?query=' + $scope.event.venue +" "+ $scope.event.city + '&key=AIzaSyCJpKi0u-5QY2pbNgURwwbJLTQ-rXRkEv8';
-    console.log(fullQuery);
-    var req = {
-    url: fullQuery,
-    method: 'GET',
-    }
-    $http(req).then(function success(res) {
-    console.log(res)
-    $scope.results = res.data;
-    console.log($scope.results);
-    }, function error(res) {
-    //do something if the response has an error
-    console.log(res);
-  });
   };
   $scope.submitNewEventModal = function() {
     console.log("event to be submitted is: ",$scope.event);
@@ -259,30 +245,48 @@ $scope.event = {
     
   
   
-        // if ($scope.event.address && $scope.event.address.length > 0) {
-        //     if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
-        //     this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
-        //         if (status == google.maps.GeocoderStatus.OK) {
-        //           console.log("results are: ",results)
-        //           $scope.event.lat = results[0].geometry.location.lat();
-        //           $scope.event.lng = results[0].geometry.location.lng();
-        //           $scope.event.address = results[0].formatted_address;
-        //           console.log("formatted address is: ",$scope.event.address);
-        //           console.log("latitude is: ",$scope.event.lat);
-        //           console.log("longitude is: ",$scope.event.lng);
-        //         } else {
-        //             alert("Sorry, this search produced no results.");
-        //         }
-        //     });
-        // }
-    
-    console.log("event should include coordinates: ",$scope.event);
-    var newEventEntry = {};
-    var newEventRef = eventsRef.push();
-    var eventId = newEventRef.key();
-    newEventEntry[eventId] = $scope.event;
-    // eventsRef.update(newEventEntry);
-    $scope.newEventModal.hide();
+        if ($scope.event.address && $scope.event.address.length > 0) {
+            if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+            this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                  console.log("results are: ",results)
+                  $scope.event.lat = results[0].geometry.location.lat();
+                  $scope.event.lng = results[0].geometry.location.lng();
+                  $scope.event.address = results[0].formatted_address;
+                  var latlng = {lat: $scope.event.lat, lng: $scope.event.lng};
+                  console.log("lat/lng is: ",latlng);
+                  this.geocoder = new google.maps.Geocoder();
+                  this.geocoder.geocode({'location': latlng}, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                          for (var ac = 0; ac < results[0].address_components.length; ac++) {
+                                    var component = results[0].address_components[ac];
+                                    switch(component.types[0]) {
+                                        case 'locality':
+                                            $scope.event.city = component.long_name;
+                                            break;
+                                        case 'administrative_area_level_1':
+                                            $scope.event.state = component.short_name;
+                                            break;
+                                    }
+                                };
+                                $scope.event.cityState = $scope.event.city+", "+$scope.event.state; 
+                                console.log("The show is in ",$scope.event.cityState);
+                                var newEventEntry = {};
+                                var newEventRef = eventsRef.push();
+                                var eventId = newEventRef.key();
+                                newEventEntry[eventId] = $scope.event;
+                                eventsRef.update(newEventEntry);
+                                $scope.newEventModal.hide();
+                    } else {
+                      window.alert('No first geocode results.');
+                      }
+                  });
+
+                } else {
+                    alert("Sorry, this search produced no results.");
+                }
+            });
+        }
   };
   // Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
@@ -296,6 +300,56 @@ $scope.event = {
   $scope.$on('newEventModal.removed', function() {
     // Execute action
   });
+
+  //Popover for New Event Address Suggestions
+  $ionicPopover.fromTemplateUrl('templates/popover.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+
+
+  $scope.openPopover = function($event) {
+    var fullQuery = '/api/place/textsearch/json?query=' + $scope.event.venue +" "+ $scope.event.cityState + '&key=AIzaSyCJpKi0u-5QY2pbNgURwwbJLTQ-rXRkEv8';
+    console.log(fullQuery);
+    var req = {
+      url: fullQuery,
+      method: 'GET',
+    }
+
+    $http(req).then(function success(res) {
+      console.log(res)
+      $scope.results = res.data.results;
+      console.log($scope.results);
+      $scope.popover.show($event);
+    }, function error(res) {
+    //do something if the response has an error
+        console.log(res);
+      }); 
+  };
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+  $scope.selectAddress = function(result){
+    console.log("result of click is: ",result);
+    $scope.event.address = result.formatted_address;
+    $scope.event.venue = result.name;
+
+    $scope.popover.remove();
+  }
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  });
+  // Execute action on hide popover
+  $scope.$on('popover.hidden', function() {
+    // Execute action
+  });
+  // Execute action on remove popover
+  $scope.$on('popover.removed', function() {
+    // Execute action
+  });
+
   
 }])
 
