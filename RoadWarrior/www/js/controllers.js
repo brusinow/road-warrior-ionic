@@ -118,7 +118,7 @@ Auth.$onAuth(function(authData){
 .controller('TodayCtrl', ['$scope', 'currentAuth', '$state','moment', function($scope, currentAuth, $state, moment){
     // $scope.currentGroup = {};
     $scope.event = {}
-    $scope.result = false;
+    $scope.result = '';
     $scope.todayDate = new moment().format('MM-DD-YYYY');
     $scope.now_formatted_date = moment().format('MMMM Do, YYYY');
     $scope.day_of_week = moment().format('dddd');
@@ -151,22 +151,19 @@ Auth.$onAuth(function(authData){
               console.log("found one");
               console.log("actual today event is: ",childData);
               $scope.event = childData;
-              
               return true;
-            } 
+            }  
           });
+          if ($scope.result !== true){
+            $scope.result = false;
+          }
         })
       } else 
         console.log("don't show stuff");
         }, function (errorObject) {
           alert("Sorry! There was an error getting your data:" + errorObject.code);
           });
-  $scope.dayName = "Tuesday";
-  $scope.date = "June 14th, 2016";
-  $scope.event = {
-    venue: "Paramount Theater",
-    city: "Seattle, WA",
-  }
+  
 }])
 
 .controller('GroupsCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
@@ -369,13 +366,11 @@ Auth.$onAuth(function(authData){
     };
 
     // New Event Modal
-     $ionicModal.fromTemplateUrl('templates/newEventModal.html', {
+    $ionicModal.fromTemplateUrl('templates/newEventModal.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
-    $scope.newEventModal = modal;
-   
-    
+    $scope.newEventModal = modal; 
   });
   $scope.openNewEventModal = function() {
     $scope.event = {};
@@ -475,8 +470,40 @@ Auth.$onAuth(function(authData){
 
 
 
+   // New Itin Modal
+    $ionicModal.fromTemplateUrl('templates/newItinModal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.newItinModal = modal; 
+  });
+  $scope.openNewItinModal = function() {
+    $scope.itin = {};
+    $scope.newItinModal.show();
+    
 
 
+
+    
+  };
+  $scope.closeNewItinModal = function() {
+    $scope.newItinModal.hide();
+  };
+  $scope.submitNewItinModal = function() {
+    console.log("event to be submitted is: ",$scope.event);
+  };
+  // Cleanup the modal when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.newItinModal.remove();
+  });
+  // Execute action on hide modal
+  $scope.$on('newItinModal.hidden', function() {
+    // Execute action
+  });
+  // Execute action on remove modal
+  $scope.$on('newItinModal.removed', function() {
+    // Execute action
+  });
 
 
   //Popover for New Event Address Suggestions

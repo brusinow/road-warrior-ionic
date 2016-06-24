@@ -39,6 +39,10 @@ $dark:                            #444 !default;
  left:4% !important;
 }
 
+.no-padding {
+  padding: 0px !important;
+}
+
 .item a {
   text-decoration: none;
   font-weight: inherit;
@@ -46,6 +50,7 @@ $dark:                            #444 !default;
 }
 
 .weather-box {
+  height: 100px;
   float: right;
   position: relative;
   right: 10px;
@@ -67,6 +72,26 @@ $dark:                            #444 !default;
   top: -32px;
 }
 
+.clear-float {
+  clear: both;
+}
+
+.itin-item {
+  text-align: left;
+}
+
+.itin-time {
+  text-align: right;
+}
+
+.button-group {
+  margin: 0px 10px;
+}
+
+.button-small-margin {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;

@@ -12,11 +12,20 @@
     <h5 ng-if="result" class="no-margin">{{event.cityState}}</h5>
    
     </div>
-    <div ng-if="!result">
+    <div class="clear-float"></div>
+    <div ng-if="result === false">
     <h4>There is no event scheduled today.</h4>
     </div>
     <div ng-if="currentGroup.access === 'pending'">
     <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
     </div>
+    <ion-list>
+    <ion-item class="no-padding">
+      <div class="row">
+        <div class="col itin-item">Load in</div>
+        <div class="col itin-time">3:00PM - 4:00PM</div>
+      </div>
+    </ion-item>
+</ion-list>
   </ion-content>
 </ion-view>
