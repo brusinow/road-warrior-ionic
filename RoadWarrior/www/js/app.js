@@ -8,7 +8,7 @@
 var authWait = ["Auth", function(Auth) { return Auth.$waitForAuth(); }]
 var authRequire = ["Auth", function(Auth) { return Auth.$requireAuth(); }]
 
-angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','roadWarrior.services','ui.bootstrap',])
+angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker'])
 
 
 
@@ -112,6 +112,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   
   .state('tab.today', {
     url: '/today',
+    cache: false,
     views: {
       'tab-today': {
         templateUrl: 'templates/tab-today.html',

@@ -1,9 +1,9 @@
 <ion-view view-title="Account">
   <ion-content>
     <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
+ <!--    <ion-toggle  ng-model="settings.enableFriends">
         Enable Friends
-    </ion-toggle>
+    </ion-toggle> -->
     </ion-list>
      <div class="card">
             <div class="item item-text-wrap">
@@ -12,7 +12,9 @@
             <button class="item" ng-click="logout()">
                 Log out
             </button>
-        </div>
-        <div class="col"><a class = "button" ng-click ="openNewEventModal()">Add an Event</a></div>
+        </div>  
+        <div class="row" ng-show="accountType === 'admin'"> 
+       <button class="button button-block button-dark" ng-click ="openNewEventModal()">Add an Event</button>
+       </div>
   </ion-content>
 </ion-view>

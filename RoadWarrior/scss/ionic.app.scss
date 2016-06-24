@@ -15,6 +15,16 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+
+
+.no-margin {
+  margin: 0px;
+}
+
+.center-text {
+  text-align: center;
+}
+
 .platform-ios .popover-arrow {
     display: none;
 }
@@ -30,8 +40,31 @@ $dark:                            #444 !default;
 }
 
 .item a {
-    text-decoration: none;
-    font-weight: inherit;
+  text-decoration: none;
+  font-weight: inherit;
+  color: #222222;
+}
+
+.weather-box {
+  float: right;
+  position: relative;
+  right: 10px;
+  top: -10px;
+}
+
+.weather-img {
+  width: 90px;
+}
+
+.weather-main-temp {
+  position: absolute;
+  top: 24px;
+  left: 30%;
+}
+
+.weather-forecast {
+  position: relative;
+  top: -32px;
 }
 
 
