@@ -6,6 +6,33 @@ angular.module('roadWarrior.services', [])
   return $firebaseAuth(usersRef);
 })
 
+
+
+.factory('Yahoo', function($http, YahooEndpoint) {
+  console.log('YahooEndpoint', YahooEndpoint)
+
+  var getYahooData = function(lat,lng) {
+    console.log("lat: ",lat);
+    console.log("lng: ",lng);
+    var url = YahooEndpoint.url + "/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(SELECT%20woeid%20FROM%20geo.places%20WHERE%20text%3D%22("+lat+"%2C"+lng+")%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+    console.log(url);
+
+    return $http.get(url)
+      .then(function(data) {
+        // console.log('Got some data: ', data.data.query.results.channel.item);
+        var weatherResults = data.data.query.results.channel.item;
+        return weatherResults;
+      });
+  };
+
+  return {
+    getYahooData: getYahooData
+  };
+})
+
+
+
+
 .factory('helperService', function() {
         return {
             timeFormat: function($scope, unix) {

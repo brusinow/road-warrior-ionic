@@ -69,17 +69,23 @@ $dark:                            #444 !default;
   right: 10px;
   top: -6px; }
 
-.weather-img {
-  width: 90px; }
+.weather-image {
+  font-size: 75px;
+  color: #bbbbbb;
+  position: absolute;
+  right: 75px;
+  top: 17px; }
 
 .weather-main-temp {
   position: absolute;
-  top: 24px;
-  left: 30%; }
+  top: 8px;
+  right: 8px; }
 
 .weather-forecast {
-  position: relative;
-  top: -32px; }
+  color: #777777;
+  position: absolute;
+  right: 0px;
+  top: 52px; }
 
 .clear-float {
   clear: both; }

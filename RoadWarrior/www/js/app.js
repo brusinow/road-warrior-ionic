@@ -10,6 +10,13 @@ var authRequire = ["Auth", function(Auth) { return Auth.$requireAuth(); }]
 
 angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter'])
 
+.constant('GoogleEndpoint', {
+  url: 'https://maps.googleapis.com/maps/api'
+})
+
+.constant('YahooEndpoint', {
+  url: 'https://query.yahooapis.com/v1'
+})
 
 
 .run(['$ionicPlatform', '$rootScope', '$state', function($ionicPlatform, $rootScope, $state) {

@@ -115,7 +115,7 @@ Auth.$onAuth(function(authData){
 
 
 
-.controller('TodayCtrl', ['$scope', 'currentAuth','itineraryService','userService', '$state','moment', function($scope, currentAuth, itineraryService, userService, $state, moment){
+.controller('TodayCtrl', ['$scope', 'currentAuth','itineraryService','userService', '$state', '$http', 'moment','Yahoo', function($scope, currentAuth, itineraryService, userService, $state, $http, moment,Yahoo){
     var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
     var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
 
@@ -124,25 +124,7 @@ Auth.$onAuth(function(authData){
     //     // **********open weather api*******
     //   var api = 'http://api.openweathermap.org/data/2.5/weather?'; 
    
-    // var key = process.env.WEATHER_KEY; 
-    // var lat = 'lat=' + lat;
-    // var lng = '&lon=' + lng;
-    // var fullQuery = '/data/2.5/weather?' + $scope.event.venue +" "+ $scope.event.cityState + '&key=AIzaSyCJpKi0u-5QY2pbNgURwwbJLTQ-rXRkEv8';
-    // console.log(fullQuery);
-    // var req = {
-    //   url: fullQuery,
-    //   method: 'GET',
-    // }
-
-    // $http(req).then(function success(res) {
-    //   console.log(res)
-    //   $scope.results = res.data.results;
-    //   console.log("results for popover are: ",$scope.results);
-    //   $scope.popover.show($event);
-    // }, function error(res) {
-    // //do something if the response has an error
-    //     console.log(res);
-    //   }); 
+    
 
 
 
@@ -161,6 +143,21 @@ Auth.$onAuth(function(authData){
             if ($scope.todayDate === childData.date){
               $scope.result = true;
               $scope.event = childData;
+              
+              var lat = $scope.event.lat;
+              var lng = $scope.event.lng;
+              Yahoo.getYahooData(lat,lng).then(function(data){
+                $scope.weatherData = data;
+                console.log($scope.weatherData);
+              });
+
+
+
+
+
+
+
+
               itineraryService.getItinItems($scope, key);
               return true;
             }  

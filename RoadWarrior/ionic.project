@@ -5,10 +5,6 @@
     {
       "path": "/api",
       "proxyUrl": "https://maps.googleapis.com/maps/api"
-    },
-    {
-      "path": "/data",
-      "proxyUrl": "http://api.openweathermap.org/data"
     }
   ],
   "gulpStartupTasks": [
