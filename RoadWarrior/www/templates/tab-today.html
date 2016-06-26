@@ -6,11 +6,12 @@
         <h3 class="weather-main-temp center-text">72°</h3>
         <h5 class="weather-forecast center-text">80° / 56°</h5>
       </div>
-    <h4 class="no-margin">{{day_of_week}}</h4>
-    <h4 class="no-margin">{{now_formatted_date}}</h4>
-    <h4 ng-if="result" class="no-margin">{{event.venue}}</h4>
-    <h5 ng-if="result" class="no-margin">{{event.cityState}}</h5>
-   
+    <div class="today-header-div">
+      <h5 class="no-margin">{{day_of_week}}</h5>
+      <h4 class="no-margin">{{now_formatted_date}}</h4>
+      <h4 ng-if="result" class="no-margin">{{event.venue}}</h4>
+      <h5 ng-if="result" class="no-margin">{{event.cityState}}</h5>
+    </div>
     </div>
     <div class="clear-float"></div>
     <div ng-if="result === false">
@@ -20,10 +21,10 @@
     <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
     </div>
     <ion-list>
-    <ion-item class="no-padding">
+    <ion-item ng-repeat="itin in todayItins | toArray:false | orderBy: 'startTimeUnix'" class="no-padding">
       <div class="row">
-        <div class="col itin-item">Load in</div>
-        <div class="col itin-time">3:00PM - 4:00PM</div>
+        <div class="col itin-list itin-item">{{itin.mainItem}}</div>
+        <div class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}}</div>
       </div>
     </ion-item>
 </ion-list>

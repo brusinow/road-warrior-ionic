@@ -6,6 +6,8 @@
   },
   "dependencies": {
     "angular-moment": "^0.10.3",
-    "ionic-datepicker": "^1.1.0"
+    "ionic-datepicker": "^1.1.0",
+    "angular-toArrayFilter": "^1.0.1",
+    "ionic-timepicker": "^0.5.1"
   }
 }
