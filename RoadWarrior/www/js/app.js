@@ -8,7 +8,7 @@
 var authWait = ["Auth", function(Auth) { return Auth.$waitForAuth(); }]
 var authRequire = ["Auth", function(Auth) { return Auth.$requireAuth(); }]
 
-angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker'])
+angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter'])
 
 
 
@@ -33,6 +33,17 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
     }
   });
 }])
+
+.config(function (ionicTimePickerProvider) {
+    var timePickerObj = {
+      inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
+      format: 12,
+      step: 15,
+      setLabel: 'Set',
+      closeLabel: 'Close'
+    };
+    ionicTimePickerProvider.configTimePicker(timePickerObj);
+  })
 
 .config(function($stateProvider, $urlRouterProvider) {
 
