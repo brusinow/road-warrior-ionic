@@ -41,6 +41,10 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   });
 }])
 
+.config(['$compileProvider', function($compileProvider) {
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|tel):/);
+}])
+
 .config(function (ionicTimePickerProvider) {
     var timePickerObj = {
       inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),

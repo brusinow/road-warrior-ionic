@@ -46,7 +46,7 @@
             </div>
           </div>
         </div>
-        <div ng-show="yelpShow.food">
+        <div class="yelp" ng-show="yelpShow.food">
                 <h4 class="no-margin"> Food:</h4>
               <ion-list>
                 <ion-item class="no-padding yelp-list" ng-repeat="restaurant in yelp.restaurants">
@@ -74,6 +74,106 @@
                     </div>
                     <div class="col col-50 no-padding-top text-right">
                       <span class="yelp-distance">{{metersToMiles(yelp.coffee.distance)}} mi</span><br><span class="yelp-category">{{yelp.coffee.categories[0][0]}}</span>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+        </div>
+         <div class="yelp" ng-show="yelpShow.entertainment">
+              <h4 class="no-margin"> Gym:</h4>
+              <ion-list>
+                <ion-item class="no-padding yelp-list">
+                  <div class="row">
+                    <div class="col col-50 no-padding-top">
+                      <span class='yelp-name'>{{yelp.gym.name}}</span><br>
+                      <div class='yelp-review'><img ng-src="{{yelp.gym.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.gym.review_count}} Reviews</div><br>
+                      <span class="yelp-address">{{yelp.gym.location.display_address[0]}} {{yelp.gym.location.city}}</span>
+                    </div>
+                    <div class="col col-50 no-padding-top text-right">
+                      <span class="yelp-distance">{{metersToMiles(yelp.gym.distance)}} mi</span><br><span class="yelp-category">{{yelp.gym.categories[0][0]}}</span>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+                <h4 class="no-margin"> Movie Theater:</h4>
+              <ion-list>
+                <ion-item class="no-padding yelp-list">
+                  <div class="row">
+                    <div class="col col-50 no-padding-top">
+                      <span class='yelp-name'>{{yelp.movie.name}}</span><br>
+                      <div class='yelp-review'><img ng-src="{{yelp.movie.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.movie.review_count}} Reviews</div><br>
+                      <span class="yelp-address">{{yelp.movie.location.display_address[0]}} {{yelp.movie.location.city}}</span>
+                    </div>
+                    <div class="col col-50 no-padding-top text-right">
+                      <span class="yelp-distance">{{metersToMiles(yelp.movie.distance)}} mi</span><br><span class="yelp-category">{{yelp.movie.categories[0][0]}}</span>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+
+              <h4 class="no-margin"> Bookstore:</h4>
+              <ion-list>
+                <ion-item class="no-padding yelp-list">
+                  <div class="row">
+                    <div class="col col-50 no-padding-top">
+                      <span class='yelp-name'>{{yelp.bookstore.name}}</span><br>
+                      <div class='yelp-review'><img ng-src="{{yelp.bookstore.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.bookstore.review_count}} Reviews</div><br>
+                      <span class="yelp-address">{{yelp.bookstore.location.display_address[0]}} {{yelp.bookstore.location.city}}</span>
+                    </div>
+                    <div class="col col-50 no-padding-top text-right">
+                      <span class="yelp-distance">{{metersToMiles(yelp.bookstore.distance)}} mi</span><br><span class="yelp-category">{{yelp.bookstore.categories[0][0]}}</span>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+        </div>
+         <div class="yelp" ng-show="yelpShow.emergency">
+              <h4 class="no-margin"> Pharmacy:</h4>
+              <ion-list>
+                <ion-item class="no-padding yelp-list">
+                  <div class="row">
+                    <div class="col col-50 no-padding-top">
+                      <span class='yelp-name'>{{yelp.pharmacy.name}}</span><br>
+                      <div class='yelp-review'><img ng-src="{{yelp.pharmacy.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.pharmacy.review_count}} Reviews</div><br>
+                      <span class="yelp-address">{{yelp.pharmacy.location.display_address[0]}} {{yelp.pharmacy.location.city}}</span>
+                    </div>
+                    <div class="col col-50 no-padding-top text-right">
+                      <span class="yelp-distance">{{metersToMiles(yelp.pharmacy.distance)}} mi</span><br><span class="yelp-category">{{yelp.pharmacy.categories[0][0]}}</span><br>
+                       <span class='yelp-phone'><a ng-href='tel:{{yelp.pharmacy.display_phone}}'>{{yelp.pharmacy.formattedPhone}}</a></span>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+                <h4 class="no-margin"> Urgent Care Clinic:</h4>
+              <ion-list>
+                <ion-item class="no-padding yelp-list">
+                  <div class="row">
+                    <div class="col col-50 no-padding-top">
+                      <span class='yelp-name'>{{yelp.urgent.name}}</span><br>
+                      <div class='yelp-review'><img ng-src="{{yelp.urgent.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.urgent.review_count}} Reviews</div><br>
+                      <span class="yelp-address">{{yelp.urgent.location.display_address[0]}} {{yelp.urgent.location.city}}</span>
+                    </div>
+                    <div class="col col-50 no-padding-top text-right">
+                      <span class="yelp-distance">{{metersToMiles(yelp.urgent.distance)}} mi</span><br><span class="yelp-category">{{yelp.urgent.categories[0][0]}}</span><br>
+                       <span class='yelp-phone'><a ng-href='tel:{{yelp.urgent.display_phone}}'>{{yelp.urgent.formattedPhone}}</a></span>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+
+              <h4 class="no-margin"> Hospital:</h4>
+              <ion-list>
+                <ion-item class="no-padding yelp-list">
+                  <div class="row">
+                    <div class="col col-50 no-padding-top">
+                      <span class='yelp-name'>{{yelp.hospital.name}}</span><br>
+                      <div class='yelp-review'><img ng-src="{{yelp.hospital.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.hospital.review_count}} Reviews</div><br>
+                      <span class="yelp-address">{{yelp.hospital.location.display_address[0]}} {{yelp.hospital.location.city}}</span>
+                    </div>
+                    <div class="col col-50 no-padding-top text-right">
+                      <span class="yelp-distance">{{metersToMiles(yelp.hospital.distance)}} mi</span><br><span class="yelp-category">{{yelp.hospital.categories[0][0]}}</span><br>
+                       <span class='yelp-phone'><a ng-href='tel:{{yelp.hospital.display_phone}}'>{{yelp.hospital.formattedPhone}}</a></span>
+  
                     </div>
                   </div>
                 </ion-item>

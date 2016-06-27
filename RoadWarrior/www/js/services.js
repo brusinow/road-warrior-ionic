@@ -116,7 +116,12 @@ angular.module('roadWarrior.services', [])
                   var formattedTime = utcHours + ":" + utcMinutes + " AM";
                   return formattedTime;
                   }
+            },
+            phoneFormat: function(number){
+              var newNumber = number.slice(3);
+              return newNumber;
             }
+            
 
         };
 })

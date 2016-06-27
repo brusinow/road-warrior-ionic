@@ -249,17 +249,20 @@ Auth.$onAuth(function(authData){
                 });
                 var drugStore = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "drugstores", 3000, 1, "0", 5, function(data){
                 console.log("yelp drugstore data is: ",data);
-                $scope.yelp.drugstore = data.businesses[0];
+                $scope.yelp.pharmacy = data.businesses[0];
+                $scope.yelp.pharmacy.formattedPhone = helperService.phoneFormat($scope.yelp.pharmacy.display_phone);
                 $scope.yelpLoadList[5] = true;
                 });
                 var urgentCare = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "urgent_care", 3000, 1, "0", 6, function(data){
                 console.log("yelp urgent care data is: ",data);
-                $scope.yelp.urgentCare = data.businesses[0];
+                $scope.yelp.urgent = data.businesses[0];
+                $scope.yelp.urgent.formattedPhone = helperService.phoneFormat($scope.yelp.urgent.display_phone);
                 $scope.yelpLoadList[6] = true;
                 });
                 var hospital = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "hospitals", 5000, 1, "0", 7, function(data){
                 console.log("yelp hospital data is: ",data);
                 $scope.yelp.hospital = data.businesses[0];
+                $scope.yelp.hospital.formattedPhone = helperService.phoneFormat($scope.yelp.hospital.display_phone);
                 $scope.yelpLoadList[7] = true;
                 }); 
                 console.log("end of yelp calls");
