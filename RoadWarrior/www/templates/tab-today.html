@@ -1,35 +1,94 @@
 <ion-view view-title="Today">
-  <ion-content class="padding">
-    <div ng-if="currentGroup.access !== 'pending'">
-      <div class="row">
-      <div class="today-header-div col col-50">
-      <h5 class="no-margin">{{day_of_week}}</h5>
-      <h4 class="no-margin">{{now_formatted_date}}</h4>
-      <h4 ng-if="result" class="no-margin">{{event.venue}}</h4>
-      <h5 ng-if="result" class="no-margin">{{event.cityState}}</h5>
-      </div>
-      <div ng-show="weatherData" class="weather-box col col-50">
-        <span class="weather-image"><i class="wi wi-yahoo-{{weatherData.condition.code}}"></i></span>
-        <h2 class="weather-main-temp center-text">{{weatherData.condition.temp}}<span ng-show="weatherData">°</span></h2>
-        <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
-      </div>
-      </div>
-
-      <ion-list>
-    <ion-item ng-repeat="itin in todayItins | toArray:false | orderBy: 'startTimeUnix'" class="no-padding">
-      <div class="row">
-        <div class="col itin-list itin-item">{{itin.mainItem}}</div>
-        <div class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}}</div>
-      </div>
-    </ion-item>
-  </ion-list>
-    </div>
-    <div ng-if="result === false">
-    <h4>There is no event scheduled today.</h4>
-    </div>
-    <div ng-if="currentGroup.access === 'pending'">
-    <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
-    </div>
+<ion-content class="padding" scroll="false">
+  <ion-slides  options="options" slider="data.slider">
+    <ion-slide-page>
+                 <div ng-if="currentGroup.access !== 'pending'">
+                <div class="row">
+                <div class="today-header-div col col-50">
+                <h5 class="no-margin">{{day_of_week}}</h5>
+                <h4 class="no-margin">{{now_formatted_date}}</h4>
+                <h4 ng-if="result" class="no-margin">{{event.venue}}</h4>
+                <h5 ng-if="result" class="no-margin">{{event.cityState}}</h5>
+                </div>
+                <div ng-show="weatherData" class="weather-box col col-50">
+                  <span class="weather-image"><i class="wi wi-yahoo-{{weatherData.condition.code}}"></i></span>
+                  <h3 class="weather-main-temp center-text">{{weatherData.condition.temp}}<span ng-show="weatherData">°</span></h3>
+                  <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
+                </div>
+                </div>
+                <h4 ng-show="yelpLoading()">Yelp All Loaded</h4>
+                <ion-list>
+              <ion-item ng-repeat="itin in todayItins | toArray:false | orderBy: 'startTimeUnix'" class="no-padding">
+                <div class="row">
+                  <div class="col itin-list itin-item">{{itin.mainItem}}</div>
+                  <div class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}}</div>
+                </div>
+              </ion-item>
+            </ion-list>
+              </div>
+              <div ng-if="result === false">
+              <h4>There is no event scheduled today.</h4>
+              </div>
+              <div ng-if="currentGroup.access === 'pending'">
+              <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
+              </div>
     
-  </ion-content>
+    </ion-slide-page>
+    <ion-slide-page>
+      <h5 class="center-text no-margin">Powered by <img class="yelp-logo" src="../img/yelp.png"></h5>
+        <h4 class="center-text no-margin">What's Nearby</h4>
+        <div class="row">
+          <div class="col col-50 col-offset-25">
+            <div class="button-bar">
+              <a ng-click="yelpShowFood()" class="button button-stable"><i class="icon ion-pizza"></i></a>
+              <a ng-click="yelpShowEntertainment()" class="button button-stable"><i class="icon ion-film-marker"></i></a>
+              <a ng-click="yelpShowEmergency()" class="button button-assertive"><i class="icon ion-medkit"></i></a>
+            </div>
+          </div>
+        </div>
+        <div ng-show="yelpShow.food">
+                <h4 class="no-margin"> Food:</h4>
+              <ion-list>
+                <ion-item class="no-padding yelp-list" ng-repeat="restaurant in yelp.restaurants">
+                  <div class="row">
+                    <div class="col col-50 no-padding-top">
+                      <span class='yelp-name'>{{restaurant.name}}</span><br>
+                      <div class='yelp-review'><img ng-src="{{restaurant.rating_img_url_small}}"></div><div class='yelp-review-count'>{{restaurant.review_count}} Reviews</div><br>
+                      <span class="yelp-address">{{restaurant.location.display_address[0]}} {{restaurant.location.city}}</span>
+                    </div>
+                    <div class="col col-50 no-padding-top text-right">
+                      <span class="yelp-distance">{{metersToMiles(restaurant.distance)}} mi</span><br><span class="yelp-category">{{restaurant.categories[0][0]}}</span>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+
+              <h4 class="no-margin"> Coffee/Tea:</h4>
+              <ion-list>
+                <ion-item class="no-padding yelp-list">
+                  <div class="row">
+                    <div class="col col-50 no-padding-top">
+                      <span class='yelp-name'>{{yelp.coffee.name}}</span><br>
+                      <div class='yelp-review'><img ng-src="{{yelp.coffee.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.coffee.review_count}} Reviews</div><br>
+                      <span class="yelp-address">{{yelp.coffee.location.display_address[0]}} {{yelp.coffee.location.city}}</span>
+                    </div>
+                    <div class="col col-50 no-padding-top text-right">
+                      <span class="yelp-distance">{{metersToMiles(yelp.coffee.distance)}} mi</span><br><span class="yelp-category">{{yelp.coffee.categories[0][0]}}</span>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+        </div>
+    </ion-slide-page>
+    <ion-slide-page>
+      <div class="box pink"><h1>PINK</h1></div>
+    </ion-slide-page>
+  </ion-slides>
+</ion-content>
+
+
+
+
+
+
 </ion-view>

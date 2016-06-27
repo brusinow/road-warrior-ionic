@@ -115,7 +115,75 @@ Auth.$onAuth(function(authData){
 
 
 
-.controller('TodayCtrl', ['$scope', 'currentAuth','itineraryService','userService', '$state', '$http', 'moment','Yahoo', function($scope, currentAuth, itineraryService, userService, $state, $http, moment,Yahoo){
+.controller('TodayCtrl', ['$scope', 'currentAuth','itineraryService', 'helperService', 'YelpKeys','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, itineraryService, helperService, YelpKeys, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+    $scope.yelpLoadList = [];
+    $scope.yelpShow = {
+      "food": true,
+      "entertainment": false,
+      "emergency": false
+    }
+    
+
+    function dataChangeHandler(){
+    // call this function when data changes, such as an HTTP request, etc
+      if ( $scope.slider ){
+      $scope.slider.updateLoop();
+      }
+    }
+
+    $scope.metersToMiles = function(distance) {
+      var result = distance * 0.000621371192;
+     return Math.round( result * 10 ) / 10; 
+    }
+
+
+
+    $scope.yelpLoading = function(){
+      if ($scope.yelpLoadList.length === 8){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    $scope.yelpShowFood = function(){
+      $scope.yelpShow = {
+      "food": true,
+      "entertainment": false,
+      "emergency": false
+      }
+    }
+
+    $scope.yelpShowEntertainment = function(){
+      $scope.yelpShow = {
+      "food": false,
+      "entertainment": true,
+      "emergency": false
+      }
+    }
+
+    $scope.yelpShowEmergency = function(){
+      $scope.yelpShow = {
+      "food": false,
+      "entertainment": false,
+      "emergency": true
+      }
+    }
+
+    $scope.options = {
+    loop: false,
+    effect: 'slide',
+    speed: 500,
+    }
+
+
+  $scope.data = {};
+  $scope.$watch('data.slider', function(nv, ov) {
+  $scope.slider = $scope.data.slider;
+  })
+
+    
+
     var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
     var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
 
@@ -124,8 +192,6 @@ Auth.$onAuth(function(authData){
     //     // **********open weather api*******
     //   var api = 'http://api.openweathermap.org/data/2.5/weather?'; 
    
-    
-
 
 
     $scope.event = {}
@@ -151,10 +217,56 @@ Auth.$onAuth(function(authData){
                 console.log($scope.weatherData);
               });
 
-
-
-
-
+              var keyRef = new Firebase('https://roadwarrior.firebaseio.com/secretKeys/yelp');
+              
+              keyRef.on("value", function(snapshot) {
+                $scope.yelp = {};
+                var keyResult = snapshot.val();
+                var food = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "restaurants", 500, 4, "2", 0, function(data){
+                console.log("yelp food data is: ",data);
+                $scope.yelp.restaurants = data.businesses;
+                $scope.yelpLoadList[0] = true;
+                });
+                var coffee = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "coffee", 500, 1, "2", 1, function(data){
+                console.log("yelp coffee/tea data is: ",data);
+                $scope.yelp.coffee = data.businesses[0];
+                $scope.yelpLoadList[1] = true;
+                });
+                var gym = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "gyms", 500, 1, "2", 2, function(data){
+                console.log("yelp gym data is: ",data);
+                $scope.yelp.gym = data.businesses[0];
+                $scope.yelpLoadList[2] = true;
+                });
+                var bookstore = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "bookstores", 2000, 1, "0", 3, function(data){
+                console.log("yelp bookstore data is: ",data);
+                $scope.yelp.bookstore = data.businesses[0];
+                $scope.yelpLoadList[3] = true;
+                });
+                var movieTheater = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "movietheaters", 2000, 1, "0", 4, function(data){
+                console.log("yelp movie theater data is: ",data);
+                $scope.yelp.movie = data.businesses[0];
+                $scope.yelpLoadList[4] = true;
+                });
+                var drugStore = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "drugstores", 3000, 1, "0", 5, function(data){
+                console.log("yelp drugstore data is: ",data);
+                $scope.yelp.drugstore = data.businesses[0];
+                $scope.yelpLoadList[5] = true;
+                });
+                var urgentCare = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "urgent_care", 3000, 1, "0", 6, function(data){
+                console.log("yelp urgent care data is: ",data);
+                $scope.yelp.urgentCare = data.businesses[0];
+                $scope.yelpLoadList[6] = true;
+                });
+                var hospital = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "hospitals", 5000, 1, "0", 7, function(data){
+                console.log("yelp hospital data is: ",data);
+                $scope.yelp.hospital = data.businesses[0];
+                $scope.yelpLoadList[7] = true;
+                }); 
+                console.log("end of yelp calls");
+              }, function (errorObject) {
+                console.log("The read failed: " + errorObject.code);
+              });
+          
 
 
 

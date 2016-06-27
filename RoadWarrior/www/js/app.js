@@ -130,7 +130,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   
   .state('tab.today', {
     url: '/today',
-    cache: false,
+    cache: true,
     views: {
       'tab-today': {
         templateUrl: 'templates/tab-today.html',
