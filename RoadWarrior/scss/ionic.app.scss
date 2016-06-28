@@ -10,13 +10,13 @@ $positive:                        #387ef5 !default;
 $calm:                            #11c1f3 !default;
 $balanced:                        #33cd5f !default;
 $energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
+
 $royal:                           #886aea !default;
-$dark:                            #444 !default;
+
 */
 $stable:                          #f8f8f8 !default;
-
-
+$dark:                            #205275 !default;
+$assertive:                       #dddddd !default;
 
 
 /* when showing the picture */
@@ -28,7 +28,6 @@ $stable:                          #f8f8f8 !default;
 
 .yelp.ng-hide-remove      { animation:0.4s fadein ease; }
 
-/* ANIMATIONS (FROM ANIMATE.CSS) ======================== */
 
 @keyframes fadein {
     from {
@@ -98,6 +97,7 @@ $stable:                          #f8f8f8 !default;
 }
 
 
+
 div.spinner {
   margin: auto;
   position: absolute;
@@ -110,7 +110,10 @@ div.spinner {
   height: 85px !important;
 }
 
+ion-view.pane {
 
+background: $stable;
+}
 
 .no-margin {
   margin: 0px;
@@ -121,7 +124,9 @@ div.spinner {
 }
 
 
-
+.med-red {
+  color: #CC4141;
+}
 
 .platform-ios .popover-arrow {
     display: none;
@@ -152,7 +157,7 @@ div.spinner {
 }
 
 .item {
-  margin: 0px !important;
+  margin: 0px 3px !important;
 }
 
 .item a {
@@ -328,6 +333,13 @@ div.spinner {
     padding: 1px 40px 0 0px !important;
     font-size: 14px !important;  
 }
+
+
+
+
+
+
+
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
