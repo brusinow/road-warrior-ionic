@@ -6,12 +6,21 @@
     </ion-toggle> -->
     </ion-list>
      <div class="card">
-            <div class="item item-text-wrap">
-                You are logged in as {{ user }}!
-            </div>
-            <button class="item" ng-click="logout()">
+         
+              <div class="item row">
+                <div class="col col-80">
+                  {{user.name}} 
+                </div>
+                <div class="text-center col col-20">
+                  <i class="icon ion-pizza"></i>
+                </div>
+              </div>
+             
+              <button class="item row" ng-click="logout()">
                 Log out
-            </button>
+              </button> 
+            
+          
         </div>  
         <div class="button-group" ng-show="accountType === 'admin'"> 
        <button class="button button-block button-dark button-small-margin" ng-click ="openNewEventModal()">Add an Event</button>

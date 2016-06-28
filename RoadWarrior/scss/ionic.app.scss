@@ -14,9 +14,12 @@ $energized:                       #ffc900 !default;
 $royal:                           #886aea !default;
 
 */
+
+
+
 $stable:                          #f8f8f8 !default;
 $dark:                            #205275 !default;
-$assertive:                       #dddddd !default;
+$assertive:                       #ef4e3a  !default;
 
 
 /* when showing the picture */
@@ -98,6 +101,17 @@ $assertive:                       #dddddd !default;
 
 
 
+.header-font {
+  font-family: 'Libre Franklin', sans-serif !important;
+  font-weight: 400 !important;
+}
+
+.header-font-heavy {
+  font-family: 'Libre Franklin', sans-serif !important;
+  font-weight: 700 !important;
+}
+
+
 div.spinner {
   margin: auto;
   position: absolute;
@@ -153,11 +167,10 @@ background: $stable;
 .today-header-div {
   padding-top: 8px;
   padding-left: 8px;
-  width: 50%;
 }
 
-.item {
-  margin: 0px 3px !important;
+.item-itin {
+  margin: -1px 3px !important;
 }
 
 .item a {
@@ -185,8 +198,7 @@ background: $stable;
 }
 
 .weather-box {
-  height: 100px;
-  float: right;
+  height: 90px;
   position: relative;
   right: 10px;
   top: -6px;
@@ -217,6 +229,19 @@ background: $stable;
     top: 62px;
 }
 
+/*.button-yelp {
+  padding: 0 !important;
+  height: 30px !important;
+  width: 30px !important;
+  min-height: 25px !important;
+  min-width: 25px !important;
+  font-size:12px !important;
+  line-height: 12px !important;
+
+  i {
+    font-size: 100px;
+  }
+}*/
 .yelp-logo {
   width: 35px !important;
   vertical-align: bottom;
@@ -290,8 +315,9 @@ background: $stable;
   font-size: 14px;
 }
 
-.itin-item {
+.itin-name {
   text-align: left;
+  font-weight: bold;
 }
 
 .itin-time {
@@ -334,10 +360,61 @@ background: $stable;
     font-size: 14px !important;  
 }
 
+.no-itins {
+  position: relative;
+  top: 40px;
+}
 
+.cat-time {
+  display: inline-block;
+  background: url("../img/cat-dj.jpg") center center;
+  background-size: cover;
+  border:6px solid $dark;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+}
 
+.cat-time-no-event {
+  display: inline-block;
+  background: url("../img/cat.jpg") center center;
+  background-size: cover;
+  border:6px solid $dark;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+}
 
+.list .item.item-accordion {
+  background-color: white;
+  text-align: left;
+  font-size: 13px;
+  line-height: 14px;
+  height: 70px;
+  padding-top: 10px;
+  padding-bottom: 0;
+  margin: -1px 3px;
+  transition: 0.09s all ease;
+}
+.list .item.item-accordion.ng-hide {
+  line-height: 0px;
+}
 
+.list .item.item-accordion.ng-hide-add,
+.list .item.item-accordion.ng-hide-remove {
+  display: block !important;
+}
+
+.item-divider {
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+    padding-left: 11px;
+    min-height: 20px;
+    background-color: #e9e9e9 !important;
+    color: #222;
+    font-weight: 500;
+    border: 1px solid #ddd;
+}
 
 
 

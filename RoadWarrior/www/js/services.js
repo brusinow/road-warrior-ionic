@@ -75,7 +75,7 @@ angular.module('roadWarrior.services', [])
                     limit: limitNumber,
                     category_filter: searchTerm 
                 };
-                console.log("callback in params is: ",params.callback);
+                // console.log("callback in params is: ",params.callback);
             var consumerSecret = keys.consumerSecret; //Consumer Secret
             var tokenSecret = keys.tokenSecret; //Token Secret
             var signature = oauthSignature.generate(method, url, params, consumerSecret, tokenSecret, { encodeSignature: false});
@@ -249,24 +249,47 @@ angular.module('roadWarrior.services', [])
 
 })
 
-.factory('userService', function(){
+.factory('userService', function($q){
      var _url = 'https://roadwarrior.firebaseio.com/users';
     var usersRef = new Firebase(_url);
 
-    return {
-      currentUserData: function($scope, userId){
-        console.log("user id is ",userId);
-        console.log("entering service");
-        usersRef.child(userId).child("groups").on("child_added", function(group){
 
-          $scope.groupKey = group.key();
-          console.log($scope.groupKey);
-          $scope.thisGroup = group.val();
-          console.log($scope.thisGroup);
-        });
-
-      }
+  var myObject = {
+    currentGroupData: function(userId){
+      var deferred = $q.defer();
+      usersRef.child(userId).child("groups").on("child_added", function(groupData){
+          console.log("should have data");
+          deferred.resolve(groupData)
+      });
+      return deferred.promise;
     }
-
-
+  }
+  return myObject;
 })
+
+
+
+
+// authenticationController.factory('Authentication' , ['$firebase' , '$location' , 'FIREBASE_URL', '$rootScope' , '$q', function( $firebaseSimpleLogin , $location, FIREBASE_URL, $rootScope, $q){
+
+// var ref = new Firebase(FIREBASE_URL);
+
+// var myObject = {
+//     login : function(user){
+//  var defered = $q.defer();
+//  ref.authWithPassword({
+//           email    : user.email,
+//           password : user.password
+//         }, function(error, authData) {
+//         if (error) {
+//            defered.reject(error);
+//         } else {
+//             defered.resolve(authData);
+//           }
+//         }); 
+//         return defered.promise;
+//     }, // login
+
+// } // object
+
+// return myObject; 

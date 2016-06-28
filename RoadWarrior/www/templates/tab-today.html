@@ -1,56 +1,71 @@
 
 <ion-view view-title="Today">
 <ion-content class="padding" scroll="false">
-  <div class="spinner" ng-hide="yelpLoading()">
+  <div class="spinner" ng-hide="yelpLoading() || noEventResult()">
   <ion-spinner></ion-spinner>
   </div>
   <ion-slides options="options" slider="data.slider">
 
     <ion-slide-page>
-               <div class="postLoad" ng-hide="!yelpLoading()"> 
+               <div class="postLoad" ng-show="yelpLoading() || noEventResult()"> 
                  <div ng-if="currentGroup.access !== 'pending'">
                
                 <div class="row">
-                <div class="today-header-div col col-50">
-                <h5 class="no-margin">{{day_of_week}}</h5>
-                <h4 class="no-margin">{{now_formatted_date}}</h4>
-                <h4 ng-if="result" class="no-margin">{{event.venue}}</h4>
-                <h5 ng-if="result" class="no-margin">{{event.cityState}}</h5>
+                  <div style="padding-top:8px;" class="col col-75">
+                  <h5 class="no-margin header-font">{{day_of_week}}</h5>
+                  <h5 class="no-margin header-font">{{now_formatted_date}}</h5>
+                  <h4 ng-if="result" class="no-margin header-font-heavy">{{event.venue}}</h4>
+                  <h5 ng-if="result" class="no-margin header-font">{{event.cityState}}</h5>
+                  </div>
+                  <div ng-show="weatherData" class="weather-box col col-25">
+                    <span class="weather-image"><i class="wi wi-yahoo-{{weatherData.condition.code}}"></i></span>
+                    <h3 class="weather-main-temp center-text">{{weatherData.condition.temp}}<span ng-show="weatherData">°</span></h3>
+                    <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
+                  </div>
                 </div>
-                <div ng-show="weatherData" class="weather-box col col-50">
-                  <span class="weather-image"><i class="wi wi-yahoo-{{weatherData.condition.code}}"></i></span>
-                  <h3 class="weather-main-temp center-text">{{weatherData.condition.temp}}<span ng-show="weatherData">°</span></h3>
-                  <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
-                </div>
-                </div>
-                <ion-list>
-              <ion-item ng-repeat="itin in todayItins | toArray:false | orderBy: 'startTimeUnix'" class="no-padding">
-                <div class="row">
-                  <div class="col itin-list itin-item">{{itin.mainItem}}</div>
-                  <div class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}}</div>
-                </div>
-              </ion-item>
+                <ion-list ng-show="todayItins">
+                <div ng-repeat="itin in todayItins | toArray:false | orderBy: 'startTimeUnix'">
+                      <ion-item  ng-click="toggleItin(itin)" class="item-itin no-padding">
+                        <div class="row">
+                          <div class="col itin-list itin-name">{{itin.mainItem}}</div>
+                          <div class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}}</div>
+                        </div>
+                      </ion-item>
+                      <ion-item class="item-accordion" ng-show="isItinShown(itin)">
+                        {{itin.details}}
+                      </ion-item>
+              </div>
             </ion-list>
               </div>
-             
+             <div class="no-itins center-text" ng-show="!todayItins && !noEventResult()">
+              <div class="cat-time"></div>
+              <h3 class="no-margin">Your itinerary is empty.</h3>
+              <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2>  
+             </div>
+              <div class="no-itins center-text" ng-show="noEventResult()">
+              <div class="cat-time-no-event"></div>
+              <h3 class="no-margin">You have no event scheduled today.</h3> 
+             </div>
           </div>  
     </ion-slide-page>
-    <ion-slide-page>
+    <ion-slide-page ng-if="yelpLoading()">
       <h5 class="center-text no-margin">Powered by <img class="yelp-logo" src="../img/yelp.png"></h5>
-        <h4 class="center-text no-margin">What's Nearby</h4>
+        <h4 class="center-text no-margin header-font-heavy">What's Nearby</h4>
         <div class="row">
           <div class="col col-50 col-offset-25">
             <div class="button-bar">
-              <a ng-click="yelpShowFood()" class="button button-dark"><i class="icon ion-pizza"></i></a>
-              <a ng-click="yelpShowEntertainment()" class="button button-dark"><i class="icon ion-film-marker"></i></a>
-              <a ng-click="yelpShowEmergency()" class="button button-dark"><i class="med-red icon ion-medkit"></i></a>
+              <a ng-click="yelpShowFood()" class="button button-outline button-dark button-yelp"><i class="icon ion-pizza"></i></a>
+              <a ng-click="yelpShowEntertainment()" class="button button-outline button-dark button-yelp"><i class="icon ion-film-marker"></i></a>
+              <a ng-click="yelpShowEmergency()" class="button button-outline button-assertive button-yelp"><i class="icon ion-medkit"></i></a>
             </div>
           </div>
         </div>
         <div class="yelp" ng-show="yelpShow.food">
-                <h4 class="no-margin"> Food:</h4>
               <ion-list>
-                <ion-item class="no-padding yelp-list" ng-repeat="restaurant in yelp.restaurants">
+              <div class="item-itin item-divider">
+                <h5 class="no-margin header-font">Food</h5>
+              </div>
+                <ion-item class="item-itin no-padding yelp-list" ng-repeat="restaurant in yelp.restaurants">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
                       <span class='yelp-name'>{{restaurant.name}}</span><br>
@@ -63,10 +78,13 @@
                   </div>
                 </ion-item>
               </ion-list>
-
-              <h4 class="no-margin"> Coffee/Tea:</h4>
+              <br>
+            
               <ion-list>
-                <ion-item class="no-padding yelp-list">
+                <div class="item-itin item-divider">
+                  <h5 class="no-margin header-font">Coffee/Tea</h5>
+                </div>
+                <ion-item class="item-itin no-padding yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
                       <span class='yelp-name'>{{yelp.coffee.name}}</span><br>
@@ -81,9 +99,11 @@
               </ion-list>
         </div>
          <div class="yelp" ng-show="yelpShow.entertainment">
-              <h4 class="no-margin"> Gym:</h4>
               <ion-list>
-                <ion-item class="no-padding yelp-list">
+              <div class="item-itin item-divider">
+                <h5 class="no-margin header-font">Gym</h5>
+              </div>
+                <ion-item class="item-itin no-padding yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
                       <span class='yelp-name'>{{yelp.gym.name}}</span><br>
@@ -95,10 +115,12 @@
                     </div>
                   </div>
                 </ion-item>
-              </ion-list>
-                <h4 class="no-margin"> Movie Theater:</h4>
+              </ion-list><br>
               <ion-list>
-                <ion-item class="no-padding yelp-list">
+              <div class="item-itin item-divider">
+                <h5 class="no-margin header-font">Movie Theater</h5>
+              </div>
+                <ion-item class="item-itin no-padding yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
                       <span class='yelp-name'>{{yelp.movie.name}}</span><br>
@@ -110,11 +132,12 @@
                     </div>
                   </div>
                 </ion-item>
-              </ion-list>
-
-              <h4 class="no-margin"> Bookstore:</h4>
+              </ion-list><br>
               <ion-list>
-                <ion-item class="no-padding yelp-list">
+              <div class="item-itin item-divider">
+                <h5 class="no-margin header-font">Bookstore</h5>
+              </div>
+                <ion-item class="item-itin no-padding yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
                       <span class='yelp-name'>{{yelp.bookstore.name}}</span><br>
@@ -129,9 +152,11 @@
               </ion-list>
         </div>
          <div class="yelp" ng-show="yelpShow.emergency">
-              <h4 class="no-margin"> Pharmacy:</h4>
               <ion-list>
-                <ion-item class="no-padding yelp-list">
+              <div class="item-itin item-divider">
+                <h5 class="no-margin header-font">Pharmacy</h5>
+              </div>
+                <ion-item class="item-itin no-padding yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
                       <span class='yelp-name'>{{yelp.pharmacy.name}}</span><br>
@@ -144,10 +169,12 @@
                     </div>
                   </div>
                 </ion-item>
-              </ion-list>
-                <h4 class="no-margin"> Urgent Care Clinic:</h4>
+              </ion-list><br>
               <ion-list>
-                <ion-item class="no-padding yelp-list">
+              <div class="item-itin item-divider">
+                <h5 class="no-margin header-font">Urgent Care Clinic</h5>
+              </div>
+                <ion-item class="item-itin no-padding yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
                       <span class='yelp-name'>{{yelp.urgent.name}}</span><br>
@@ -160,11 +187,12 @@
                     </div>
                   </div>
                 </ion-item>
-              </ion-list>
-
-              <h4 class="no-margin"> Hospital:</h4>
+              </ion-list><br>
               <ion-list>
-                <ion-item class="no-padding yelp-list">
+              <div class="item-itin item-divider">
+                <h5 class="no-margin header-font">Hospital</h5>
+              </div>
+                <ion-item class="item-itin no-padding yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
                       <span class='yelp-name'>{{yelp.hospital.name}}</span><br>
