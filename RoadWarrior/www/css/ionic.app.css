@@ -16,6 +16,9 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 /* when showing the picture */
+.postLoad.ng-hide-remove {
+  animation: 1s fadein ease; }
+
 .yelp.ng-hide-remove {
   animation: 0.4s fadein ease; }
 
@@ -73,6 +76,20 @@ $dark:                            #444 !default;
     opacity: 0; }
   to {
     opacity: 1; } }
+
+div.spinner {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 85px;
+  text-align: center; }
+
+.spinner svg {
+  width: 19% !important;
+  height: 85px !important; }
 
 .no-margin {
   margin: 0px; }

@@ -1,8 +1,15 @@
+
 <ion-view view-title="Today">
 <ion-content class="padding" scroll="false">
-  <ion-slides  options="options" slider="data.slider">
+  <div class="spinner" ng-hide="yelpLoading()">
+  <ion-spinner></ion-spinner>
+  </div>
+  <ion-slides options="options" slider="data.slider">
+
     <ion-slide-page>
+               <div class="postLoad" ng-hide="!yelpLoading()"> 
                  <div ng-if="currentGroup.access !== 'pending'">
+               
                 <div class="row">
                 <div class="today-header-div col col-50">
                 <h5 class="no-margin">{{day_of_week}}</h5>
@@ -16,7 +23,6 @@
                   <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
                 </div>
                 </div>
-                <h4 ng-show="yelpLoading()">Yelp All Loaded</h4>
                 <ion-list>
               <ion-item ng-repeat="itin in todayItins | toArray:false | orderBy: 'startTimeUnix'" class="no-padding">
                 <div class="row">
@@ -26,13 +32,8 @@
               </ion-item>
             </ion-list>
               </div>
-              <div ng-if="result === false">
-              <h4>There is no event scheduled today.</h4>
-              </div>
-              <div ng-if="currentGroup.access === 'pending'">
-              <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
-              </div>
-    
+             
+          </div>  
     </ion-slide-page>
     <ion-slide-page>
       <h5 class="center-text no-margin">Powered by <img class="yelp-logo" src="../img/yelp.png"></h5>
@@ -182,8 +183,16 @@
     </ion-slide-page>
     <ion-slide-page>
       <div class="box pink"><h1>PINK</h1></div>
-    </ion-slide-page>
+    </ion-slide-page> 
+ 
   </ion-slides>
+
+   <div ng-if="result === false">
+              <h4>There is no event scheduled today.</h4>
+              </div>
+              <div ng-if="currentGroup.access === 'pending'">
+              <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
+              </div>
 </ion-content>
 
 
