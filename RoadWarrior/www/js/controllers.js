@@ -147,14 +147,7 @@ Auth.$onAuth(function(authData){
     $state.go("tab.list");
   }  
 
-  // $scope.tooOld = function(){
-  //   var currentDay = moment.utc();
-  //   if ((currentDay - $scope.event.unixDate) >= 259200){
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
+
 
     var lat = $scope.event.lat;
     var lng = $scope.event.lng;
