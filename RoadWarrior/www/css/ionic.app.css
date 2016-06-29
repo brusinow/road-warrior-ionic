@@ -76,6 +76,28 @@ $royal:                           #886aea !default;
   to {
     opacity: 1; } }
 
+.ionic_datepicker_popup .popup-body .selected_date_full {
+  background-color: #205275 !important; }
+
+.ionic_datepicker_popup .selected_date {
+  background-color: #205275 !important;
+  border-color: #205275 !important; }
+
+.ionic_datepicker_popup .popup-buttons button {
+  background-color: #205275 !important; }
+
+.ionic_datepicker_popup .popup-body .button-clear {
+  color: #205275 !important; }
+
+.ionic_datepicker_popup .popup-body .month_select, .ionic_datepicker_popup .popup-body .year_select {
+  border-bottom: 1px solid #205275 !important; }
+
+.month-select {
+  color: #205275 !important; }
+
+.year-select {
+  color: #205275 !important; }
+
 .header-font {
   font-family: 'Libre Franklin', sans-serif !important;
   font-weight: 400 !important; }

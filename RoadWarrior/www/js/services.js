@@ -86,6 +86,21 @@ angular.module('roadWarrior.services', [])
 })
 
 
+.factory('sendDataService', function() {
+ var savedData = {}
+ function set(data) {
+   savedData = data;
+ }
+ function get() {
+  return savedData;
+ }
+
+ return {
+  set: set,
+  get: get
+ }
+
+})
 
 
 .factory('helperService', function() {
@@ -125,6 +140,27 @@ angular.module('roadWarrior.services', [])
 
         };
 })
+
+
+
+.factory('eventsServiceTest', function($q){
+  var _url = 'https://roadwarrior.firebaseio.com/events';
+  var eventsRef = new Firebase(_url);
+
+  var myObject = {
+    allGroupEvents: function(groupKey){
+      var deferred = $q.defer();
+      eventsRef.orderByChild('groupId').startAt(groupKey).endAt(groupKey).on("value", function(eventsData){
+        deferred.resolve(eventsData);
+      });
+      return deferred.promise;
+    },
+  }
+  return myObject;
+})
+
+
+
 
 
 .factory('eventsService', function() {

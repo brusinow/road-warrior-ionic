@@ -56,12 +56,51 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
     ionicTimePickerProvider.configTimePicker(timePickerObj);
   })
 
+
+
+
+
+
+// .filter('tooOld', function() {
+
+//   // Create the return function and set the required parameter as well as an optional paramater
+//   return function(event) {
+//     console.log("event is: ",event)
+//     var currentDay = moment().unix()
+//     console.log("currentDay is: ",currentDay);
+//     if ((currentDay - event.unixDate) >= 259200) {
+//       console.log("too old");
+//     } else {
+//       return event;
+//     }
+
+//   }
+
+// })
+
+.filter('tooOld', function() {
+  return function(events) {
+    var currentDay = moment().unix()
+    var filtered = [];
+    angular.forEach(events, function(event) {
+      var thisEvent = event.unixDate/1000;
+      if ((currentDay - thisEvent) <= 259200) {
+        filtered.push(event);
+      }
+    });
+    return filtered;
+  };
+})
+
+
+
 .config(function($stateProvider, $urlRouterProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
+  
   $stateProvider
 
   // setup an abstract state for the tabs directive
@@ -147,10 +186,24 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   })
   .state('tab.list', {
       url: '/list',
+      cache: false,
       views: {
         'tab-list': {
           templateUrl: 'templates/tab-list.html',
           controller: 'ListCtrl'
+        }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
+    })
+      .state('tab.listShow', {
+      url: '/list/show',
+      cache: true,
+      views: {
+        'tab-list': {
+          templateUrl: 'templates/tab-listShow.html',
+          controller: 'ListShowCtrl'
         }
       },
       resolve: {

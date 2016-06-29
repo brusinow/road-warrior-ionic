@@ -113,13 +113,76 @@ Auth.$onAuth(function(authData){
 }])
 
 
-.controller ('ListCtrl', ['$scope', 'currentAuth','itineraryService', 'helperService', 'YelpKeys','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, itineraryService, helperService, YelpKeys, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+.controller ('ListCtrl', ['$scope', 'currentAuth', 'sendDataService', 'eventsServiceTest', 'itineraryService', 'helperService', 'YelpKeys','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, sendDataService, eventsServiceTest, itineraryService, helperService, YelpKeys, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+  $scope.events = {};
+
+  $scope.viewDay = function(event){
+    sendDataService.set(event);
+    $state.go("tab.listShow");
+
+  }
 
 
 
 
 
+  userService.currentGroupData(currentAuth.uid).then(function(group){
+    var groupData = group.val();
+    console.log("Group data? ",groupData);
+    var groupKey = group.key();
+    eventsServiceTest.allGroupEvents(groupKey).then(function(events){
+      $scope.events = events.val();
+      console.log("all events: ",$scope.events);
+    })
 
+
+  })
+}])
+
+
+.controller ('ListShowCtrl', ['$scope', 'currentAuth', 'sendDataService', 'eventsServiceTest', 'itineraryService', 'helperService', 'YelpKeys','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, sendDataService, eventsServiceTest, itineraryService, helperService, YelpKeys, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+  $scope.event = sendDataService.get();
+
+  $scope.toList = function(){
+    $state.go("tab.list");
+  }  
+
+  // $scope.tooOld = function(){
+  //   var currentDay = moment.utc();
+  //   if ((currentDay - $scope.event.unixDate) >= 259200){
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
+
+    var lat = $scope.event.lat;
+    var lng = $scope.event.lng;
+    Yahoo.getYahooData(lat,lng).then(function(data){
+      $scope.weatherData = data;
+      console.log($scope.weatherData);
+    });
+  // $scope.viewDay = function(event){
+  //   sendDataService.set(event);
+  //   $state.go("listShow");
+
+  // }
+
+  
+
+
+
+  // userService.currentGroupData(currentAuth.uid).then(function(group){
+  //   var groupData = group.val();
+  //   console.log("Group data? ",groupData);
+  //   var groupKey = group.key();
+  //   eventsServiceTest.allGroupEvents(groupKey).then(function(events){
+  //     $scope.events = events.val();
+  //     console.log("all events: ",$scope.events);
+  //   })
+
+
+  // })
 }])
 
 
@@ -222,21 +285,7 @@ Auth.$onAuth(function(authData){
 
 
 
-    // userService.currentGroupData(currentAuth.uid).then(function(groupData){
-    //       console.log("got stuff back! ",groupData.val());
-    //       console.log("key is: ",groupData.key());
-    
-
-
-
-
-
-
-
-
-
-
-    // });
+   
 
 
 
@@ -244,7 +293,7 @@ Auth.$onAuth(function(authData){
     
 
     
-    usersRef.child(currentAuth.uid).child("groups").on("child_added", function(group){
+    userService.currentGroupData(currentAuth.uid).then(function(group){
     $scope.currentGroup = group.val();
     var groupKey = group.key();
       if ($scope.currentGroup.access !== "pending"){
@@ -490,7 +539,7 @@ Auth.$onAuth(function(authData){
       $scope.user = user.val();
     })
     usersRef.child(currentAuth.uid).child("groups").on("child_added", function(group){
-      console.log("current group: ",group.val());
+      // console.log("current group: ",group.val());
       var currentGroup = group.val();
       $scope.accountType = currentGroup.access;
       $scope.save.groupId = group.key();
@@ -538,6 +587,7 @@ Auth.$onAuth(function(authData){
    var ipObj1 = {
       callback: function (val) {  //Mandatory
         console.log('Return value from the datepicker popup is : ',val);
+        $scope.event.unixDate = val;
         $scope.event.date = moment(val).format('MM-DD-YYYY');
         $scope.event.longDate = moment(val).format('MMMM Do, YYYY');
         console.log("day is: ",$scope.event.date);
@@ -555,7 +605,6 @@ Auth.$onAuth(function(authData){
       to: new Date(2016, 10, 30), //Optional
       inputDate: new Date(),      //Optional
       mondayFirst: true,          //Optional
-           //Optional
       closeOnSelect: false,       //Optional
       templateType: 'popup'       //Optional
     };
