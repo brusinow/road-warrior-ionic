@@ -6,3 +6,4 @@ platforms/
 plugins/
 .env
 .DS_Store
+env.json

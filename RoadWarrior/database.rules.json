@@ -1,0 +1,29 @@
+{
+  "rules": {
+    "_admin": {
+      ".read": false,
+      ".write": false,
+      "env": {
+        "$hostname": {
+          ".read": true
+        }
+      }
+    },
+    "users": {
+      ".read": true,
+      ".write": true
+    },
+    "groups": {
+      ".read": true,
+      ".write": true
+    },
+    "events": {
+      ".read": true,
+      ".write": true
+    },
+    "itins": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

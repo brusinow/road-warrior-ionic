@@ -305,58 +305,54 @@ Auth.$onAuth(function(authData){
                   console.log($scope.weatherData);
                 });
 
-                var keyRef = new Firebase('https://roadwarrior.firebaseio.com/secretKeys/yelp');
               
-                  keyRef.on("value", function(snapshot) {
                     $scope.yelp = {};
-                    var keyResult = snapshot.val();
-                    var food = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "restaurants", 500, 4, "2", 0, function(data){
+      
+                    var food = MyYelpAPI.retrieveYelp($scope.event, "restaurants", 500, 4, "2", 0, function(data){
                     // console.log("yelp food data is: ",data);
                     $scope.yelp.restaurants = data.businesses;
                     $scope.yelpLoadList[0] = true;
                     });
-                    var coffee = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "coffee", 500, 1, "2", 1, function(data){
+                    var coffee = MyYelpAPI.retrieveYelp($scope.event, "coffee", 500, 1, "2", 1, function(data){
                     // console.log("yelp coffee/tea data is: ",data);
                     $scope.yelp.coffee = data.businesses[0];
                     $scope.yelpLoadList[1] = true;
                     });
-                    var gym = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "gyms", 500, 1, "2", 2, function(data){
+                    var gym = MyYelpAPI.retrieveYelp($scope.event, "gyms", 500, 1, "2", 2, function(data){
                     // console.log("yelp gym data is: ",data);
                     $scope.yelp.gym = data.businesses[0];
                     $scope.yelpLoadList[2] = true;
                     });
-                    var bookstore = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "bookstores", 2000, 1, "0", 3, function(data){
+                    var bookstore = MyYelpAPI.retrieveYelp($scope.event, "bookstores", 2000, 1, "0", 3, function(data){
                     // console.log("yelp bookstore data is: ",data);
                     $scope.yelp.bookstore = data.businesses[0];
                     $scope.yelpLoadList[3] = true;
                     });
-                    var movieTheater = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "movietheaters", 2000, 1, "0", 4, function(data){
+                    var movieTheater = MyYelpAPI.retrieveYelp($scope.event, "movietheaters", 2000, 1, "0", 4, function(data){
                     // console.log("yelp movie theater data is: ",data);
                     $scope.yelp.movie = data.businesses[0];
                     $scope.yelpLoadList[4] = true;
                     });
-                    var drugStore = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "drugstores", 3000, 1, "0", 5, function(data){
+                    var drugStore = MyYelpAPI.retrieveYelp($scope.event, "drugstores", 3000, 1, "0", 5, function(data){
                     // console.log("yelp drugstore data is: ",data);
                     $scope.yelp.pharmacy = data.businesses[0];
                     $scope.yelp.pharmacy.formattedPhone = helperService.phoneFormat($scope.yelp.pharmacy.display_phone);
                     $scope.yelpLoadList[5] = true;
                     });
-                    var urgentCare = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "urgent_care", 3000, 1, "0", 6, function(data){
+                    var urgentCare = MyYelpAPI.retrieveYelp($scope.event, "urgent_care", 3000, 1, "0", 6, function(data){
                     // console.log("yelp urgent care data is: ",data);
                     $scope.yelp.urgent = data.businesses[0];
                     $scope.yelp.urgent.formattedPhone = helperService.phoneFormat($scope.yelp.urgent.display_phone);
                     $scope.yelpLoadList[6] = true;
                     });
-                    var hospital = MyYelpAPI.retrieveYelp(keyResult, $scope.event.address, $scope.event.lat, $scope.event.lng, "hospitals", 5000, 1, "0", 7, function(data){
+                    var hospital = MyYelpAPI.retrieveYelp($scope.event, "hospitals", 5000, 1, "0", 7, function(data){
                     // console.log("yelp hospital data is: ",data);
                     $scope.yelp.hospital = data.businesses[0];
                     $scope.yelp.hospital.formattedPhone = helperService.phoneFormat($scope.yelp.hospital.display_phone);
                     $scope.yelpLoadList[7] = true;
                     }); 
                     console.log("end of yelp calls");
-                  }, function (errorObject) {
-                    console.log("The read failed: " + errorObject.code);
-                  });
+                 
                   itineraryService.getItinItems($scope, key);
                   return true;
                 }  
@@ -704,7 +700,7 @@ Auth.$onAuth(function(authData){
 
 
   $scope.openPopover = function($event) {
-    var fullQuery = '/api/place/textsearch/json?query=' + $scope.event.venue +" "+ $scope.event.cityState + '&key=AIzaSyCJpKi0u-5QY2pbNgURwwbJLTQ-rXRkEv8';
+    var fullQuery = '/api/place/textsearch/json?query=' + $scope.event.venue +" "+ $scope.event.cityState + '&key='+__env.GOOGLE_PLACES_KEY;
     console.log(fullQuery);
     var req = {
       url: fullQuery,

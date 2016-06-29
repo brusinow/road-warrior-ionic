@@ -58,15 +58,15 @@ angular.module('roadWarrior.services', [])
     
 
     return {
-        retrieveYelp: function(keys, address, lat, lng, searchTerm, radius, limitNumber, sort, id, callback) {
+        retrieveYelp: function(event, searchTerm, radius, limitNumber, sort, id, callback) {
             var method = 'GET';
             var url = 'http://api.yelp.com/v2/search';
             var params = {
                     callback: 'angular.callbacks._' + id,
-                    location: address, 
-                    cll: lat+','+lng,
-                    oauth_consumer_key: keys.consumerKey, //Consumer Key
-                    oauth_token: keys.token, //Token
+                    location: event.address, 
+                    cll: event.lat+','+event.lng,
+                    oauth_consumer_key: __env.YELP_CONSUMER_KEY, //Consumer Key
+                    oauth_token: __env.YELP_TOKEN, //Token
                     oauth_signature_method: "HMAC-SHA1",
                     oauth_timestamp: new Date().getTime(),
                     oauth_nonce: randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),
@@ -76,8 +76,9 @@ angular.module('roadWarrior.services', [])
                     category_filter: searchTerm 
                 };
                 // console.log("callback in params is: ",params.callback);
-            var consumerSecret = keys.consumerSecret; //Consumer Secret
-            var tokenSecret = keys.tokenSecret; //Token Secret
+
+            var consumerSecret = __env.YELP_CONSUMER_SECRET; //Consumer Secret
+            var tokenSecret = __env.YELP_TOKEN_SECRET; //Token Secret
             var signature = oauthSignature.generate(method, url, params, consumerSecret, tokenSecret, { encodeSignature: false});
             params['oauth_signature'] = signature;
             $http.jsonp(url, {params: params}).success(callback);
