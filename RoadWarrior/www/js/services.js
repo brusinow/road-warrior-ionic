@@ -30,22 +30,133 @@ angular.module('roadWarrior.services', [])
   };
 })
 
+.factory("Profile", ["$firebaseObject",
+  function($firebaseObject) {
+    return function(userId) {
+      // create a reference to the database node where we will store our data
+      var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+      var profileRef = usersRef.child(userId);
 
-.factory("YelpKeys", function(){
-    var getKeys = function(){
-      var keyRef = new Firebase('https://roadwarrior.firebaseio.com/secretKeys/yelp')
-      return keyRef.on("value", function(snapshot) {
-        var keyResult = snapshot.val();
-        console.log("keyResult is: ",keyResult);
-        return keyResult;
-    }, function (errorObject) {
-      console.log("The read failed: " + errorObject.code);
+      // return it as a synchronized object
+      return $firebaseObject(profileRef);
+    }
+  }
+])
+
+
+.factory('eventsServiceTest', ["$firebaseObject", 
+  function($firebaseObject) {
+    return function(groupKey) {
+        
+        var ref = new Firebase("https://roadwarrior.firebaseio.com/events");
+        var obj = $firebaseObject(ref.orderByChild('groupId').startAt(groupKey).endAt(groupKey));
+        obj.$loaded(function() {
+            console.log('loaded', obj);
+            // if( arr.$value === null ) { // if object has not been initialized
+            //     angular.extend(arr, {
+            //         something: "1234", 
+            //         somethingElse: "567",
+            //         $priority: 7
+            //     });
+            //     arr.$save();
+            // }
+        });
+        return obj;
+    }
+}
+])
+
+
+
+
+
+
+
+// .factory("eventsServiceTest", ["$firebaseArray",
+//   function($firebaseArray) {
+//     return function(groupKey) {
+//       // create a reference to the database node where we will store our data
+//       var ref = new Firebase("https://roadwarrior.firebaseio.com/events");
+//       var obj = $firebaseArray(ref.orderByChild('groupId').startAt(groupKey).endAt(groupKey));
+//       obj.$loaded().then(function(data) {
+//         console.log("what is data? ",data);
+//         return data;
+//       })
+     
+
+//       // console.log("what does this firebaseObject look like? ",$firebaseObject(eventsRef))
+//       // return it as a synchronized object
+//       // return $firebaseObject(eventsRef);
+//     }
+//   }
+// ])
+
+
+
+
+
+
+
+
+// .factory('eventsServiceTest', function($q){
+//   var _url = 'https://roadwarrior.firebaseio.com/events';
+//   var eventsRef = new Firebase(_url);
+
+//   var myObject = {
+//     allGroupEvents: function(groupKey){
+//       var deferred = $q.defer();
+//       eventsRef.orderByChild('groupId').startAt(groupKey).endAt(groupKey).on("value", function(eventsData){
+//         deferred.resolve(eventsData);
+//       });
+//       console.log("deferred promise: ",deferred.promise);
+//       return deferred.promise;
+//     },
+//   }
+//   return myObject;
+// })
+
+
+
+
+
+
+// .factory("userServiceTest", ["$firebaseObject",
+//   function($firebaseObject) {
+//     return function(userId) {
+//       // create a reference to the database node where we will store our data
+//       var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+//       usersRef.child(userId).child("groups").on("child_added", function(groupData){
+//           console.log("should have data");
+//           deferred.resolve(groupData)
+//       });
+
+//       // return it as a synchronized object
+//       return $firebaseObject(profileRef);
+//     }
+//   }
+// ])
+
+
+
+.factory('userService', function($q){
+     var _url = 'https://roadwarrior.firebaseio.com/users';
+    var usersRef = new Firebase(_url);
+
+
+  var myObject = {
+    currentGroupData: function(userId){
+      var deferred = $q.defer();
+      usersRef.child(userId).child("groups").on("child_added", function(groupData){
+          console.log("should have data");
+          deferred.resolve(groupData)
       });
+      return deferred.promise;
     }
-    return {
-      getKeys: getKeys
-    }
+  }
+  return myObject;
 })
+
+
 
 
 
@@ -104,6 +215,23 @@ angular.module('roadWarrior.services', [])
 })
 
 
+.factory('GetGroup', function() {
+ var currentGroupId = "-KKzqF2TmPER2w71AlwJ";
+ function set(data) {
+   currentGroupId = data;
+ }
+ function get() {
+  return currentGroupId;
+ }
+
+ return {
+  set: set,
+  get: get
+ }
+
+})
+
+
 .factory('helperService', function() {
         return {
             timeFormat: function($scope, unix) {
@@ -144,21 +272,6 @@ angular.module('roadWarrior.services', [])
 
 
 
-.factory('eventsServiceTest', function($q){
-  var _url = 'https://roadwarrior.firebaseio.com/events';
-  var eventsRef = new Firebase(_url);
-
-  var myObject = {
-    allGroupEvents: function(groupKey){
-      var deferred = $q.defer();
-      eventsRef.orderByChild('groupId').startAt(groupKey).endAt(groupKey).on("value", function(eventsData){
-        deferred.resolve(eventsData);
-      });
-      return deferred.promise;
-    },
-  }
-  return myObject;
-})
 
 
 
@@ -286,23 +399,6 @@ angular.module('roadWarrior.services', [])
 
 })
 
-.factory('userService', function($q){
-     var _url = 'https://roadwarrior.firebaseio.com/users';
-    var usersRef = new Firebase(_url);
-
-
-  var myObject = {
-    currentGroupData: function(userId){
-      var deferred = $q.defer();
-      usersRef.child(userId).child("groups").on("child_added", function(groupData){
-          console.log("should have data");
-          deferred.resolve(groupData)
-      });
-      return deferred.promise;
-    }
-  }
-  return myObject;
-})
 
 
 

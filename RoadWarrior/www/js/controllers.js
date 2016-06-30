@@ -113,34 +113,20 @@ Auth.$onAuth(function(authData){
 }])
 
 
-.controller ('ListCtrl', ['$scope', 'currentAuth', 'sendDataService', 'eventsServiceTest', 'itineraryService', 'helperService', 'YelpKeys','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, sendDataService, eventsServiceTest, itineraryService, helperService, YelpKeys, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
-  $scope.events = {};
+.controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'sendDataService', 'GetGroup','eventsServiceTest', 'itineraryService', 'helperService','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, GetGroup,eventsServiceTest, itineraryService, helperService, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+  
+  var groupKey = GetGroup.get();
+  var eventRef = new Firebase("https://roadwarrior.firebaseio.com/events");
+  $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt(groupKey).endAt(groupKey))
 
   $scope.viewDay = function(event){
     sendDataService.set(event);
     $state.go("tab.listShow");
-
   }
-
-
-
-
-
-  userService.currentGroupData(currentAuth.uid).then(function(group){
-    var groupData = group.val();
-    console.log("Group data? ",groupData);
-    var groupKey = group.key();
-    eventsServiceTest.allGroupEvents(groupKey).then(function(events){
-      $scope.events = events.val();
-      console.log("all events: ",$scope.events);
-    })
-
-
-  })
 }])
 
 
-.controller ('ListShowCtrl', ['$scope', 'currentAuth', 'sendDataService', 'eventsServiceTest', 'itineraryService', 'helperService', 'YelpKeys','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, sendDataService, eventsServiceTest, itineraryService, helperService, YelpKeys, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+.controller ('ListShowCtrl', ['$scope', 'currentAuth', 'sendDataService', 'eventsServiceTest', 'itineraryService', 'helperService','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, sendDataService, eventsServiceTest, itineraryService, helperService, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
   $scope.event = sendDataService.get();
 
   $scope.toList = function(){
@@ -180,7 +166,14 @@ Auth.$onAuth(function(authData){
 
 
 
-.controller('TodayCtrl', ['$scope', 'currentAuth','itineraryService', 'helperService', 'YelpKeys','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, itineraryService, helperService, YelpKeys, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+.controller('TodayCtrl', ['$scope','currentAuth','itineraryService','GetGroup', 'helperService', 'Profile','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, currentAuth, itineraryService, GetGroup, helperService, Profile, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+    
+  
+    Profile(currentAuth.uid).$bindTo($scope, "profile");
+
+    var thisGroup = GetGroup.get();
+
+    console.log("This group ID: ",thisGroup);
     $scope.yelpLoadList = [];
     $scope.yelpShow = {
       "food": true,
@@ -271,20 +264,6 @@ Auth.$onAuth(function(authData){
     $scope.now_formatted_date = moment().format('MMMM Do, YYYY');
     $scope.day_of_week = moment().format('dddd');
     
-
-
-
-
-
-
-
-   
-
-
-
-  
-    
-
     
     userService.currentGroupData(currentAuth.uid).then(function(group){
     $scope.currentGroup = group.val();
