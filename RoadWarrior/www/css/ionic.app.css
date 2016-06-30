@@ -17,10 +17,10 @@ $royal:                           #886aea !default;
 */
 /* when showing the picture */
 .postLoad.ng-hide-remove {
-  animation: 1s fadein ease; }
+  animation: 1s fadein linear; }
 
 .yelp.ng-hide-remove {
-  animation: 0.4s fadein ease; }
+  animation: 4s fadein linear; }
 
 @keyframes fadein {
   from {
@@ -191,6 +191,13 @@ ion-view.pane {
   right: 26px;
   top: 10px; }
 
+.weather-image-list {
+  font-size: 45px;
+  color: #bbbbbb;
+  position: absolute;
+  right: 15px;
+  top: 15px; }
+
 .weather-main-temp {
   position: absolute;
   top: 24px;
@@ -201,6 +208,12 @@ ion-view.pane {
   position: absolute;
   right: 10px;
   top: 62px; }
+
+.weather-forecast-list {
+  color: #777777;
+  position: absolute;
+  right: 0px;
+  top: 54px; }
 
 /*.button-yelp {
   padding: 0 !important;
@@ -329,7 +342,7 @@ ion-view.pane {
   height: 200px; }
 
 .list .item.item-accordion {
-  background-color: white;
+  background-color: #f8f8f8;
   text-align: left;
   font-size: 13px;
   line-height: 14px;
@@ -337,10 +350,12 @@ ion-view.pane {
   padding-top: 10px;
   padding-bottom: 0;
   margin: -1px 3px;
-  transition: 0.09s all ease; }
+  -webkit-transition: height .1s linear;
+  /* Safari */
+  transition: height .1s linear; }
 
 .list .item.item-accordion.ng-hide {
-  line-height: 0px; }
+  height: 0px; }
 
 .list .item.item-accordion.ng-hide-add,
 .list .item.item-accordion.ng-hide-remove {
@@ -356,6 +371,15 @@ ion-view.pane {
   font-weight: 500;
   border: 1px solid #ddd; }
 
+/*.yelp {
+  opacity: 1;
+  -webkit-transition: opacity .4s linear; 
+  transition: opacity .4s linear;
+}
+
+.yelp.ng-hide {
+  opacity: 0;
+}*/
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/

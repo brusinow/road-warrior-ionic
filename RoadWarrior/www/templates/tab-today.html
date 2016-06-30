@@ -23,11 +23,11 @@
                     <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
                   </div>
                 </div>
-                <ion-list ng-show="todayItins">
-                <div ng-repeat="itin in todayItins | toArray:false | orderBy: 'startTimeUnix'">
-                      <ion-item  ng-click="toggleItin(itin)" class="item-itin no-padding">
+                <ion-list ng-show="itins">
+                <div ng-repeat="itin in itins | orderBy: 'startTimeUnix'">
+                      <ion-item  ng-click="toggleItin(itin)" class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
                         <div class="row">
-                          <div class="col itin-list itin-name">{{itin.mainItem}}</div>
+                          <div class="col itin-list itin-name">{{itin.mainItem}}  <i class="icon" ng-if="itin.details" ng-class="isItinShown(itin) ? 'ion-minus-circled' : 'ion-plus-circled'"></i></div>
                           <div class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}}</div>
                         </div>
                       </ion-item>
@@ -37,7 +37,7 @@
               </div>
             </ion-list>
               </div>
-             <div class="no-itins center-text" ng-show="!todayItins && !noEventResult()">
+             <div class="no-itins center-text" ng-show="!itins && !noEventResult()">
               <div class="cat-time"></div>
               <h3 class="no-margin">Your itinerary is empty.</h3>
               <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2> 

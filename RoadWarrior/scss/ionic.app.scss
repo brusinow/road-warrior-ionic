@@ -25,11 +25,11 @@ $assertive:                       #ef4e3a  !default;
 /* when showing the picture */
 
 
-.postLoad.ng-hide-remove { animation: 1s fadein ease; }
+.postLoad.ng-hide-remove { animation: 1s fadein linear; }
 
 
 
-.yelp.ng-hide-remove      { animation:0.4s fadein ease; }
+.yelp.ng-hide-remove      { animation: 4s fadein linear; }
 
 
 @keyframes fadein {
@@ -244,6 +244,14 @@ background: $stable;
     top: 10px;
 }
 
+.weather-image-list {
+    font-size: 45px;
+    color: #bbbbbb;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
 .weather-main-temp {
   position: absolute;
   top: 24px;
@@ -257,6 +265,12 @@ background: $stable;
     top: 62px;
 }
 
+.weather-forecast-list {
+    color: #777777;
+    position: absolute;
+    right: 0px;
+    top: 54px;
+}
 /*.button-yelp {
   padding: 0 !important;
   height: 30px !important;
@@ -414,7 +428,7 @@ background: $stable;
 }
 
 .list .item.item-accordion {
-  background-color: white;
+  background-color: $stable;
   text-align: left;
   font-size: 13px;
   line-height: 14px;
@@ -422,10 +436,11 @@ background: $stable;
   padding-top: 10px;
   padding-bottom: 0;
   margin: -1px 3px;
-  transition: 0.09s all ease;
+  -webkit-transition: height .1s linear; /* Safari */
+  transition: height .1s linear;
 }
 .list .item.item-accordion.ng-hide {
-  line-height: 0px;
+  height: 0px;
 }
 
 .list .item.item-accordion.ng-hide-add,
@@ -444,6 +459,15 @@ background: $stable;
     border: 1px solid #ddd;
 }
 
+/*.yelp {
+  opacity: 1;
+  -webkit-transition: opacity .4s linear; 
+  transition: opacity .4s linear;
+}
+
+.yelp.ng-hide {
+  opacity: 0;
+}*/
 
 
 // The path for our ionicons font files, relative to the built CSS in www/css
