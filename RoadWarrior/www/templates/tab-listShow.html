@@ -5,7 +5,7 @@
                  <!--  <h5 class="no-margin header-font">{{day_of_week}}</h5> -->
                   <h5 class="no-margin header-font">{{event.weekDay}}</h5>
                   <h5 class="no-margin header-font">{{event.longDate}}</h5>
-                  <h4 class="no-margin header-font-heavy">{{event.venue}}</h4>
+                  <h4 class="no-margin header-font-heavy" ng-class="tooLong(event.venue) ? 'venue-small-text' : 'venue-normal-text'">{{event.venue}}</h4>
                   <h5 class="no-margin header-font">{{event.cityState}}</h5>
                   </div>
                   <div ng-show="weatherData" class="weather-box col col-33">
@@ -13,7 +13,7 @@
                     <h4 class="weather-forecast-list center-text"><i class="wi wi-direction-up"></i> {{weatherData.high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.low}}<span ng-show="weatherData">°</span></h4>
                   </div>
                 </div>
-                  <ion-list ng-show="itins">
+                  <ion-list ng-show="itins.length > 0">
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix'">
                       <ion-item  ng-click="toggleItin(itin)" class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
                         <div class="row">
@@ -27,14 +27,10 @@
               </div>
             </ion-list>
               </div>
-             <div class="no-itins center-text" ng-show="!itins">
+             <div class="no-itins center-text" ng-show="itins.length === 0">
               <div class="cat-time"></div>
               <h3 class="no-margin">Your itinerary is empty.</h3>
               <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2>  
-             </div>
-              <div class="no-itins center-text" ng-show="noEventResult()">
-              <div class="cat-time-no-event"></div>
-              <h3 class="no-margin">You have no event scheduled today.</h3> 
              </div>
 </ion-content>
 </ion-view>

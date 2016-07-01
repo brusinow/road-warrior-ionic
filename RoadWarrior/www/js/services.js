@@ -45,11 +45,14 @@ angular.module('roadWarrior.services', [])
 
 
 
+
+
+
+
+
 .factory('userService', function($q){
      var _url = 'https://roadwarrior.firebaseio.com/users';
     var usersRef = new Firebase(_url);
-
-
   var myObject = {
     currentGroupData: function(userId){
       var deferred = $q.defer();
@@ -123,7 +126,7 @@ angular.module('roadWarrior.services', [])
 
 
 .factory('GetGroup', function() {
- var currentGroupId = "-KKzqF2TmPER2w71AlwJ";
+ var currentGroupId = "-KLZGgOKYAEyuCLmyu9K";
  function set(data) {
    currentGroupId = data;
  }
@@ -171,6 +174,10 @@ angular.module('roadWarrior.services', [])
             phoneFormat: function(number){
               var newNumber = number.slice(3);
               return newNumber;
+            },
+            dayOfWeek: function(unixTime){
+              var day = moment(unixTime).format('dddd');
+              return day;
             }
             
 

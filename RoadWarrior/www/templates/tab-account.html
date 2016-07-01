@@ -6,7 +6,6 @@
     </ion-toggle> -->
     </ion-list>
      <div class="card">
-         
               <div class="item row">
                 <div class="col col-80">
                   {{user.name}} 
@@ -19,12 +18,17 @@
               <button class="item row" ng-click="logout()">
                 Log out
               </button> 
-            
-          
         </div>  
         <div class="button-group" ng-show="accountType === 'admin'"> 
        <button class="button button-block button-dark button-small-margin" ng-click ="openNewEventModal()">Add an Event</button>
        <button class="button button-block button-dark button-small-margin" ng-click ="openNewItinModal()">Add an Itinerary Item</button>
        </div>
+        <label class = "item item-input-itin item-select item-select-itin">
+      <div class = "input-label-itin">
+        Choose Group:
+      </div>
+      <select ng-model="selectedGroup" ng-change="getScoreData(selectedGroup)"  ng-options='group in groups'>
+      </select>
+    </label>
   </ion-content>
 </ion-view>

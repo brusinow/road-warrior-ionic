@@ -84,7 +84,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
     var filtered = [];
     angular.forEach(events, function(event) {
       var thisEvent = event.unixDate/1000;
-      if ((currentDay - thisEvent) <= 259200) {
+      if ((currentDay - thisEvent) <= 172800) {
         filtered.push(event);
       }
     });

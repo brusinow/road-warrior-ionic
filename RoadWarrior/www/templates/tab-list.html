@@ -1,10 +1,22 @@
 <ion-view view-title="Show List">
   <ion-content class="padding">
-    <ion-list>
-      <ion-item ng-repeat="event in events | tooOld | orderBy: 'unixDate'" ng-click="viewDay(event)">
-        {{event.longDate}} {{event.venue}} in {{event.cityState}}
-      </ion-item>
-    </ion-list>
+    <div ng-if="events.length > 0">
+      <ion-list>
+        <ion-item ng-repeat="event in events | tooOld | orderBy: 'unixDate'" ng-click="viewDay(event)">
+          <div class="event-list row">
+            <div class="col">
+            {{event.dayOfWeek}} <br> {{event.longDate}}
+            </div>
+            <div class="col text-right">
+            {{event.venue}} <br> {{event.cityState}} 
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+    <div ng-if="events.length === 0">
+    <h3>You have no events.</h3>
+    </div>
   </ion-content>
 </ion-view>
 

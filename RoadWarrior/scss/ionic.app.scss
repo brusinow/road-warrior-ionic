@@ -139,6 +139,13 @@ $assertive:                       #ef4e3a  !default;
   font-weight: 700 !important;
 }
 
+.venue-small-text {
+  font-size:14px !important;
+}
+
+.venue-normal-text {
+  font-size: 18px !important;
+}
 
 div.spinner {
   margin: auto;
@@ -163,6 +170,10 @@ background: $stable;
 
 .center-text {
   text-align: center;
+}
+
+.text-right {
+  text-align: right;
 }
 
 
@@ -237,10 +248,10 @@ background: $stable;
 }
 
 .weather-image {
-      font-size: 35px;
+    font-size: 35px;
     color: #bbbbbb;
     position: absolute;
-    right: 26px;
+    right: 16px;
     top: 10px;
 }
 
@@ -458,6 +469,11 @@ background: $stable;
     font-weight: 500;
     border: 1px solid #ddd;
 }
+
+.event-list {
+  font-size: 13px;
+}
+
 
 /*.yelp {
   opacity: 1;

@@ -8,7 +8,7 @@
 
     <ion-slide-page>
                <div class="postLoad" ng-show="yelpLoading() || noEventResult()"> 
-                 <div ng-if="currentGroup.access !== 'pending'">
+                 <div>
                
                 <div class="row">
                   <div style="padding-top:8px;" class="col col-75">
@@ -23,7 +23,7 @@
                     <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
                   </div>
                 </div>
-                <ion-list ng-show="itins">
+                <ion-list ng-show="itins.length > 0">
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix'">
                       <ion-item  ng-click="toggleItin(itin)" class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
                         <div class="row">
@@ -37,11 +37,10 @@
               </div>
             </ion-list>
               </div>
-             <div class="no-itins center-text" ng-show="!itins && !noEventResult()">
+             <div class="no-itins center-text" ng-show="itins.length === 0 && !noEventResult()">
               <div class="cat-time"></div>
               <h3 class="no-margin">Your itinerary is empty.</h3>
               <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2> 
-              <h4>{{profile}}</h4> 
              </div>
               <div class="no-itins center-text" ng-show="noEventResult()">
               <div class="cat-time-no-event"></div>
@@ -219,7 +218,7 @@
    <div ng-if="result === false">
               <h4>There is no event scheduled today.</h4>
               </div>
-              <div ng-if="currentGroup.access === 'pending'">
+              <div ng-if="currentGroup.access === false">
               <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
               </div>
 </ion-content>
