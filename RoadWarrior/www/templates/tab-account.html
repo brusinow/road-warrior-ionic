@@ -8,7 +8,7 @@
      <div class="card">
               <div class="item row">
                 <div class="col col-80">
-                  {{user.name}} 
+                  {{profile.name}} 
                 </div>
                 <div class="text-center col col-20">
                   <i class="icon ion-pizza"></i>
@@ -19,16 +19,24 @@
                 Log out
               </button> 
         </div>  
-        <div class="button-group" ng-show="accountType === 'admin'"> 
+        <div class="button-group"> 
        <button class="button button-block button-dark button-small-margin" ng-click ="openNewEventModal()">Add an Event</button>
        <button class="button button-block button-dark button-small-margin" ng-click ="openNewItinModal()">Add an Itinerary Item</button>
+       <button class="button button-block button-dark button-small-margin" ng-click = "newGroup()">Add a Group</button>
        </div>
         <label class = "item item-input-itin item-select item-select-itin">
       <div class = "input-label-itin">
-        Choose Group:
+        Current Group:
       </div>
-      <select ng-model="selectedGroup" ng-change="getScoreData(selectedGroup)"  ng-options='group in groups'>
+      <select ng-model="selected"  ng-change="switchGroup(selected)" ng-options='group.name for group in groups'>
       </select>
-    </label>
+    </label> 
+    Selected : {{selected}} <br>
+    Current Group Saved : {{currentGroup}}
   </ion-content>
 </ion-view>
+<!-- ng-change="getScoreData(selectedGroup)" -->
+
+  <!--  <label>Color (null not allowed):
+    <select ng-model="myColor" ng-options="color.name for color in colors"></select>
+  </label><br/> -->

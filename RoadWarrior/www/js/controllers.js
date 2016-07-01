@@ -116,8 +116,9 @@ Auth.$onAuth(function(authData){
 .controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'sendDataService', 'GetGroup', 'itineraryService', 'helperService','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, GetGroup, itineraryService, helperService, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
   
   var groupKey = GetGroup.get();
+  console.log("this is the groupKey: ",groupKey);
   var eventRef = new Firebase("https://roadwarrior.firebaseio.com/events");
-  $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt(groupKey).endAt(groupKey))
+  $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt(groupKey.groupId).endAt(groupKey.groupId))
 
 
   // $scope.events.$loaded().then(function(){
@@ -190,14 +191,12 @@ Auth.$onAuth(function(authData){
 
 
 .controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','itineraryService','GetGroup', 'helperService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, itineraryService, GetGroup, helperService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
-    $scope.event = {}
-    $scope.todayDate = moment().format('MM-DD-YYYY');
-    $scope.now_formatted_date = moment().format('MMMM Do, YYYY');
-    $scope.day_of_week = moment().format('dddd');
+  
     
 
     Profile(currentAuth.uid).$bindTo($scope, "profile");
     var thisGroup = GetGroup.get();
+    console.log("this group is: ",thisGroup)
     $scope.yelpLoadList = [];
     $scope.yelpShow = {
       "food": true,
@@ -296,13 +295,16 @@ Auth.$onAuth(function(authData){
     var itinsRef = new Firebase('https://roadwarrior.firebaseio.com/itins');
 
     
-    
+      $scope.event = {}
+      $scope.todayDate = moment().format('MM-DD-YYYY');
+      $scope.now_formatted_date = moment().format('MMMM Do, YYYY');
+      $scope.day_of_week = moment().format('dddd');
     
     
     
 
       if (thisGroup){
-        $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').equalTo(thisGroup))
+        $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').equalTo(thisGroup.groupId))
         $scope.events.$loaded()
           .then(function(){
             angular.forEach($scope.events, function(event) {
@@ -369,9 +371,9 @@ Auth.$onAuth(function(authData){
               }); 
               console.log("end of yelp calls");
               }
-              
+              if ($scope.events){
               $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
-
+              }
                   if ($scope.result !== true){
                       $scope.result = "chicken";
                       console.log($scope.result);
@@ -484,6 +486,7 @@ Auth.$onAuth(function(authData){
         "groupName": searchGroup,
         "groupId": groupId
       }
+      console.log("what is adminEntry? ",adminEntry)
       groupsRef.child(groupId).set({
         "name": searchGroup,
         "members": memberEntry
@@ -525,24 +528,34 @@ Auth.$onAuth(function(authData){
 
 
 
-.controller('AccountCtrl', ['$scope', '$http','currentAuth', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, currentAuth, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('AccountCtrl', ['$scope', '$http','$firebaseArray','currentAuth','Profile','GetGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, currentAuth, Profile, GetGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
     var geocoder = new google.maps.Geocoder();
     var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
     var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
+    var userGroupsRef = new Firebase("https://roadwarrior.firebaseio.com/users/"+currentAuth.uid+"/groups");
 
+    var currentGroup = GetGroup.get();
+    Profile(currentAuth.uid).$bindTo($scope, "profile");
 
-    // $scope.groups = $firebaseArray(usersRef.child(currentAuth.uid+"/groups").orderByChild('groupId').equalTo(thisGroup))
-    //     $scope.events.$loaded()
-    //       .then(function(){
-    //         angular.forEach($scope.events, function(event) {
-    //         console.log("event in forEach: ",event);
-    //           if (event.date === $scope.todayDate){
-    //             $scope.result = true;
-    //             $scope.event = event;
-    //             console.log("saves the correct day");
-    //           }
-    //       })
+    $scope.newGroup = function(){
+      $state.go("newGroup");
+    }
 
+    $scope.switchGroup = function(group){
+      GetGroup.set(group);
+    }
+
+    console.log("what is this group? ",$scope.thisGroup);
+    $scope.groups = $firebaseArray(userGroupsRef);
+        $scope.groups.$loaded()
+          .then(function(){
+            angular.forEach($scope.groups, function(event) {
+            console.log("event in forEach: ",event);
+              if (currentGroup.groupName === event.name){
+              $scope.selected = event;
+              }
+            })
+          })
     $scope.orderByDate = function(event){
     var unixTime = moment(event.date, "MM-DD-YYYY");
     return unixTime;

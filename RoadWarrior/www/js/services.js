@@ -126,12 +126,12 @@ angular.module('roadWarrior.services', [])
 
 
 .factory('GetGroup', function() {
- var currentGroupId = "-KLZGgOKYAEyuCLmyu9K";
+  var currentGroup = {}
  function set(data) {
-   currentGroupId = data;
+   currentGroup = data;
  }
  function get() {
-  return currentGroupId;
+  return currentGroup;
  }
 
  return {
@@ -191,7 +191,7 @@ angular.module('roadWarrior.services', [])
 
 
 
-.factory('eventsService', function() {
+.factory('eventsService', ['GetGroup', function(GetGroup) {
     var _url = 'https://roadwarrior.firebaseio.com/events';
     var eventsRef = new Firebase(_url);
     
@@ -249,12 +249,16 @@ angular.module('roadWarrior.services', [])
                                     }
                                 };
                                 newEvent.cityState = newEvent.city+", "+newEvent.state; 
-                                newEvent.groupId = $scope.save.groupId;
-                                newEvent.groupName = $scope.save.groupName;
+                                var currentGroup = GetGroup.get();
+                                console.log("GetGroup results are: ",currentGroup);
+                                newEvent.groupId = currentGroup.$id;
+                                newEvent.groupName = currentGroup.name;
                                 var newEventEntry = {};
                                 var newEventRef = eventsRef.push();
                                 var eventId = newEventRef.key();
                                 newEvent.eventId = eventId;
+                                console.log("new event to be submitted: ",newEvent);
+                                GetGroup.set(newEvent);
                                 newEventEntry[eventId] = newEvent;
                                 eventsRef.update(newEventEntry);
                                 $scope.newEventModal.hide();
@@ -270,7 +274,8 @@ angular.module('roadWarrior.services', [])
         }
       }   
     };
-})
+}
+])
 
 .factory('itineraryService', function() {
   var _url = 'https://roadwarrior.firebaseio.com/itins';

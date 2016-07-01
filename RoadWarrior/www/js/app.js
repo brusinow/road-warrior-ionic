@@ -1,14 +1,16 @@
 // Ionic Starter App
-
+var authWait = ["Auth", function(Auth) { return Auth.$waitForAuth(); }]
+var authRequire = ["Auth", function(Auth) { return Auth.$requireAuth(); }]
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-var authWait = ["Auth", function(Auth) { return Auth.$waitForAuth(); }]
-var authRequire = ["Auth", function(Auth) { return Auth.$requireAuth(); }]
 
 angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter'])
+
+
+
 
 .constant('GoogleEndpoint', {
   url: 'https://maps.googleapis.com/maps/api'
@@ -35,72 +37,22 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
     // catch the error thrown when the $requireAuth promise is rejected and redirect user back to the home page
     if (error === "AUTH_REQUIRED") {
-      console.log("state change error");
       $state.go("login");
     }
   });
 }])
 
-.config(['$compileProvider', function($compileProvider) {
-  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|tel):/);
-}])
-
-.config(function (ionicTimePickerProvider) {
-    var timePickerObj = {
-      inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
-      format: 12,
-      step: 15,
-      setLabel: 'Set',
-      closeLabel: 'Close'
-    };
-    ionicTimePickerProvider.configTimePicker(timePickerObj);
-  })
 
 
 
-
-
-
-// .filter('tooOld', function() {
-
-//   // Create the return function and set the required parameter as well as an optional paramater
-//   return function(event) {
-//     console.log("event is: ",event)
-//     var currentDay = moment().unix()
-//     console.log("currentDay is: ",currentDay);
-//     if ((currentDay - event.unixDate) >= 259200) {
-//       console.log("too old");
-//     } else {
-//       return event;
-//     }
-
-//   }
-
-// })
-
-.filter('tooOld', function() {
-  return function(events) {
-    var currentDay = moment().unix()
-    var filtered = [];
-    angular.forEach(events, function(event) {
-      var thisEvent = event.unixDate/1000;
-      if ((currentDay - thisEvent) <= 172800) {
-        filtered.push(event);
-      }
-    });
-    return filtered;
-  };
-})
-
-
-
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
-  
+  $ionicConfigProvider.tabs.position('bottom');
+  $ionicConfigProvider.navBar.alignTitle('center');
   $stateProvider
 
   // setup an abstract state for the tabs directive
@@ -252,4 +204,36 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/today');
 
+})
+
+.config(['$compileProvider', function($compileProvider) {
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|tel):/);
+}])
+
+.config(function (ionicTimePickerProvider) {
+    var timePickerObj = {
+      inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
+      format: 12,
+      step: 15,
+      setLabel: 'Set',
+      closeLabel: 'Close'
+    };
+    ionicTimePickerProvider.configTimePicker(timePickerObj);
+  })
+
+
+
+.filter('tooOld', function() {
+  return function(events) {
+    var currentDay = moment().unix()
+    var filtered = [];
+    angular.forEach(events, function(event) {
+      var thisEvent = event.unixDate/1000;
+      if ((currentDay - thisEvent) <= 172800) {
+        filtered.push(event);
+      }
+    });
+    return filtered;
+  };
 });
+
