@@ -44,6 +44,41 @@ angular.module('roadWarrior.services', [])
 ])
 
 
+.factory("ActiveGroup", ["$firebaseObject",
+  function($firebaseObject) {
+    return function(userId) {
+      // create a reference to the database node where we will store our data
+      var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+userId);
+      return $firebaseObject(activeGroupRef);
+    }
+  }
+])
+
+
+.factory('GetSetActiveGroup', ["$firebaseObject", function($firebaseObject) {
+  
+  function set(data, userId) {
+    console.log("data is ",data);
+    console.log("userId is ",userId);
+    var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+userId);
+    var obj = $firebaseObject(activeGroupRef);
+    obj.name = data.name;
+    obj.groupId = data.groupId;
+    obj.access = data.access;
+    obj.level = data.level;
+    obj.$save().then(function(ref) {
+      ref.key() === obj.$id; // true
+    }, function(error) {
+      console.log("Error:", error);
+    });
+  }
+
+ return {
+  set: set
+ }
+}
+])
+
 
 
 
@@ -67,10 +102,10 @@ angular.module('roadWarrior.services', [])
 })
 
 
+ 
 
 
-
-.factory("MyYelpAPI", function($http) {
+.factory("MyYelpAPI", function($http, YelpEndpoint) {
     function randomString(length, chars) {
                 var result = '';
                 for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
@@ -80,10 +115,15 @@ angular.module('roadWarrior.services', [])
 
     return {
         retrieveYelp: function(event, searchTerm, radius, limitNumber, sort, id, callback) {
+            // var count = angular.callbacks.counter;
+            // id = id + count;
+            // console.log("what is callback id? ",count);
+            console.log("what is passed in id? ",id);
+            console.log("running Yelp")
             var method = 'GET';
-            var url = 'http://api.yelp.com/v2/search';
+            var url = YelpEndpoint.url+'?callback=JSON_CALLBACK';
             var params = {
-                    callback: 'angular.callbacks._' + id,
+                    callback: 'angular.callbacks._0',
                     location: event.address, 
                     cll: event.lat+','+event.lng,
                     oauth_consumer_key: __env.YELP_CONSUMER_KEY, //Consumer Key
@@ -102,10 +142,22 @@ angular.module('roadWarrior.services', [])
             var tokenSecret = __env.YELP_TOKEN_SECRET; //Token Secret
             var signature = oauthSignature.generate(method, url, params, consumerSecret, tokenSecret, { encodeSignature: false});
             params['oauth_signature'] = signature;
-            $http.jsonp(url, {params: params}).success(callback);
+            $http.jsonp(url, {params: params}).success(callback).catch(err => console.log(err));;
         }
     }
 })
+
+
+// $http.jsonp("api.yelp.com/v2/search?callback=JSON_CALLBACK", yourParams) 
+// .success(function() {
+//      //success callback
+// })
+// .error(function(){
+//      //error callback
+// }) ;
+
+
+
 
 
 .factory('sendDataService', function() {
@@ -125,21 +177,21 @@ angular.module('roadWarrior.services', [])
 })
 
 
-.factory('GetGroup', function() {
-  var currentGroup = {}
- function set(data) {
-   currentGroup = data;
- }
- function get() {
-  return currentGroup;
- }
+// .factory('GetGroup', function() {
+//   var currentGroup = {}
+//  function set(data) {
+//    currentGroup = data;
+//  }
+//  function get() {
+//   return currentGroup;
+//  }
 
- return {
-  set: set,
-  get: get
- }
+//  return {
+//   set: set,
+//   get: get
+//  }
 
-})
+// })
 
 
 .factory('helperService', function() {
@@ -191,9 +243,9 @@ angular.module('roadWarrior.services', [])
 
 
 
-.factory('eventsService', ['GetGroup', function(GetGroup) {
-    var _url = 'https://roadwarrior.firebaseio.com/events';
-    var eventsRef = new Firebase(_url);
+.factory('eventsService', ['ActiveGroup','GetSetActiveGroup', function(ActiveGroup, GetSetActiveGroup) {
+    var eventsRef = new Firebase('https://roadwarrior.firebaseio.com/events');
+
     
     return {
       allGroupEvents: function($scope, groupKey){
@@ -212,7 +264,7 @@ angular.module('roadWarrior.services', [])
             if (todayDate === childData.date){
               $scope.result = true;
               // console.log("found one");
-              console.log("actual today event from service is: ",childData);
+              // console.log("actual today event from service is: ",childData);
               $scope.today = childData;
               return true;
             }  
@@ -222,7 +274,7 @@ angular.module('roadWarrior.services', [])
           }
         })
       },
-      createEvent: function($scope, newEvent){
+      createEvent: function($scope, newEvent, userId){
         console.log("event to be submitted is: ",newEvent);
         if (newEvent.address && newEvent.address.length > 0) {
             if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
@@ -249,19 +301,20 @@ angular.module('roadWarrior.services', [])
                                     }
                                 };
                                 newEvent.cityState = newEvent.city+", "+newEvent.state; 
-                                var currentGroup = GetGroup.get();
-                                console.log("GetGroup results are: ",currentGroup);
-                                newEvent.groupId = currentGroup.$id;
-                                newEvent.groupName = currentGroup.name;
+                                // var currentGroup = ActiveGroup(userId);
+                                ActiveGroup(userId).$bindTo($scope, "currentGroup").then(function(){
+                                console.log("GetGroup results are: ",$scope.currentGroup);
+                                newEvent.groupId = $scope.currentGroup.groupId;
+                                newEvent.groupName = $scope.currentGroup.name;
                                 var newEventEntry = {};
                                 var newEventRef = eventsRef.push();
                                 var eventId = newEventRef.key();
                                 newEvent.eventId = eventId;
                                 console.log("new event to be submitted: ",newEvent);
-                                GetGroup.set(newEvent);
                                 newEventEntry[eventId] = newEvent;
                                 eventsRef.update(newEventEntry);
                                 $scope.newEventModal.hide();
+                              })
                     } else {
                       window.alert('No first geocode results.');
                       }

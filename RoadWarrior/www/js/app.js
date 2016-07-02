@@ -11,13 +11,16 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
 
 
 
-
 .constant('GoogleEndpoint', {
   url: 'https://maps.googleapis.com/maps/api'
 })
 
 .constant('YahooEndpoint', {
   url: 'https://query.yahooapis.com/v1'
+})
+
+.constant('YelpEndpoint', {
+  url: 'https://api.yelp.com/v2/search'
 })
 
 
@@ -125,7 +128,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   
   .state('tab.today', {
     url: '/today',
-    cache: true,
+    cache: false,
     views: {
       'tab-today': {
         templateUrl: 'templates/tab-today.html',
@@ -151,7 +154,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
     })
       .state('tab.listShow', {
       url: '/list/show',
-      cache: true,
+      cache: false,
       views: {
         'tab-list': {
           templateUrl: 'templates/tab-listShow.html',
@@ -190,6 +193,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
 
   .state('tab.account', {
     url: '/account',
+    cache: false,
     views: {
       'tab-account': {
         templateUrl: 'templates/tab-account.html',

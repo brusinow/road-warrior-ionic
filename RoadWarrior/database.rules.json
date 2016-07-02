@@ -28,6 +28,10 @@
     "admins": {
       ".read": true,
       ".write": true
+    },
+    "activeGroup": {
+      ".read": true,
+      ".write": true
     }
   }
 }
