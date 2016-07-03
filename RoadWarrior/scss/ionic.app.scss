@@ -29,7 +29,7 @@ $assertive:                       #ef4e3a  !default;
 
 
 
-.yelp.ng-hide-remove      { animation: 4s fadein linear; }
+.yelp.ng-hide-remove      { animation: .2s fadein linear; }
 
 
 @keyframes fadein {
@@ -212,6 +212,20 @@ background: $stable;
   margin: -1px 3px !important;
 }
 
+.input-label {
+    display: table;
+    padding: 7px 10px 7px 0px;
+    max-width: 200px;
+    width: 35%;
+    color: #444 !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+}
+
+.item-input-time {
+  padding: 6px 0 5px 8px !important;
+}
+
 .item a {
   text-decoration: none;
   font-weight: inherit;
@@ -228,13 +242,26 @@ background: $stable;
     margin: -1px;
     padding: 16px;
     padding-top: 8px;
-    padding-right: 16px;
+    padding-right: 6px;
     padding-bottom: 8px;
-    padding-left: 16px;
+    padding-left: 6px;
     border-width: 1px;
     border-style: solid;
     font-size: 16px;
 }
+
+.settings-label {
+  font-weight: bold;
+}
+
+input::-webkit-input-placeholder {
+ color:    #777 !important;
+}
+
+textarea::-webkit-input-placeholder {
+ color:    #777 !important;
+}
+
 
 .weather-box {
   height: 90px;
@@ -391,6 +418,10 @@ background: $stable;
   font-weight: bold;
 }
 
+.input-label-settings {
+  font-weight: bold;
+}
+
 .item-input-itin {
   display: -webkit-box;
   display: -webkit-flex;
@@ -411,6 +442,10 @@ background: $stable;
 .item-select-itin select {
     padding: 1px 40px 0 0px !important;
     font-size: 14px !important;  
+}
+
+.item-select-settings select {
+    padding: 1px 40px 0 0px !important;  
 }
 
 .no-itins {
@@ -474,6 +509,41 @@ background: $stable;
   font-size: 13px;
 }
 
+.scroll {
+  height: 100%;
+}
+
+.settings .item-divider {
+  padding-top: 1em;
+}
+.settings .item .current-value {
+  position: absolute;
+  right: 35px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.settings .item .current-value.setting-url {
+  width: 75%;
+}
+.settings .item .current-value.setting-triggerActivities {
+  font-size: 12px;
+}
+/**
+* Hide chevron in ion-item when field is a checkbox
+*/
+.settings .item.setting-type-checkbox[ng-click] .item-content:after {
+  display: none;
+}
+
+
+.settings-values .item-radio input:checked ~ .item-content {
+  background-color: #fff;
+}
+
+.item-select select {
+    font-size: 100% !important;
+}
 
 /*.yelp {
   opacity: 1;

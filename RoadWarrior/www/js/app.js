@@ -128,7 +128,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   
   .state('tab.today', {
     url: '/today',
-    cache: false,
+    cache: true,
     views: {
       'tab-today': {
         templateUrl: 'templates/tab-today.html',
@@ -197,6 +197,34 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
     views: {
       'tab-account': {
         templateUrl: 'templates/tab-account.html',
+        controller: 'AccountCtrl'
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+
+  .state('tab.account-newEvent', {
+    url: '/account/newEvent',
+    cache: false,
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/newEvent.html',
+        controller: 'AccountCtrl'
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+
+  .state('tab.account-newItin', {
+    url: '/account/newItin',
+    cache: false,
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/newItin.html',
         controller: 'AccountCtrl'
       }
     },

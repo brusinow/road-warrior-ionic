@@ -113,14 +113,14 @@ Auth.$onAuth(function(authData){
 }])
 
 
-.controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'sendDataService', 'GetGroup', 'itineraryService', 'helperService','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, GetGroup, itineraryService, helperService, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+.controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'sendDataService', 'ActiveGroup', 'itineraryService', 'helperService','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, ActiveGroup, itineraryService, helperService, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
   
-  var groupKey = GetGroup.get();
-  console.log("this is the groupKey: ",groupKey);
-  var eventRef = new Firebase("https://roadwarrior.firebaseio.com/events");
-  $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt(groupKey.groupId).endAt(groupKey.groupId))
-
-
+  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+    console.log("This group: ",$scope.thisGroup);
+    var eventRef = new Firebase("https://roadwarrior.firebaseio.com/events");
+    $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId)) 
+  })
+              
   // $scope.events.$loaded().then(function(){
   //     angular.forEach($scope.events, function(event) {
   //       console.log("event in loop: ",event)
@@ -182,7 +182,6 @@ Auth.$onAuth(function(authData){
           $scope.weatherData = forecast;
         }
       })
-        console.log("forecast is for ",$scope.weatherData.date);
     });
     
 
@@ -338,37 +337,37 @@ Auth.$onAuth(function(authData){
               $scope.yelp = {};
               if (lat && lng) {
                 console.log("entered lat && lng");
-              MyYelpAPI.retrieveYelp($scope.event, "restaurants", 500, 4, "2", 0, function(data){
+              MyYelpAPI.retrieveYelp($scope.event, "restaurants", 500, 4, "2", function(data){
                 $scope.yelp.restaurants = data.businesses;
                 $scope.yelpLoadList[0] = true;
               });
-              MyYelpAPI.retrieveYelp($scope.event, "coffee", 500, 1, "2", 1, function(data){
+              MyYelpAPI.retrieveYelp($scope.event, "coffee", 500, 1, "2", function(data){
                 $scope.yelp.coffee = data.businesses[0];
                 $scope.yelpLoadList[1] = true;
               });
-              MyYelpAPI.retrieveYelp($scope.event, "gyms", 500, 1, "2", 2, function(data){
+              MyYelpAPI.retrieveYelp($scope.event, "gyms", 500, 1, "2", function(data){
                 $scope.yelp.gym = data.businesses[0];
                 $scope.yelpLoadList[2] = true;
               });
-              MyYelpAPI.retrieveYelp($scope.event, "bookstores", 2000, 1, "0", 3, function(data){
+              MyYelpAPI.retrieveYelp($scope.event, "bookstores", 2000, 1, "0", function(data){
                 $scope.yelp.bookstore = data.businesses[0];
                 $scope.yelpLoadList[3] = true;
               });
-              MyYelpAPI.retrieveYelp($scope.event, "movietheaters", 2000, 1, "0", 4, function(data){
+              MyYelpAPI.retrieveYelp($scope.event, "movietheaters", 2000, 1, "0", function(data){
                 $scope.yelp.movie = data.businesses[0];
                 $scope.yelpLoadList[4] = true;
               });
-              MyYelpAPI.retrieveYelp($scope.event, "drugstores", 3000, 1, "0", 5, function(data){
+              MyYelpAPI.retrieveYelp($scope.event, "drugstores", 3000, 1, "0", function(data){
                 $scope.yelp.pharmacy = data.businesses[0];
                 $scope.yelp.pharmacy.formattedPhone = helperService.phoneFormat($scope.yelp.pharmacy.display_phone);
                 $scope.yelpLoadList[5] = true;
               });
-              MyYelpAPI.retrieveYelp($scope.event, "urgent_care", 3000, 1, "0", 6, function(data){
+              MyYelpAPI.retrieveYelp($scope.event, "urgent_care", 3000, 1, "0", function(data){
                 $scope.yelp.urgent = data.businesses[0];
                 $scope.yelp.urgent.formattedPhone = helperService.phoneFormat($scope.yelp.urgent.display_phone);
                 $scope.yelpLoadList[6] = true;
               });
-              MyYelpAPI.retrieveYelp($scope.event, "hospitals", 5000, 1, "0", 7, function(data){
+              MyYelpAPI.retrieveYelp($scope.event, "hospitals", 5000, 1, "0", function(data){
                 $scope.yelp.hospital = data.businesses[0];
                 $scope.yelp.hospital.formattedPhone = helperService.phoneFormat($scope.yelp.hospital.display_phone);
                 $scope.yelpLoadList[7] = true;
@@ -544,6 +543,15 @@ Auth.$onAuth(function(authData){
 
     Profile(currentAuth.uid).$bindTo($scope, "profile");
 
+    $scope.newEvent = function(){
+      $state.go("tab.account-newEvent");
+    }
+
+    $scope.newItin = function(){
+      $state.go("tab.account-newItin");
+    }
+
+
     $scope.newGroup = function(){
       $state.go("newGroup");
     }
@@ -554,49 +562,33 @@ Auth.$onAuth(function(authData){
     }
 
     ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-      // console.log("what is this group? ",$scope.thisGroup);
+      $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId))
       $scope.groups = $firebaseArray(userGroupsRef);
         $scope.groups.$loaded()
           .then(function(){
             angular.forEach($scope.groups, function(event) {
-            // console.log("event in forEach: ",event);
               if ($scope.thisGroup.name === event.name){
               $scope.selected = event;
               }
             })
           })
     })
+
     $scope.orderByDate = function(event){
     var unixTime = moment(event.date, "MM-DD-YYYY");
     return unixTime;
     };
 
     if (currentAuth.facebook){
-        // console.log("facebook",currentAuth);
+        console.log("facebook",currentAuth);
     } else {
-        // console.log("not facebook",currentAuth);
+        console.log("not facebook",currentAuth);
     }
       $scope.currentAuth = currentAuth;
       $scope.selectedEvent = {};
       $scope.nextDay = false; 
       $scope.event = {};
-      $scope.save = {};
-   
-    usersRef.child(currentAuth.uid).on("value", function(user){
-      // console.log("this user is: ",user.val());
-      $scope.user = user.val();
-    })
-    usersRef.child(currentAuth.uid).child("groups").on("child_added", function(group){
-      // console.log("current group: ",group.val());
-      var currentGroup = group.val();
-      $scope.accountType = currentGroup.level;
-      $scope.save.groupId = group.key();
-      eventsService.allGroupEvents($scope, $scope.save.groupId);
-      eventsService.todayGroupEvents($scope, $scope.save.groupId);
-      $scope.save.groupName = currentGroup.name;
-    }, function (errorObject) {
-      console.log("Sorry! There was an error getting your data:" + errorObject.code);
-    });
+    
     $scope.logout = function(){
       usersRef.unauth();
       $state.go("login");
@@ -620,6 +612,7 @@ Auth.$onAuth(function(authData){
   $scope.submitNewEventModal = function() {
     console.log("current auth is: ",currentAuth);
     eventsService.createEvent($scope, $scope.event, currentAuth.uid);
+    $state.go("tab.account");
   };
   // Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {

@@ -114,11 +114,10 @@ angular.module('roadWarrior.services', [])
     
 
     return {
-        retrieveYelp: function(event, searchTerm, radius, limitNumber, sort, id, callback) {
+        retrieveYelp: function(event, searchTerm, radius, limitNumber, sort, callback) {
             // var count = angular.callbacks.counter;
             // id = id + count;
             // console.log("what is callback id? ",count);
-            console.log("what is passed in id? ",id);
             console.log("running Yelp")
             var method = 'GET';
             var url = YelpEndpoint.url+'?callback=JSON_CALLBACK';
@@ -344,7 +343,7 @@ angular.module('roadWarrior.services', [])
         $scope.itin.endTimeUnix = $scope.itin.endTimeUnix + 86400;  
         } 
       }
-      $scope.itin.groupId = $scope.save.groupId;
+      $scope.itin.groupId = $scope.thisGroup.groupId;
       $scope.itin.eventId = $scope.selectedEvent.select.eventId;
       console.log("itin object is: ",$scope.itin);
       var newItinEntry = {};

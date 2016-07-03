@@ -1,6 +1,12 @@
 {
   "name": "RoadWarrior",
   "app_id": "",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "https://maps.googleapis.com/maps/api"
+    }
+  ],
   "gulpStartupTasks": [
     "sass",
     "watch"
