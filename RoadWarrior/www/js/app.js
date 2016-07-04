@@ -211,7 +211,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
     views: {
       'tab-account': {
         templateUrl: 'templates/newEvent.html',
-        controller: 'AccountCtrl'
+        controller: 'NewEventCtrl'
       }
     },
     resolve: {
@@ -226,6 +226,20 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
       'tab-account': {
         templateUrl: 'templates/newItin.html',
         controller: 'AccountCtrl'
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+
+  .state('tab.account-editEvent', {
+    url: '/account/editEvent',
+    cache: false,
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/editEvent.html',
+        controller: 'EditEventCtrl'
       }
     },
     resolve: {

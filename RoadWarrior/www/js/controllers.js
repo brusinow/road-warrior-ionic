@@ -195,6 +195,13 @@ Auth.$onAuth(function(authData){
 
    
     $scope.yelpLoadList = [];
+    $scope.result = {
+      "weather": false,
+      "today": false,
+      "itins": false,
+      "complete": false,
+      "director": ""
+    }
     $scope.yelpShow = {
       "food": true,
       "entertainment": false,
@@ -241,8 +248,12 @@ Auth.$onAuth(function(authData){
       }
     }
 
-    $scope.noEventResult = function(){
-      if ($scope.result === "chicken"){
+    $scope.hideLoader = function(){
+      if ($scope.result.director === "noToday"){
+        return true;
+      } else if ($scope.result.director === "noItins" && $scope.result.weather){
+        return true;
+      } else if ($scope.result.weather && $scope.result.today && $scope.result.itins){
         return true;
       } else {
         return false;
@@ -295,7 +306,7 @@ Auth.$onAuth(function(authData){
     var itinsRef = new Firebase('https://roadwarrior.firebaseio.com/itins');
 
     
-      $scope.event = {}
+      $scope.event = {};
       $scope.todayDate = moment().format('MM-DD-YYYY');
       $scope.now_formatted_date = moment().format('MMMM Do, YYYY');
       $scope.day_of_week = moment().format('dddd');
@@ -310,33 +321,61 @@ Auth.$onAuth(function(authData){
         $scope.events.$loaded()
           .then(function(){
             console.log("events loaded: ",$scope.events);
-            angular.forEach($scope.events, function(event) {
-            console.log("event in forEach: ",event);
-              if (event.date === $scope.todayDate){
-                $scope.result = true;
-                console.log("$scope.result is ",$scope.result);
-                $scope.event = event;
-                console.log("saves the correct day");
+              if ($scope.events.length === 0){
+                console.log("you have no events. None at all.");
+                $scope.result.director = "noToday";
               }
-            })
+                    angular.forEach($scope.events, function(event) {
+                    console.log("event in forEach: ",event);
+                      if (event.date === $scope.todayDate){
+                        $scope.result.today = true;
+                        $scope.event = event;
+                        console.log("saves the correct day");
+
+                        var lat = $scope.event.lat;
+                        var lng = $scope.event.lng;
+                        Yahoo.getYahooData(lat,lng).then(function(data){
+                        if (data){
+                          $scope.result.weather = true;
+                          console.log("weather result is ",$scope.result.weather);
+                          console.log("weather data is ",data);
+                        }
+                        $scope.weatherData = data;
+                        }).catch(function(data){
+                          console.log("You have no weather data. ",data);
+                        });
+
+                        $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
+                        $scope.itins.$loaded()
+                        .then(function(){
+                          if ($scope.itins.length > 0){
+                            $scope.result.itins = true;
+                            console.log("itins result is ",$scope.result.itins);
+                          } else {
+                            console.log("you have no itins for this day.")
+                            $scope.result.director = "noItins";
+                          }
+                        }).catch(function(data){
+                          console.log("no itins data came back. ",data);
+                        });
+                      } 
+                    })
+                    if (!$scope.result.today){
+                        console.log("no today event!");
+                        $scope.result.director = "noToday";
+                    }
               
 
             // ********** weather related stuff *************
 
-              var lat = $scope.event.lat;
-              var lng = $scope.event.lng;
-              Yahoo.getYahooData(lat,lng).then(function(data){
-                $scope.weatherData = data;
-                console.log($scope.weatherData);
-              });
+              
 
               // ********** YELP *************
-            $scope.$watch('events', function() {
-               console.log("HEY, SOMETHING CHANGED!!!!");
-   
+            // $scope.$watch('events', function() {
+
+               // console.log("HEY, SOMETHING CHANGED!!!!");
               $scope.yelp = {};
-              if (lat && lng) {
-                console.log("entered lat && lng");
+              if ($scope.result.today) {
               MyYelpAPI.retrieveYelp($scope.event, "restaurants", 500, 4, "2", function(data){
                 $scope.yelp.restaurants = data.businesses;
                 $scope.yelpLoadList[0] = true;
@@ -375,15 +414,13 @@ Auth.$onAuth(function(authData){
               console.log("end of yelp calls");
               }
             });
-              if ($scope.events){
-              $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
-              }
-                  if ($scope.result !== true){
-                      $scope.result = "chicken";
-                      console.log($scope.result);
-                  }
+              // if ($scope.events){
+              
+              // }
+          }).catch(function(data){
+            console.log("you have no events. ",data);
           });
-        })
+        // });
 
        
   
@@ -541,10 +578,16 @@ Auth.$onAuth(function(authData){
     var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
     var userGroupsRef = new Firebase("https://roadwarrior.firebaseio.com/users/"+currentAuth.uid+"/groups");
 
+
+    $scope.itin = {};
     Profile(currentAuth.uid).$bindTo($scope, "profile");
 
     $scope.newEvent = function(){
       $state.go("tab.account-newEvent");
+    }
+
+    $scope.editEvent = function(){
+      $state.go("tab.account-editEvent");
     }
 
     $scope.newItin = function(){
@@ -566,9 +609,9 @@ Auth.$onAuth(function(authData){
       $scope.groups = $firebaseArray(userGroupsRef);
         $scope.groups.$loaded()
           .then(function(){
-            angular.forEach($scope.groups, function(event) {
-              if ($scope.thisGroup.name === event.name){
-              $scope.selected = event;
+            angular.forEach($scope.groups, function(group) {
+              if ($scope.thisGroup.name === group.name){
+              $scope.selected = group;
               }
             })
           })
@@ -592,69 +635,6 @@ Auth.$onAuth(function(authData){
     $scope.logout = function(){
       usersRef.unauth();
       $state.go("login");
-    };
-
-    // New Event Modal
-    $ionicModal.fromTemplateUrl('templates/newEventModal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.newEventModal = modal; 
-  });
-  $scope.openNewEventModal = function() {
-    $scope.event = {};
-    $scope.newEventModal.show();
-  };
-  $scope.closeNewEventModal = function() {
-    $scope.newEventModal.hide();
-    console.log("closeNewEventModal");
-  };
-  $scope.submitNewEventModal = function() {
-    console.log("current auth is: ",currentAuth);
-    eventsService.createEvent($scope, $scope.event, currentAuth.uid);
-    $state.go("tab.account");
-  };
-  // Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.newEventModal.remove();
-  });
-  // Execute action on hide modal
-  $scope.$on('newEventModal.hidden', function() {
-    console.log("NewEventModal.hidden");
-  });
-  // Execute action on remove modal
-  $scope.$on('newEventModal.removed', function() {
-    console.log("NewEventModal.removed");
-  });
-
-   var ipObj1 = {
-      callback: function (val) {  //Mandatory
-        console.log('Return value from the datepicker popup is : ',val);
-        $scope.event.unixDate = val;
-        $scope.event.dayOfWeek = moment(val).format('dddd');
-        $scope.event.date = moment(val).format('MM-DD-YYYY');
-        $scope.event.longDate = moment(val).format('MMMM Do, YYYY');
-        console.log("day is: ",$scope.event.date);
-      },
-      disabledDates: [            //Optional
-        new Date(2016, 2, 16),
-        new Date(2015, 3, 16),
-        new Date(2015, 4, 16),
-        new Date(2015, 5, 16),
-        new Date('Wednesday, August 12, 2015'),
-        new Date("08-16-2016"),
-        new Date(1439676000000)
-      ],
-      from: new Date(2012, 1, 1), //Optional
-      to: new Date(2016, 10, 30), //Optional
-      inputDate: new Date(),      //Optional
-      mondayFirst: true,          //Optional
-      closeOnSelect: false,       //Optional
-      templateType: 'popup'       //Optional
-    };
-
-    $scope.openDatePicker = function(){
-      ionicDatePicker.openDatePicker(ipObj1);
     };
 
 
@@ -705,49 +685,65 @@ Auth.$onAuth(function(authData){
     };
 
 
-   // New Itin Modal
-    $ionicModal.fromTemplateUrl('templates/newItinModal.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.newItinModal = modal; 
-  });
-  $scope.openNewItinModal = function() {
-    $scope.itin = {};
-    $scope.newItinModal.show();
-  };
-  $scope.nextDayToggle = function() {
-          if ($scope.nextDay == false) {
-              $scope.nextDay = true;
-          } else
-              $scope.nextDay = false;
-          console.log('testToggle changed to ' + $scope.nextDay);
-  };
-  $scope.closeNewItinModal = function() {
-    $scope.selectedEvent = {};
-    $scope.newItinModal.hide();
-        
-      };
-  $scope.submitNewItinModal = function() {
+  $scope.submitNewItin = function() {
     console.log($scope.selectedEvent.select.eventId);
      itineraryService.createItinItem($scope);
+     $state.go("tab.account");
   };
-  // Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-    $scope.newItinModal.remove();
-  });
-  // Execute action on hide modal
-  $scope.$on('newItinModal.hidden', function() {
-    // Execute action
-  });
-  // Execute action on remove modal
-  $scope.$on('newItinModal.removed', function() {
-    // Execute action
-  });
+
+  
+
+  
+}])
 
 
-  //Popover for New Event Address Suggestions
-  $ionicPopover.fromTemplateUrl('templates/popover.html', {
+
+.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+  $scope.event = {};
+  Profile(currentAuth.uid).$bindTo($scope, "profile");
+
+
+  $scope.submitNewEvent = function() {
+    console.log("current auth is: ",currentAuth);
+    eventsService.createEvent($scope, $scope.event, currentAuth.uid);
+    $state.go("tab.account");
+  };
+
+
+
+
+
+ var ipObj1 = {
+      callback: function (val) {  //Mandatory
+        console.log('Return value from the datepicker popup is : ',val);
+        $scope.event.unixDate = val;
+        $scope.event.dayOfWeek = moment(val).format('dddd');
+        $scope.event.date = moment(val).format('MM-DD-YYYY');
+        $scope.event.longDate = moment(val).format('MMMM Do, YYYY');
+        console.log("day is: ",$scope.event.date);
+      },
+      disabledDates: [            //Optional
+        new Date(2016, 2, 16),
+        new Date(2015, 3, 16),
+        new Date(2015, 4, 16),
+        new Date(2015, 5, 16),
+        new Date('Wednesday, August 12, 2015'),
+        new Date("08-16-2016"),
+        new Date(1439676000000)
+      ],
+      from: new Date(2012, 1, 1), //Optional
+      to: new Date(2016, 10, 30), //Optional
+      inputDate: new Date(),      //Optional
+      mondayFirst: true,          //Optional
+      closeOnSelect: false,       //Optional
+      templateType: 'popup'       //Optional
+    };
+
+    $scope.openDatePicker = function(){
+      ionicDatePicker.openDatePicker(ipObj1);
+    };
+
+$ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope
   }).then(function(popover) {
     $scope.popover = popover;
@@ -797,6 +793,156 @@ Auth.$onAuth(function(authData){
     // Execute action
   });
 
-  
+
+
+
 }])
 
+.controller('EditEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+  var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
+  var userGroupsRef = new Firebase("https://roadwarrior.firebaseio.com/users/"+currentAuth.uid+"/groups");
+
+
+  $scope.updateEvents = function(){
+      angular.forEach($scope.events, function(event) {
+        console.log("event in loop: ",event)
+        var thisEvent = event;
+          this.geocoder = new google.maps.Geocoder();
+              this.geocoder.geocode({ 'address': thisEvent.address }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                  console.log("results are: ",results)
+                  thisEvent.lat = results[0].geometry.location.lat();
+                  thisEvent.lng = results[0].geometry.location.lng();
+                  thisEvent.address = results[0].formatted_address;
+                  var latlng = {lat: thisEvent.lat, lng: thisEvent.lng};
+                  console.log("lat/lng is: ",latlng);
+                  this.geocoder = new google.maps.Geocoder();
+                  this.geocoder.geocode({'location': latlng}, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                      for (var ac = 0; ac < results[0].address_components.length; ac++) {
+                        var component = results[0].address_components[ac];
+                        switch(component.types[0]) {
+                          case 'locality':
+                            thisEvent.city = component.long_name;
+                            break;
+                          case 'administrative_area_level_1':
+                            thisEvent.state = component.short_name;
+                            break;
+                        }
+                      };
+                      thisEvent.cityState = thisEvent.city+", "+thisEvent.state; 
+                    }
+                  })
+                } 
+              });
+        $scope.events.$save(event).then(function(ref) {
+          console.log(ref.val);
+        });
+      })
+      $state.go("tab.account");
+  }
+
+
+   ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+      $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId))
+      $scope.groups = $firebaseArray(userGroupsRef);
+        $scope.groups.$loaded()
+          .then(function(){
+           $scope.selected = $scope.events[0];
+          })
+    })
+
+   $ionicPopover.fromTemplateUrl('templates/popover.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+
+
+  $scope.openPopover = function($event) {
+    var fullQuery = '/api/place/textsearch/json?query=' + $scope.selected.venue +" "+ $scope.selected.cityState + '&key='+__env.GOOGLE_PLACES_KEY;
+    console.log(fullQuery);
+    var req = {
+      url: fullQuery,
+      method: 'GET',
+    }
+
+    $http(req).then(function success(res) {
+      console.log(res)
+      $scope.results = res.data.results;
+      console.log("results for popover are: ",$scope.results);
+      $scope.popover.show($event);
+    }, function error(res) {
+    //do something if the response has an error
+        console.log(res);
+      }); 
+  };
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+  $scope.selectAddress = function(result){
+    console.log("result of click is: ",result);
+    $scope.selected.address = result.formatted_address;
+    console.log("event address is: ",$scope.selected.address);
+    $scope.selected.venue = result.name;
+    console.log("venue is: ",$scope.selected.venue);
+    $scope.popover.hide();
+    console.log("popover should be closed");
+  }
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  });
+  // Execute action on hide popover
+  $scope.$on('popover.hidden', function() {
+    // Execute action
+  });
+  // Execute action on remove popover
+  $scope.$on('popover.removed', function() {
+    // Execute action
+  });
+
+
+
+   var ipObj1 = {
+      callback: function (val) {  //Mandatory
+        console.log('Return value from the datepicker popup is : ',val);
+        $scope.event.unixDate = val;
+        $scope.event.dayOfWeek = moment(val).format('dddd');
+        $scope.event.date = moment(val).format('MM-DD-YYYY');
+        $scope.event.longDate = moment(val).format('MMMM Do, YYYY');
+        console.log("day is: ",$scope.event.date);
+      },
+      disabledDates: [            //Optional
+        new Date(2016, 2, 16),
+        new Date(2015, 3, 16),
+        new Date(2015, 4, 16),
+        new Date(2015, 5, 16),
+        new Date('Wednesday, August 12, 2015'),
+        new Date("08-16-2016"),
+        new Date(1439676000000)
+      ],
+      from: new Date(2012, 1, 1), //Optional
+      to: new Date(2016, 10, 30), //Optional
+      inputDate: new Date(),      //Optional
+      mondayFirst: true,          //Optional
+      closeOnSelect: false,       //Optional
+      templateType: 'popup'       //Optional
+    };
+
+    $scope.openDatePicker = function(){
+      ionicDatePicker.openDatePicker(ipObj1);
+    };
+
+
+  }])
+
+
+
+  
+      
+            
+
+                
+            
+   

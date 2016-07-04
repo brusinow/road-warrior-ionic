@@ -15,7 +15,6 @@ angular.module('roadWarrior.services', [])
     console.log("lat: ",lat);
     console.log("lng: ",lng);
     var url = YahooEndpoint.url + "/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(SELECT%20woeid%20FROM%20geo.places%20WHERE%20text%3D%22("+lat+"%2C"+lng+")%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
-    console.log(url);
 
     return $http.get(url)
       .then(function(data) {
@@ -352,7 +351,7 @@ angular.module('roadWarrior.services', [])
       newItinEntry[itinId] = $scope.itin;
       itinRef.update(newItinEntry);
       $scope.selectedEvent = {};
-      $scope.newItinModal.hide();
+      // $scope.newItinModal.hide();
     },
     getItinItems: function($scope, eventId){
       itinRef.orderByChild('eventId').startAt(eventId).endAt(eventId).on("value", function(itins){

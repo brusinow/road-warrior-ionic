@@ -1,13 +1,13 @@
 
 <ion-view view-title="Today">
 <ion-content class="padding" scroll="false">
-  <div class="spinner" ng-hide="weatherData || noEventResult()">
+  <div class="spinner" ng-hide="hideLoader()">
   <ion-spinner></ion-spinner>
   </div>
   <ion-slides options="options" slider="data.slider">
 
     <ion-slide-page>
-               <div class="postLoad" ng-show="result"> 
+               <div class="postLoad" ng-show="hideLoader()"> 
                  <div>
                
                 <div class="row">
@@ -17,13 +17,13 @@
                   <h4 ng-if="result" class="no-margin header-font-heavy">{{event.venue}}</h4>
                   <h5 ng-if="result" class="no-margin header-font">{{event.cityState}}</h5>
                   </div>
-                  <div ng-show="weatherData" class="weather-box col col-25">
+                  <div ng-show="result.weather" class="weather-box col col-25">
                     <span class="weather-image"><i class="wi wi-yahoo-{{weatherData.condition.code}}"></i></span>
                     <h3 class="weather-main-temp center-text">{{weatherData.condition.temp}}<span ng-show="weatherData">°</span></h3>
                     <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
                   </div>
                 </div>
-                <ion-list ng-show="itins.length > 0">
+                <ion-list ng-show="result.itins">
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix'">
                       <ion-item  ng-click="toggleItin(itin)" class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
                         <div class="row">
@@ -37,12 +37,12 @@
               </div>
             </ion-list>
               </div>
-             <div class="no-itins center-text" ng-show="itins.length === 0 && !noEventResult()">
+             <div class="no-itins center-text" ng-show="result.director === 'noItins'">
               <div class="cat-time"></div>
               <h3 class="no-margin">Your itinerary is empty.</h3>
               <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2> 
              </div>
-              <div class="no-itins center-text" ng-show="noEventResult()">
+              <div class="no-itins center-text" ng-show="result.director === 'noToday'">
               <div class="cat-time-no-event"></div>
               <h3 class="no-margin">You have no event scheduled today.</h3> 
              </div>
