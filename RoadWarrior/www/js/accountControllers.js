@@ -14,8 +14,9 @@ angular.module('roadWarrior.controllers')
     $scope.nextDayToggle = function() {
           if ($scope.nextDay == false) {
               $scope.nextDay = true;
-          } else
+          } else {
               $scope.nextDay = false;
+            }
           console.log('testToggle changed to ' + $scope.nextDay);
     };
 
@@ -390,20 +391,38 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
     $scope.event = data.event;
 
     $scope.itin = EditItin(data.itin.id);
-   
-    $scope.toggleSwitch = function(startTimeUnix){
-      if (startTimeUnix >= 86400){
-        return true;
-      } else {
-        return false
-      }
-    }
+    console.log("nextDay is ",data.itin.nextDay);
+    // $scope.toggleSwitch = function(startTimeUnix){
+    //   if (startTimeUnix >= 86400){
+    //     return true;
+    //   } else {
+    //     return false
+    //   }
+    // }
 
+    $scope.nextDayToggle = function() {
+          console.log('testToggle changed to ' + $scope.itin.nextDay);
+    };
 
     $scope.updateItin = function(){
       console.log("click");
       console.log("what is myItins? ",$scope.itinList);
       console.log("itin to be submitted: ",$scope.itin);
+        if ($scope.itin.startTimeUnix < 86400 && $scope.itin.nextDay){
+          $scope.itin.nextDay = true;
+          $scope.itin.startTimeUnix = $scope.itin.startTimeUnix + 86400;
+          if ($scope.itin.endTimeUnix){
+            $scope.itin.endTimeUnix = $scope.itin.endTimeUnix + 86400;
+          }
+        } else if ($scope.itin.startTimeUnix >= 86400 && !$scope.itin.nextDay){
+          $scope.itin.nextDay = false;
+          $scope.itin.startTimeUnix = $scope.itin.startTimeUnix - 86400;
+          if ($scope.itin.endTimeUnix){
+            $scope.itin.endTimeUnix = $scope.itin.endTimeUnix - 86400;
+          }
+        } else {
+          console.log("no toggle change needed");
+        }
 
     
         $scope.itin.$save().then(function(ref) {
