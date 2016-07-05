@@ -10,6 +10,15 @@ angular.module('roadWarrior.controllers')
     $scope.itin = {};
     Profile(currentAuth.uid).$bindTo($scope, "profile");
 
+
+    $scope.nextDayToggle = function() {
+          if ($scope.nextDay == false) {
+              $scope.nextDay = true;
+          } else
+              $scope.nextDay = false;
+          console.log('testToggle changed to ' + $scope.nextDay);
+    };
+
     $scope.newEvent = function(){
       $state.go("tab.account-newEvent");
     }

@@ -346,12 +346,15 @@ angular.module('roadWarrior.services', [])
   return {
     createItinItem: function($scope){
       if ($scope.nextDay){
+        $scope.itin.nextDay = true;
         if ($scope.itin.startTimeUnix){
         $scope.itin.startTimeUnix = $scope.itin.startTimeUnix + 86400;
         }
         if ($scope.itin.endTimeUnix){
         $scope.itin.endTimeUnix = $scope.itin.endTimeUnix + 86400;  
         } 
+      } else {
+        $scope.itin.nextDay = false;
       }
       $scope.itin.groupId = $scope.thisGroup.groupId;
       $scope.itin.eventId = $scope.selectedEvent.select.eventId;
