@@ -125,7 +125,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
   })
 
   // Each tab has its own nav history stack:
-  
   .state('tab.today', {
     url: '/today',
     cache: true,
@@ -139,6 +138,21 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
       "currentAuth": authRequire
     }
   })
+     
+    .state('tab.today-editItin', {
+      url: '/today/editItin',
+      cache: false,
+      views: {
+        'tab-today': {
+          templateUrl: 'templates/editItin.html',
+          controller: 'EditItinCtrl'
+        }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
+    })
+
   .state('tab.list', {
       url: '/list',
       cache: false,
@@ -165,6 +179,8 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
       "currentAuth": authRequire
     }
     })
+
+   
 
   .state('tab.chats', {
       url: '/chats',

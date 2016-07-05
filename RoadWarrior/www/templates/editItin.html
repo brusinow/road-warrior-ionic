@@ -1,13 +1,8 @@
-<ion-view view-title="New Itin">
+<ion-view view-title="Edit Itin">
   <ion-content class="padding">
+  <h3 class="center-text">{{event.longDate}}</h3>
+  <h4 class="center-text">{{event.cityState}}</h4>
   <div class="list">  
-    <label class = "item item-input-itin item-select item-select-itin">
-      <div class = "input-label-itin">
-        Choose Event:
-      </div>
-      <select ng-model="selectedEvent.select" ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate'>
-      </select>
-    </label>
     <div class="item-time">
     <div class="row">
       <div class="col col-50">
@@ -36,7 +31,7 @@
     <ion-toggle ng-model=nextDay ng-change="nextDayToggle()">Make for following AM?</ion-toggle>
     </div>
           
-         <button class="button button-block button-stable itin-button" ng-click ="submitNewItin()">Submit</button>
+         <button class="button button-block button-stable itin-button" ng-click ="updateItin()">Update</button>
         </div> 
         </div>   
   </ion-content>

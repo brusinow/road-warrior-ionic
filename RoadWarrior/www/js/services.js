@@ -12,8 +12,8 @@ angular.module('roadWarrior.services', [])
   console.log('YahooEndpoint', YahooEndpoint)
 
   var getYahooData = function(lat,lng) {
-    console.log("lat: ",lat);
-    console.log("lng: ",lng);
+    // console.log("lat: ",lat);
+    // console.log("lng: ",lng);
     var url = YahooEndpoint.url + "/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(SELECT%20woeid%20FROM%20geo.places%20WHERE%20text%3D%22("+lat+"%2C"+lng+")%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 
     return $http.get(url)
@@ -117,7 +117,7 @@ angular.module('roadWarrior.services', [])
             // var count = angular.callbacks.counter;
             // id = id + count;
             // console.log("what is callback id? ",count);
-            console.log("running Yelp")
+            // console.log("running Yelp")
             var method = 'GET';
             var url = YelpEndpoint.url+'?callback=JSON_CALLBACK';
             var params = {
@@ -289,6 +289,7 @@ angular.module('roadWarrior.services', [])
                     if (status === google.maps.GeocoderStatus.OK) {
                           for (var ac = 0; ac < results[0].address_components.length; ac++) {
                                     var component = results[0].address_components[ac];
+                                    console.log("what is component? ",component);
                                     switch(component.types[0]) {
                                         case 'locality':
                                             newEvent.city = component.long_name;
@@ -311,7 +312,7 @@ angular.module('roadWarrior.services', [])
                                 console.log("new event to be submitted: ",newEvent);
                                 newEventEntry[eventId] = newEvent;
                                 eventsRef.update(newEventEntry);
-                                $scope.newEventModal.hide();
+                                // $scope.newEventModal.hide();
                               })
                     } else {
                       window.alert('No first geocode results.');
