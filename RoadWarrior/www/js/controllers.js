@@ -80,10 +80,13 @@ angular.module('roadWarrior.controllers', [])
 
 .controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
   
-    $scope.$watch('event', function(newEvent, oldEvent) {
-    console.log("Old event is ",oldEvent);  
-    console.log("New event is ",newEvent);
-    });
+      $scope.$watch('event', function(newEvent, oldEvent) {
+          console.log("Old event is ",oldEvent);  
+          console.log("New event is ",newEvent);
+          console.log("CHANGE!!!!");
+          $scope.yelpCall();
+          $scope.weatherCall($scope.event.lat, $scope.event.lng);
+      });
 
    
     $scope.yelpLoadList = [];
@@ -209,6 +212,18 @@ angular.module('roadWarrior.controllers', [])
     }
   }
 
+      $scope.weatherCall = function(lat, lng){
+        Yahoo.getYahooData(lat,lng).then(function(data){
+          if (data){
+            $scope.result.weather = true;
+            // console.log("weather result is ",$scope.result.weather);
+            // console.log("weather data is ",data);
+          }
+          $scope.weatherData = data;
+          }).catch(function(data){
+            console.log("You have no weather data. ",data);
+        });
+      }
 
 
     $scope.yelpShowFood = function(){
@@ -261,9 +276,7 @@ angular.module('roadWarrior.controllers', [])
       $scope.now_formatted_date = moment().format('MMMM Do, YYYY');
       $scope.day_of_week = moment().format('dddd');
     
-//     syncObject.$bindTo($scope, 'data').then(function(){
-//     $scope.dataLoaded = true;
-// });
+
     
       ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
         console.log("$scope.thisGroup.groupId: ",$scope.thisGroup.groupId);
@@ -284,16 +297,8 @@ angular.module('roadWarrior.controllers', [])
 
                         var lat = $scope.event.lat;
                         var lng = $scope.event.lng;
-                        Yahoo.getYahooData(lat,lng).then(function(data){
-                        if (data){
-                          $scope.result.weather = true;
-                          // console.log("weather result is ",$scope.result.weather);
-                          // console.log("weather data is ",data);
-                        }
-                        $scope.weatherData = data;
-                        }).catch(function(data){
-                          console.log("You have no weather data. ",data);
-                        });
+                      //WEATHER CALL
+                        $scope.weatherCall(lat,lng);
 
                         $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
                         $scope.itins.$loaded()
@@ -322,7 +327,11 @@ angular.module('roadWarrior.controllers', [])
           });
         });
 
-       
+    
+
+
+
+
   
 }])
 

@@ -374,39 +374,43 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
   }])
 
 
-.controller('EditItinCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'sendDataService', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, sendDataService, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('EditItinCtrl', ['$scope', '$http','$firebaseArray','$firebaseObject','$ionicHistory', 'EditItin', 'sendDataService', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $firebaseObject, $ionicHistory, EditItin, sendDataService, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
     
     var data = sendDataService.get();
     console.log("what is data? ",data);
     $scope.event = data.event;
-    $scope.itin = data.itin;
 
-    var itinsRef = new Firebase('https://roadwarrior.firebaseio.com/itins');
-    $scope.itinList = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
-    $scope.itinList.$loaded()
-    .then(function(){
-      console.log("itinList is ",$scope.itinList);
-    }).catch(function(data){
-      console.log("no itins data came back. ",data);
-    });
+    $scope.itin = EditItin(data.itin.id);
+   
+    $scope.toggleSwitch = function(startTimeUnix){
+      if (startTimeUnix >= 86400){
+        return true;
+      } else {
+        return false
+      }
+    }
+
 
     $scope.updateItin = function(){
       console.log("click");
       console.log("what is myItins? ",$scope.itinList);
       console.log("itin to be submitted: ",$scope.itin);
 
-      // var updatedItin = {};
-      // updatedItin[$scope.itin.$id] = angular.toJson($scope.itin);
-      // console.log("updated Itin? ",updatedItin);
-      var targetItin = $scope.itinList.$getRecord($scope.itin.$id)
-      console.log("target itin: ", targetItin);
+    
+        $scope.itin.$save().then(function(ref) {
+        console.log(ref);
+        $ionicHistory.goBack();
+        }, function(error) {
+        console.log("Error:", error);
+        });
+   
 
-      $scope.itinList.$save($scope.itin).then(function(ref) {
-          console.log("Ref val: ",ref.val);
-          $ionicHistory.backView();
-      }).catch(function(data){
-        console.log("error! ",data);
-      });
+      // $scope.itinList.$save($scope.itin).then(function(ref) {
+      //     console.log("Ref val: ",ref.val);
+      //     $ionicHistory.backView();
+      // }).catch(function(data){
+      //   console.log("error! ",data);
+      // });
      
     }
 

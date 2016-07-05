@@ -53,6 +53,16 @@ angular.module('roadWarrior.services', [])
   }
 ])
 
+.factory("EditItin", ["$firebaseObject",
+  function($firebaseObject) {
+    return function(id) {
+      // create a reference to the database node where we will store our data
+      var itinRef = new Firebase('https://roadwarrior.firebaseio.com/itins/'+id);
+      return $firebaseObject(itinRef);
+    }
+  }
+])
+
 
 .factory('GetSetActiveGroup', ["$firebaseObject", function($firebaseObject) {
   
@@ -349,6 +359,7 @@ angular.module('roadWarrior.services', [])
       var newItinEntry = {};
       var newItinRef = itinRef.push();
       var itinId = newItinRef.key();
+      $scope.itin.id = itinId;
       newItinEntry[itinId] = $scope.itin;
       itinRef.update(newItinEntry);
       $scope.selectedEvent = {};
