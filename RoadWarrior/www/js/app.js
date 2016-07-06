@@ -7,7 +7,7 @@ var authRequire = ["Auth", function(Auth) { return Auth.$requireAuth(); }]
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter'])
+angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter'])
 
 
 
@@ -297,5 +297,29 @@ angular.module('roadWarrior', ['ionic', 'firebase','roadWarrior.controllers','ro
     });
     return filtered;
   };
-});
+})
 
+
+.filter('cut', function () {
+        return function (value, wordwise, max, tail) {
+            if (!value) return '';
+
+            max = parseInt(max, 10);
+            if (!max) return value;
+            if (value.length <= max) return value;
+
+            value = value.substr(0, max);
+            if (wordwise) {
+                var lastspace = value.lastIndexOf(' ');
+                if (lastspace != -1) {
+                  //Also remove . and , so its gives a cleaner result.
+                  if (value.charAt(lastspace-1) == '.' || value.charAt(lastspace-1) == ',') {
+                    lastspace = lastspace - 1;
+                  }
+                  value = value.substr(0, lastspace);
+                }
+            }
+
+            return value + (tail || '…');
+        };
+    });

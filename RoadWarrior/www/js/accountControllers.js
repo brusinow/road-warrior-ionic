@@ -5,7 +5,8 @@ angular.module('roadWarrior.controllers')
     var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
     var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
     var userGroupsRef = new Firebase("https://roadwarrior.firebaseio.com/users/"+currentAuth.uid+"/groups");
-
+    $scope.submitted = false;
+    console.log("submitted is ",$scope.submitted);
 
     $scope.itin = {};
     Profile(currentAuth.uid).$bindTo($scope, "profile");
@@ -124,7 +125,8 @@ angular.module('roadWarrior.controllers')
 
 
   $scope.submitNewItin = function() {
-    console.log($scope.selectedEvent.select.eventId);
+  
+    $scope.submitted = true;
      itineraryService.createItinItem($scope);
      $state.go("tab.account");
   };
@@ -389,6 +391,8 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
     var data = sendDataService.get();
     console.log("what is data? ",data);
     $scope.event = data.event;
+    $scope.submitted = false;
+    console.log("submitted is ",$scope.submitted);
 
     $scope.itin = EditItin(data.itin.id);
     console.log("nextDay is ",data.itin.nextDay);
@@ -408,6 +412,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
       console.log("click");
       console.log("what is myItins? ",$scope.itinList);
       console.log("itin to be submitted: ",$scope.itin);
+      console.log("submitted is ",$scope.submitted);
         if ($scope.itin.startTimeUnix < 86400 && $scope.itin.nextDay){
           $scope.itin.nextDay = true;
           $scope.itin.startTimeUnix = $scope.itin.startTimeUnix + 86400;

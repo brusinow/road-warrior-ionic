@@ -23,7 +23,7 @@
     },
     "itins": {
       ".read": true,
-      ".write": true
+      ".write": true,
     },
     "admins": {
       ".read": true,

@@ -1,19 +1,21 @@
 <ion-view view-title="New Itin">
   <ion-content class="padding">
+  <form name="myForm" ng-submit="submitNewItin()" novalidate>
   <div class="list">  
-    <label class = "item item-input-itin item-select item-select-itin">
+    <label ng-class="{'valError': submitted && myForm.date.$error.required}" class = "item item-input-itin item-select item-select-itin">
       <div class = "input-label-itin">
         Choose Event:
       </div>
-      <select ng-model="selectedEvent.select" ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate'>
+      <select name="date" ng-model="selectedEvent.select" ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate' required>
       </select>
     </label>
     <div class="item-time">
     <div class="row">
       <div class="col col-50">
-        <label class="item item-input item-input-time">
+        <label ng-class="{'valError': submitted && myForm.startTime.$error.required}" class="item item-input item-input-time">
           <span class="input-label">Start Time: </span>
-            <input ng-model="itin.startTime" type="text" ng-click="openStartTimePicker()">
+            <input ng-model="itin.startTime" type="text" name="startTime" ng-click="openStartTimePicker()" required>
+
         </label>  
       </div>  
       <div class="col col-50">
@@ -24,10 +26,11 @@
       </div> 
       </div>   
     </div>
-    <label class="item item-input">
-            <input ng-model="itin.mainItem" type="text" placeholder="Itinerary Item">
-          </label>
-    
+      <label ng-class="{'valError': submitted && myForm.mainItem.$error.required, 'valErrorSecond': submitted && myForm.mainItem.$error.maxlength}" class="item item-input">
+              <input ng-model="itin.mainItem" type="text" name="mainItem" placeholder="Itinerary Item Name"  ng-maxlength="24" required>
+              <!-- <span class="help-inline" ng-show="submitted && myForm.mainItem.$error.required">* Required</span> -->
+      </label>
+ 
     <label class="item item-input">
             <textarea ng-model="itin.details" name="info" rows="3" id="itin-details" placeholder="Additional Information"></textarea>
     </label> 
@@ -35,9 +38,36 @@
     <div class="list setting-text">
     <ion-toggle ng-model="nextDay" ng-change="nextDayToggle()">Make for following AM?</ion-toggle>
     </div>
-          
-         <button class="button button-block button-stable itin-button" ng-click ="submitNewItin()">Submit</button>
+    
+         <button class="button button-block button-dark itin-button" type="submit">Submit</button>
         </div> 
-        </div>   
+        </form>
+          <div ng-messages="myForm.startTime.$error" ng-if='myForm.startTime.$dirty' style="color:maroon" role="alert">
+            <div ng-message="required">You must enter a start time.</div>
+          </div>
+         <!--  <div ng-messages="myForm.mainItem.$error" ng-if='myForm.mainItem.$dirty' style="color:maroon" role="alert">
+            <div ng-message="required">You must enter an itinerary item name.</div>
+            <div ng-message="myForm.mainItem.$error.maxlength">Itinerary item name must be shorter than 24 characters.</div>
+          </div> -->
+           <!--  <span class="help-inline" ng-show="submitted && myForm.mainItem.$error.maxlength">* Your itinerary title must be less than 24 characters.</span> -->
+             <div class="alert alert-danger" ng-show="submitted && myForm.date.$error.required" role="alert">
+              <i class="icon ion-alert-circled"></i>
+                Event date is required.
+              </div>
+           <div class="alert alert-danger" ng-show="submitted && myForm.startTime.$error.required" role="alert">
+              <i class="icon ion-alert-circled"></i>
+                Start time is required.
+              </div>
+              <div class="alert alert-danger" ng-show="submitted && myForm.mainItem.$error.required" role="alert">
+              <i class="icon ion-alert-circled"></i>
+                Itinerary name is required.
+              </div>
+            <div class="alert alert-danger" ng-show="submitted && myForm.mainItem.$error.maxlength" role="alert">
+              <i class="icon ion-alert-circled"></i>
+                Your itinerary name must be less than 24 characters.
+              </div>
+         
+
   </ion-content>
 </ion-view>
+

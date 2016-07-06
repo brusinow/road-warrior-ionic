@@ -392,12 +392,11 @@ textarea::-webkit-input-placeholder {
 }
 
 .itin-list {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .itin-name {
   text-align: left;
-  font-weight: bold;
 }
 
 .itin-time {
@@ -472,14 +471,18 @@ textarea::-webkit-input-placeholder {
   width: 200px;
   height: 200px;
 }
+.accordion-header {
+  font-weight: bold;
+  text-decoration: underline;
+  margin-bottom: 4px;
+}
 
 .list .item.item-accordion {
   background-color: $stable;
-  text-align: left;
   font-size: 13px;
   line-height: 14px;
   height: 70px;
-  padding-top: 10px;
+  padding-top: 5px;
   padding-bottom: 0;
   margin: -1px 3px;
   -webkit-transition: height .1s linear; /* Safari */
@@ -575,7 +578,90 @@ textarea::-webkit-input-placeholder {
   opacity: 0;
 }*/
 
+.valError {
+  border-left: 5px solid red !important;
+}
 
+.valErrorSecond {
+  border-left: 5px solid red !important;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 3px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.alert h4 {
+  margin-top: 0;
+  color: inherit;
+}
+.alert .alert-link {
+  font-weight: bold;
+}
+.alert > p,
+.alert > ul {
+  margin-bottom: 0;
+}
+.alert > p + p {
+  margin-top: 5px;
+}
+.alert-dismissable,
+.alert-dismissible {
+  padding-right: 35px;
+}
+.alert-dismissable .close,
+.alert-dismissible .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  color: inherit;
+}
+.alert-success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+.alert-success hr {
+  border-top-color: #c9e2b3;
+}
+.alert-success .alert-link {
+  color: #2b542c;
+}
+.alert-info {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+.alert-info hr {
+  border-top-color: #a6e1ec;
+}
+.alert-info .alert-link {
+  color: #245269;
+}
+.alert-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+.alert-warning hr {
+  border-top-color: #f7e1b5;
+}
+.alert-warning .alert-link {
+  color: #66512c;
+}
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+.alert-danger hr {
+  border-top-color: #e4b9c0;
+}
+.alert-danger .alert-link {
+  color: #843534;
+}
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
