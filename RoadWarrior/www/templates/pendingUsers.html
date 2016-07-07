@@ -1,0 +1,22 @@
+<ion-view view-title="Show List">
+  <ion-content class="padding">
+    <div>
+      <ion-list>
+        <ion-item class="pending-list-item" ng-repeat="user in pendingMembers">
+          <div class="event-list row">
+            <div class="col header-font-heavy pending-row center-text">
+            {{user.name}}
+            </div>
+            <div class="center-text col ">
+            <button class="button button-circle thumbs-up"><i class="ion ion-thumbsup"></i></button>
+            <button class="button button-circle thumbs-down"><i class="ion ion-thumbsdown"></i></button>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+    <div ng-if="events.length === 0">
+    <h3>You have no events.</h3>
+    </div>
+  </ion-content>
+</ion-view>

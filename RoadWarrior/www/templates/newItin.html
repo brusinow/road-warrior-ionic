@@ -1,5 +1,5 @@
 <ion-view view-title="New Itin">
-  <ion-content class="padding">
+  <ion-content class="padding" scroll="false">
   <form name="myForm" ng-submit="submitNewItin()" novalidate>
   <div class="list">  
     <label ng-class="{'valError': submitted && myForm.date.$error.required}" class = "item item-input-itin item-select item-select-itin">
@@ -42,14 +42,7 @@
          <button class="button button-block button-dark itin-button" type="submit">Submit</button>
         </div> 
         </form>
-          <div ng-messages="myForm.startTime.$error" ng-if='myForm.startTime.$dirty' style="color:maroon" role="alert">
-            <div ng-message="required">You must enter a start time.</div>
-          </div>
-         <!--  <div ng-messages="myForm.mainItem.$error" ng-if='myForm.mainItem.$dirty' style="color:maroon" role="alert">
-            <div ng-message="required">You must enter an itinerary item name.</div>
-            <div ng-message="myForm.mainItem.$error.maxlength">Itinerary item name must be shorter than 24 characters.</div>
-          </div> -->
-           <!--  <span class="help-inline" ng-show="submitted && myForm.mainItem.$error.maxlength">* Your itinerary title must be less than 24 characters.</span> -->
+        
              <div class="alert alert-danger" ng-show="submitted && myForm.date.$error.required" role="alert">
               <i class="icon ion-alert-circled"></i>
                 Event date is required.

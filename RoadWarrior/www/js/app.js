@@ -54,6 +54,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
+  $ionicConfigProvider.scrolling.jsScrolling(false);
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
   $stateProvider
@@ -106,14 +107,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
     }
   })
 
-    .state('pending', {
-    cache: false,
-    url: '/pending',
-    templateUrl: 'templates/pending.html',
-    resolve: {
-      "currentAuth": authRequire
-    }
-    })
 
     .state('tab', {
     url: '/tab',
@@ -248,6 +241,21 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
       "currentAuth": authRequire
     }
   })
+
+   .state('tab.account-pending', {
+    url: '/account/pending',
+    cache: false,
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/pendingUsers.html',
+        controller: 'PendingUserCtrl'
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+
 
   .state('tab.account-editEvent', {
     url: '/account/editEvent',

@@ -80,7 +80,12 @@ angular.module('roadWarrior.controllers', [])
 
 .controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
   
-      $scope.$watch('event', function(newEvent, oldEvent) {
+      $scope.$on("$ionicView.beforeEnter", function(event, data){
+   // handle event
+      console.log("State Params: ", data.stateParams);
+      });
+      
+      $scope.$watch('event.address', function(newEvent, oldEvent) {
           console.log("Old event is ",oldEvent);  
           console.log("New event is ",newEvent);
           console.log("CHANGE!!!!");

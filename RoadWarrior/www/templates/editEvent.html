@@ -5,30 +5,30 @@
           <div class = "input-label-itin">
           Choose Event:
           </div>
-          <select ng-model="selected" ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate'>
+          <select ng-model="selection.mySelect" ng-init="selection.mySelect=events[0]" ng-change = "whatSelected()"  ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate'>
             </select>
           </label>
           </div>
           <div class="list"> 
             <label class="item item-input">
              <span class="input-label">Date: </span>
-            <input ng-model="selected.longDate" style="padding-top: 0px;" type="text" ng-click="openDatePicker()">
+            <input ng-model="selection.mySelect.longDate" style="padding-top: 0px;" type="text" ng-click="openDatePicker()">
           </label>     
           <label class="item item-input">
-            <input ng-model="selected.venue" type="text" placeholder="Venue/Event Name">
+            <input ng-model="selection.mySelect.venue" type="text" placeholder="Venue/Event Name">
           </label>
           <label class="item item-input">
            
-            <input ng-model="selected.cityState" type="text" placeholder="City">
+            <input ng-model="selection.mySelect.cityState" type="text" placeholder="City">
           </label>
           <label  class="item item-input">
-            <input ng-model="selected.address" ng-click="openPopover($event)" type="text" placeholder="Complete Address">
+            <input ng-model="selection.mySelect.address" ng-click="openPopover($event)" type="text" placeholder="Complete Address">
           </label>
 
           
          
           <label class="item item-input">
-            <textarea ng-model="selected.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
+            <textarea ng-model="selection.mySelect.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
           </label> 
           
          <button class="button button-block button-stable" ng-click ="updateEvents()">Submit</button>

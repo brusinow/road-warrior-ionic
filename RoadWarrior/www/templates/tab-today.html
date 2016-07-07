@@ -1,6 +1,6 @@
 
 <ion-view view-title="Today">
-<ion-content class="padding" scroll="false">
+<ion-content class="padding">
   <div class="spinner" ng-hide="hideLoader()">
   <ion-spinner></ion-spinner>
   </div>
@@ -8,10 +8,10 @@
 
     <ion-slide-page>
                <div class="postLoad" ng-show="hideLoader()"> 
-                 <div>
+                
                
-                <div class="row">
-                  <div style="padding-top:8px;" class="col col-75">
+                <div style="padding-top:20px;" class="row">
+                  <div  class="col col-75">
                   <h5 class="no-margin header-font">{{day_of_week}}</h5>
                   <h5 class="no-margin header-font">{{now_formatted_date}}</h5>
                   <h4 ng-if="result" class="no-margin header-font-heavy">{{event.venue}}</h4>
@@ -23,14 +23,15 @@
                     <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
                   </div>
                 </div>
-                <ion-list ng-hide="itins.length === 0">
+                <div style="padding-top:20px;" >
+                <ion-list  ng-hide="itins.length === 0">
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
                       <ion-item class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
                         <div class="row">
                           <button ng-click="editItin(itin, event)" class="tiny-button icon ion-edit"></button>
                          
                             <div ng-click="toggleItin(itin)" class="col itin-list itin-name"> {{itin.mainItem}}  </div>
-                            <div ng-click="toggleItin(itin)" class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}} <i class="icon" ng-if="itin.details" ng-class="isItinShown(itin) ? 'ion-minus-circled' : 'ion-plus-circled'"></i></div>
+                            <div ng-click="toggleItin(itin)" class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}} <i class="icon icon-list" ng-if="itin.details" ng-class="isItinShown(itin) ? 'ion-minus-circled' : 'ion-plus-circled'"></i></div>
                         
                         </div>
                       </ion-item>
@@ -40,7 +41,8 @@
                       </ion-item>
               </div>
             </ion-list>
-              </div>
+            </div>
+             
              <div class="no-itins center-text" ng-show="itins.length === 0">
               <div class="cat-time"></div>
               <h3 class="no-margin">Your itinerary is empty.</h3>
@@ -59,9 +61,9 @@
         <div class="row">
           <div class="col col-50 col-offset-25">
             <div class="button-bar">
-              <a ng-click="yelpShowFood()" class="button button-outline button-dark button-yelp"><i class="icon ion-pizza"></i></a>
-              <a ng-click="yelpShowEntertainment()" class="button button-outline button-dark button-yelp"><i class="icon ion-film-marker"></i></a>
-              <a ng-click="yelpShowEmergency()" class="button button-outline button-assertive button-yelp"><i class="icon ion-medkit"></i></a>
+              <a ng-click="yelpShowFood()" class="button button-dark button-yelp"><i class="icon ion-pizza"></i></a>
+              <a ng-click="yelpShowEntertainment()" class="button button-dark button-yelp"><i class="icon ion-film-marker"></i></a>
+              <a ng-click="yelpShowEmergency()" class="button button-outline button-dark button-yelp"><i class="icon ion-medkit"></i></a>
             </div>
           </div>
         </div>

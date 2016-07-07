@@ -254,6 +254,7 @@ angular.module('roadWarrior.services', [])
 .factory('eventsService', ['ActiveGroup','GetSetActiveGroup', function(ActiveGroup, GetSetActiveGroup) {
     var eventsRef = new Firebase('https://roadwarrior.firebaseio.com/events');
 
+
     
     return {
       allGroupEvents: function($scope, groupKey){
@@ -282,17 +283,29 @@ angular.module('roadWarrior.services', [])
           }
         })
       },
-      createEvent: function($scope, newEvent, userId){
-        console.log("event to be submitted is: ",newEvent);
-        if (newEvent.address && newEvent.address.length > 0) {
+      createEvent: function($scope){
+        console.log("new event is ",$scope.event);
+        console.log("scope is ",$scope);
+          angular.forEach($scope.events, function(childData) {
+          console.log("childData is ",childData);
+            if ($scope.event.date === childData.date){
+              $scope.eventExists = true;
+              console.log("found one here already. Don't do anything.");
+              // console.log("actual today event from service is: ",childData);
+              return true;
+            }  
+          });
+          if ($scope.eventExists === false){
+            console.log("Nothing exists here - go ahead and do stuff.");
+                if ($scope.event.address && $scope.event.address.length > 0) {
             if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
-            this.geocoder.geocode({ 'address': newEvent.address }, function (results, status) {
+            this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                   console.log("results are: ",results)
-                  newEvent.lat = results[0].geometry.location.lat();
-                  newEvent.lng = results[0].geometry.location.lng();
-                  newEvent.address = results[0].formatted_address;
-                  var latlng = {lat: newEvent.lat, lng: newEvent.lng};
+                  $scope.event.lat = results[0].geometry.location.lat();
+                  $scope.event.lng = results[0].geometry.location.lng();
+                  $scope.event.address = results[0].formatted_address;
+                  var latlng = {lat: $scope.event.lat, lng: $scope.event.lng};
                   console.log("lat/lng is: ",latlng);
                   this.geocoder = new google.maps.Geocoder();
                   this.geocoder.geocode({'location': latlng}, function(results, status) {
@@ -302,28 +315,25 @@ angular.module('roadWarrior.services', [])
                                     console.log("what is component? ",component);
                                     switch(component.types[0]) {
                                         case 'locality':
-                                            newEvent.city = component.long_name;
+                                            $scope.event.city = component.long_name;
                                             break;
                                         case 'administrative_area_level_1':
-                                            newEvent.state = component.short_name;
+                                            $scope.event.state = component.short_name;
                                             break;
                                     }
                                 };
-                                newEvent.cityState = newEvent.city+", "+newEvent.state; 
-                                // var currentGroup = ActiveGroup(userId);
-                                ActiveGroup(userId).$bindTo($scope, "currentGroup").then(function(){
-                                console.log("GetGroup results are: ",$scope.currentGroup);
-                                newEvent.groupId = $scope.currentGroup.groupId;
-                                newEvent.groupName = $scope.currentGroup.name;
+                                $scope.event.cityState = $scope.event.city+", "+$scope.event.state; 
+                                $scope.event.groupId = $scope.thisGroup.groupId;
+                                $scope.event.groupName = $scope.thisGroup.name;
                                 var newEventEntry = {};
                                 var newEventRef = eventsRef.push();
                                 var eventId = newEventRef.key();
-                                newEvent.eventId = eventId;
-                                console.log("new event to be submitted: ",newEvent);
-                                newEventEntry[eventId] = newEvent;
+                                $scope.event.eventId = eventId;
+                                console.log("new event to be submitted: ",$scope.event);
+                                newEventEntry[eventId] = $scope.event;
                                 eventsRef.update(newEventEntry);
                                 // $scope.newEventModal.hide();
-                              })
+                         
                     } else {
                       window.alert('No first geocode results.');
                       }
@@ -334,8 +344,10 @@ angular.module('roadWarrior.services', [])
                 }
             });
         }
+        }
+        
       }   
-    };
+    }
 }
 ])
 
@@ -345,6 +357,7 @@ angular.module('roadWarrior.services', [])
 
   return {
     createItinItem: function($scope){
+      console.log("What is selected date at beginning of service? ",$scope.selectedEvent.select);
       if ($scope.nextDay){
         $scope.itin.nextDay = true;
         if ($scope.itin.startTimeUnix){
@@ -365,7 +378,7 @@ angular.module('roadWarrior.services', [])
       $scope.itin.id = itinId;
       newItinEntry[itinId] = $scope.itin;
       itinRef.update(newItinEntry);
-      $scope.selectedEvent = {};
+      
       // $scope.newItinModal.hide();
     },
     getItinItems: function($scope, eventId){
@@ -388,3 +401,52 @@ angular.module('roadWarrior.services', [])
 
 
 
+      // createEvent: function($scope, newEvent, userId){
+      //   if ($scope.event.address && $scope.event.address.length > 0) {
+      //       if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+      //       this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
+      //           if (status == google.maps.GeocoderStatus.OK) {
+      //             console.log("results are: ",results)
+      //             $scope.event.lat = results[0].geometry.location.lat();
+      //             $scope.event.lng = results[0].geometry.location.lng();
+      //             $scope.event.address = results[0].formatted_address;
+      //             var latlng = {lat: $scope.event.lat, lng: $scope.event.lng};
+      //             console.log("lat/lng is: ",latlng);
+      //             this.geocoder = new google.maps.Geocoder();
+      //             this.geocoder.geocode({'location': latlng}, function(results, status) {
+      //               if (status === google.maps.GeocoderStatus.OK) {
+      //                     for (var ac = 0; ac < results[0].address_components.length; ac++) {
+      //                               var component = results[0].address_components[ac];
+      //                               console.log("what is component? ",component);
+      //                               switch(component.types[0]) {
+      //                                   case 'locality':
+      //                                       $scope.event.city = component.long_name;
+      //                                       break;
+      //                                   case 'administrative_area_level_1':
+      //                                       $scope.event.state = component.short_name;
+      //                                       break;
+      //                               }
+      //                           };
+      //                           $scope.event.cityState = $scope.event.city+", "+$scope.event.state; 
+      //                           $scope.event.groupId = $scope.thisGroup.groupId;
+      //                           $scope.event.groupName = $scope.thisGroup.name;
+      //                           var newEventEntry = {};
+      //                           var newEventRef = eventsRef.push();
+      //                           var eventId = newEventRef.key();
+      //                           $scope.event.eventId = eventId;
+      //                           console.log("new event to be submitted: ",$scope.event);
+      //                           newEventEntry[eventId] = $scope.event;
+      //                           eventsRef.update(newEventEntry);
+      //                           // $scope.newEventModal.hide();
+                         
+      //               } else {
+      //                 window.alert('No first geocode results.');
+      //                 }
+      //             });
+
+      //           } else {
+      //               alert("Sorry, this search produced no results.");
+      //           }
+      //       });
+      //   }
+      // }

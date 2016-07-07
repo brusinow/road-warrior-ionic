@@ -7,7 +7,7 @@ angular.module('roadWarrior.controllers')
     var userGroupsRef = new Firebase("https://roadwarrior.firebaseio.com/users/"+currentAuth.uid+"/groups");
     $scope.submitted = false;
     console.log("submitted is ",$scope.submitted);
-
+    $scope.selectedEvent = {};
     $scope.itin = {};
     Profile(currentAuth.uid).$bindTo($scope, "profile");
 
@@ -23,6 +23,10 @@ angular.module('roadWarrior.controllers')
 
     $scope.newEvent = function(){
       $state.go("tab.account-newEvent");
+    }
+
+     $scope.pendingUsers = function(){
+      $state.go("tab.account-pending");
     }
 
     $scope.editEvent = function(){
@@ -128,6 +132,7 @@ angular.module('roadWarrior.controllers')
   
     $scope.submitted = true;
      itineraryService.createItinItem($scope);
+     console.log("What is selected date after service? ",$scope.selectedEvent.select);
      $state.go("tab.account");
   };
 
@@ -138,14 +143,32 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
   $scope.event = {};
+  $scope.submitted = false;
+  console.log("submitted is ",$scope.submitted);
+  $scope.eventExists = false;
   Profile(currentAuth.uid).$bindTo($scope, "profile");
+
+  var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
+  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+      $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId))
+      $scope.events.$loaded()
+        .then(function(){
+        console.log("events list is ",$scope.events);
+      })
+    })
+
+
+
+
+
 
 
   $scope.submitNewEvent = function() {
-    console.log("current auth is: ",currentAuth);
-    eventsService.createEvent($scope, $scope.event, currentAuth.uid);
+    $scope.submitted = true;
+    console.log("submitted after click is ",$scope.submitted);
+    eventsService.createEvent($scope);
     $state.go("tab.account");
   };
 
@@ -155,6 +178,7 @@ angular.module('roadWarrior.controllers')
 
  var ipObj1 = {
       callback: function (val) {  //Mandatory
+        $scope.eventExists = false;
         console.log('Return value from the datepicker popup is : ',val);
         $scope.event.unixDate = val;
         $scope.event.dayOfWeek = moment(val).format('dddd');
@@ -171,8 +195,8 @@ angular.module('roadWarrior.controllers')
         new Date("08-16-2016"),
         new Date(1439676000000)
       ],
-      from: new Date(2012, 1, 1), //Optional
-      to: new Date(2016, 10, 30), //Optional
+      from: new Date(2015, 1, 1), //Optional
+      to: new Date(2017, 05, 30), //Optional
       inputDate: new Date(),      //Optional
       mondayFirst: true,          //Optional
       closeOnSelect: false,       //Optional
@@ -191,6 +215,13 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 
 
   $scope.openPopover = function($event) {
+    $ionicLoading.show({
+    content: 'Loading',
+    animation: 'fade-in',
+    showBackdrop: true,
+    width: 100,
+    showDelay: 100
+    });
     var fullQuery = '/api/place/textsearch/json?query=' + $scope.event.venue +" "+ $scope.event.cityState + '&key='+__env.GOOGLE_PLACES_KEY;
     console.log(fullQuery);
     var req = {
@@ -199,6 +230,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
     }
 
     $http(req).then(function success(res) {
+      $ionicLoading.hide();
       console.log(res)
       $scope.results = res.data.results;
       console.log("results for popover are: ",$scope.results);
@@ -241,41 +273,56 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 .controller('EditEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
   var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
   var userGroupsRef = new Firebase("https://roadwarrior.firebaseio.com/users/"+currentAuth.uid+"/groups");
+  $scope.selection = {};
 
+
+  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+      $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId))
+      $scope.groups = $firebaseArray(userGroupsRef);
+        $scope.groups.$loaded()
+          .then(function(){
+           $scope.selection.mySelect = $scope.events[0];
+          })
+  })
+
+
+
+  $scope.whatSelected = function(){
+    console.log("selected is ",$scope.selection);
+  }
 
   $scope.updateEvents = function(){
       console.log("what is $scope.events? ",$scope.events);
       angular.forEach($scope.events, function(event) {
         console.log("event in loop: ",event)
-        $scope.thisEvent = event;
           this.geocoder = new google.maps.Geocoder();
-              this.geocoder.geocode({ 'address': $scope.thisEvent.address }, function (results, status) {
+              this.geocoder.geocode({ 'address': event.address }, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                   console.log("results are: ",results)
-                  $scope.thisEvent.lat = results[0].geometry.location.lat();
-                  $scope.thisEvent.lng = results[0].geometry.location.lng();
-                  $scope.thisEvent.address = results[0].formatted_address;
-                  var latlng = {lat: $scope.thisEvent.lat, lng: $scope.thisEvent.lng};
+                  event.lat = results[0].geometry.location.lat();
+                  event.lng = results[0].geometry.location.lng();
+                  event.address = results[0].formatted_address;
+                  var latlng = {lat: event.lat, lng: event.lng};
                   console.log("lat/lng is: ",latlng);
-                  this.geocoder = new google.maps.Geocoder();
-                  this.geocoder.geocode({'location': latlng}, function(results, status) {
+                    this.geocoder = new google.maps.Geocoder();
+                    this.geocoder.geocode({'location': latlng}, function(results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
                       for (var ac = 0; ac < results[0].address_components.length; ac++) {
                         var component = results[0].address_components[ac];
                         console.log("what is component? ",component);
                         switch(component.types[0]) {
                           case 'locality':
-                            $scope.thisEvent.city = component.long_name;
+                            event.city = component.long_name;
                             break;
                           case 'administrative_area_level_1':
-                            $scope.thisEvent.state = component.short_name;
+                            event.state = component.short_name;
                             break;
                         }
                       };
-                      $scope.thisEvent.cityState = $scope.thisEvent.city+", "+$scope.thisEvent.state; 
-                      console.log("cityState is ",$scope.thisEvent.cityState);
-                      console.log("this event to be saved: ",$scope.thisEvent);
-                      $scope.events.$save($scope.thisEvent).then(function(ref) {
+                      event.cityState = event.city+", "+event.state; 
+                      console.log("cityState is ",event.cityState);
+                      console.log("this event to be saved: ",event);
+                      $scope.events.$save(event).then(function(ref) {
                         console.log("Ref val: ",ref.val);
                       });
                     }
@@ -291,14 +338,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
   }
 
 
-   ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-      $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId))
-      $scope.groups = $firebaseArray(userGroupsRef);
-        $scope.groups.$loaded()
-          .then(function(){
-           $scope.selected = $scope.events[0];
-          })
-    })
+   
 
    $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope
@@ -308,7 +348,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 
 
   $scope.openPopover = function($event) {
-    var fullQuery = '/api/place/textsearch/json?query=' + $scope.selected.venue +" "+ $scope.selected.cityState + '&key='+__env.GOOGLE_PLACES_KEY;
+    var fullQuery = '/api/place/textsearch/json?query=' + $scope.selection.mySelect.venue +" "+ $scope.selection.mySelect.cityState + '&key='+__env.GOOGLE_PLACES_KEY;
     console.log(fullQuery);
     var req = {
       url: fullQuery,
@@ -330,10 +370,10 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
   };
   $scope.selectAddress = function(result){
     console.log("result of click is: ",result);
-    $scope.selected.address = result.formatted_address;
-    console.log("event address is: ",$scope.selected.address);
-    $scope.selected.venue = result.name;
-    console.log("venue is: ",$scope.selected.venue);
+    $scope.selection.mySelect.address = result.formatted_address;
+    console.log("event address is: ",$scope.selection.mySelect.address);
+    $scope.selection.mySelect.venue = result.name;
+    console.log("venue is: ",$scope.selection.mySelect.venue);
     $scope.popover.hide();
     console.log("popover should be closed");
   }
@@ -355,11 +395,11 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
    var ipObj1 = {
       callback: function (val) {  //Mandatory
         console.log('Return value from the datepicker popup is : ',val);
-        $scope.selected.unixDate = val;
-        $scope.selected.dayOfWeek = moment(val).format('dddd');
-        $scope.selected.date = moment(val).format('MM-DD-YYYY');
-        $scope.selected.longDate = moment(val).format('MMMM Do, YYYY');
-        console.log("day is: ",$scope.selected.date);
+        $scope.selection.mySelect.unixDate = val;
+        $scope.selection.mySelect.dayOfWeek = moment(val).format('dddd');
+        $scope.selection.mySelect.date = moment(val).format('MM-DD-YYYY');
+        $scope.selection.mySelect.longDate = moment(val).format('MMMM Do, YYYY');
+        console.log("day is: ",$scope.selection.mySelect.date);
       },
       disabledDates: [            //Optional
         new Date(2016, 2, 16),
@@ -509,4 +549,25 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
   // };
 
 }])
+
+.controller('PendingUserCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
   
+
+  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+    var thisGroup = $scope.thisGroup.groupId;
+    console.log("this group is ",thisGroup);
+    var memberRef = new Firebase("https://roadwarrior.firebaseio.com/groups/"+thisGroup+"/members");
+      $scope.pendingMembers = $firebaseArray(memberRef.orderByChild('userType').startAt('pending').endAt('pending'))
+        $scope.pendingMembers.$loaded()
+          .then(function(){
+           console.log("pending members are ",$scope.pendingMembers);
+          })
+  })
+
+
+  $scope.accept = function(){
+
+  }
+
+
+}])

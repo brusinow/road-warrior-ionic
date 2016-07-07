@@ -1,7 +1,7 @@
 <ion-view view-title="New Event">
    <ion-content class="padding">
+        <form name="myForm" ng-submit="submitNewEvent()" novalidate>
         <div class="list">        
-         
             <label class="item item-input">
              <span class="input-label">Date: </span>
             <input ng-model="event.longDate" style="padding-top: 0px;" type="text" ng-click="openDatePicker()">
@@ -23,7 +23,12 @@
             <textarea ng-model="event.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
           </label> 
           
-         <button class="button button-block button-stable" ng-click ="submitNewEvent()">Submit</button>
-        </div>    
+         <button class="button button-block button-stable" type="submit">Submit</button>
+        </div> 
+        </form>   
+          <div class="alert alert-danger" ng-show="submitted && eventExists" role="alert">
+              <i class="icon ion-alert-circled"></i>
+                Event with this date already exists. Please choose a different date or edit an existing one.
+              </div>
       </ion-content>
 </ion-view>
