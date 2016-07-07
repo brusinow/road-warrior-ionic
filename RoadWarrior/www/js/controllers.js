@@ -84,7 +84,7 @@ angular.module('roadWarrior.controllers', [])
    // handle event
       console.log("State Params: ", data.stateParams);
       });
-      
+
       $scope.$watch('event.address', function(newEvent, oldEvent) {
           console.log("Old event is ",oldEvent);  
           console.log("New event is ",newEvent);
@@ -356,17 +356,22 @@ angular.module('roadWarrior.controllers', [])
     }
 }])
 
-.controller('JoinGroupsCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
+
+
+
+.controller('JoinGroupsCtrl', ['$scope', 'Profile', 'GetSetActiveGroup','currentAuth', '$state', function($scope, Profile, GetSetActiveGroup, currentAuth, $state){
   $scope.noResults = {};
   $scope.admin = {email: ""};
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
   var adminsRef = new Firebase("https://roadwarrior.firebaseio.com/admins");
   var groupsRef = new Firebase("https://roadwarrior.firebaseio.com/groups");
-  var currentRef = usersRef.child(currentAuth.uid);
-  var userGroupRef = currentRef.child("groups");
-   usersRef.child(currentAuth.uid).on("value", function(user){
-    $scope.currentUser = user.val();
-    })
+  var currentUserRef = usersRef.child(currentAuth.uid);
+  var currentUserGroupRef = currentUserRef.child("groups");
+
+  Profile(currentAuth.uid).$bindTo($scope, "profile");
+   // usersRef.child(currentAuth.uid).on("value", function(user){
+   //  $scope.currentUser = user.val();
+   //  })
     $scope.joinGroup = function(){
     $scope.noResults = {}; 
     var searchEmail = $scope.admin.email;
@@ -381,8 +386,8 @@ angular.module('roadWarrior.controllers', [])
           if (foundAdmin.groupName === $scope.admin.groupName ){
             var memberEntry = {};
             memberEntry[currentAuth.uid] = {
-            "name": $scope.currentUser.name,
-            "email": $scope.currentUser.email,
+            "name": $scope.profile.name,
+            "email": $scope.profile.email,
             "userType": "pending"
             };
             groupsRef.child(groupId+"/members").update(memberEntry);
@@ -390,9 +395,17 @@ angular.module('roadWarrior.controllers', [])
             userGroupEntry[groupId] = {
               "name": foundAdmin.groupName,
               "access": false,
-              "level": pending
-            }
-            userGroupRef.update(userGroupEntry);  
+              "level": "pending"
+            };
+            activeGroupEntry = {
+            "name": foundAdmin.groupName,
+            "groupId": groupId,
+            "access": false,
+            "level": "pending"
+            };
+            console.log("userGroupEntry before submission is ",userGroupEntry);
+            currentUserGroupRef.update(userGroupEntry); 
+            GetSetActiveGroup.set(activeGroupEntry, currentAuth.uid); 
             $state.go("tab.today");
           } else {
             $scope.$apply(function() {

@@ -1,6 +1,6 @@
-<ion-view view-title="Show List">
+<ion-view view-title="Event List">
   <ion-content class="padding">
-    <div ng-if="events.length > 0">
+    <div ng-if="events.length > 0 && thisGroup.access === true">
       <ion-list>
         <ion-item ng-repeat="event in events | tooOld | orderBy: 'unixDate'" ng-click="viewDay(event)">
           <div class="event-list row">
@@ -14,8 +14,11 @@
         </ion-item>
       </ion-list>
     </div>
-    <div ng-if="events.length === 0">
+    <div ng-if="events.length === 0 && thisGroup.access === true">
     <h3>You have no events.</h3>
+    </div>
+    <div ng-if="thisGroup.access === false">
+    <h3>Your attempt to join this group is still pending - Talk to your administrator.</h3>
     </div>
   </ion-content>
 </ion-view>

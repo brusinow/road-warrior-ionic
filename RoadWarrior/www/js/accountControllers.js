@@ -566,7 +566,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 
 
   $scope.accept = function(){
-
+    
   }
 
 

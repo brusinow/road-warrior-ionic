@@ -1,10 +1,10 @@
 
 <ion-view view-title="Today">
 <ion-content class="padding">
-  <div class="spinner" ng-hide="hideLoader()">
+  <div class="spinner" ng-if="thisGroup.access === true" ng-hide="hideLoader()">
   <ion-spinner></ion-spinner>
   </div>
-  <ion-slides options="options" slider="data.slider">
+  <ion-slides ng-if="thisGroup.access === true" options="options" slider="data.slider">
 
     <ion-slide-page>
                <div class="postLoad" ng-show="hideLoader()"> 
@@ -225,11 +225,11 @@
  
   </ion-slides>
 
-   <div ng-if="result === false">
-              <h4>There is no event scheduled today.</h4>
+              <div ng-if="result === false">
+                <h4>There is no event scheduled today.</h4>
               </div>
-              <div ng-if="currentGroup.access === false">
-              <h3>Your attempt to join a group is still pending - Talk to your administrator.</h3>
+              <div ng-if="thisGroup.access === false">
+              <h3>Your attempt to join this group is still pending - Talk to your administrator.</h3>
               </div>
 </ion-content>
 
