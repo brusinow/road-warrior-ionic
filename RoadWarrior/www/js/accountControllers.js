@@ -550,8 +550,15 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 
 }])
 
-.controller('PendingUserCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('PendingUserCtrl', ['$scope', '$http','$firebaseArray','$firebaseObject','currentAuth','Profile','GetSetActiveGroup','ActiveGroup', '$state', function($scope, $http,$firebaseArray,$firebaseObject,currentAuth,Profile,GetSetActiveGroup,ActiveGroup, $state){
   
+  // var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+  // var adminsRef = new Firebase("https://roadwarrior.firebaseio.com/admins");
+  // var groupsRef = new Firebase("https://roadwarrior.firebaseio.com/groups");
+  // var currentUserRef = usersRef.child(currentAuth.uid);
+  // var currentUserGroupRef = currentUserRef.child("groups");
+
+  Profile(currentAuth.uid).$bindTo($scope, "profile");
 
   ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
     var thisGroup = $scope.thisGroup.groupId;
@@ -565,8 +572,44 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
   })
 
 
-  $scope.accept = function(){
-    
+  $scope.accept = function(user){
+    var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+user.$id);
+    var activeUserObj = $firebaseObject(activeGroupRef);
+    activeUserObj.access = true;
+    activeUserObj.groupId = $scope.thisGroup.groupId;
+    activeUserObj.name = $scope.thisGroup.name;
+    activeUserObj.level = "user";
+    activeUserObj.$save().then(function(ref) {
+      console.log("ref is ",ref) // true
+    }, function(error) {
+      console.log("Error:", error);
+    });
+
+    var currentGroupMemberRef = new Firebase('https://roadwarrior.firebaseio.com/groups/'+$scope.thisGroup.groupId+'/members/'+user.$id);
+    var groupMemberObj = $firebaseObject(currentGroupMemberRef);
+    groupMemberObj.userType = 'user';
+    groupMemberObj.name = user.name;
+    groupMemberObj.email = user.email;
+    groupMemberObj.$save().then(function(ref) {
+     console.log("ref is ",ref) 
+    }, function(error) {
+      console.log("Error:", error);
+    });
+
+    var url = 'https://roadwarrior.firebaseio.com/users/'+user.$id+'/groups/'+$scope.thisGroup.groupId;
+    console.log("what is url? ",url);
+    var thisUserGroupRef = new Firebase(url);
+    var currentUserObj = $firebaseObject(thisUserGroupRef);
+    currentUserObj.access = true;
+    currentUserObj.level = "user";
+    currentUserObj.groupId = $scope.thisGroup.groupId;
+    currentUserObj.name = $scope.thisGroup.name;
+    currentUserObj.$save().then(function(ref) {
+     console.log("ref is ",ref) 
+    }, function(error) {
+      console.log("Error:", error);
+    });
+
   }
 
 

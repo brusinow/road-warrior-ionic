@@ -64,7 +64,7 @@ usersRef.createUser({
 }
 }])
 
-.controller('LoginCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
+.controller('LoginCtrl', ['$scope', '$ionicHistory', 'Auth', 'currentAuth', '$state', function($scope, $ionicHistory, Auth, currentAuth, $state){
 var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
 
 Auth.$onAuth(function(authData){
@@ -103,7 +103,7 @@ Auth.$onAuth(function(authData){
         console.log("Login Failed!", error);
       } else {
         console.log("Login Successful!", authData);
-      
+        $ionicHistory.clearCache();
       }
     });
   };

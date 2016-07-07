@@ -28,7 +28,7 @@
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
                       <ion-item class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
                         <div class="row">
-                          <button ng-click="editItin(itin, event)" class="tiny-button icon ion-edit"></button>
+                          <button ng-if="thisGroup.level === 'admin'" ng-click="editItin(itin, event)" class="tiny-button icon ion-edit"></button>
                          
                             <div ng-click="toggleItin(itin)" class="col itin-list itin-name"> {{itin.mainItem}}  </div>
                             <div ng-click="toggleItin(itin)" class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}} <i class="icon icon-list" ng-if="itin.details" ng-class="isItinShown(itin) ? 'ion-minus-circled' : 'ion-plus-circled'"></i></div>

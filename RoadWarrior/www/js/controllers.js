@@ -359,7 +359,7 @@ angular.module('roadWarrior.controllers', [])
 
 
 
-.controller('JoinGroupsCtrl', ['$scope', 'Profile', 'GetSetActiveGroup','currentAuth', '$state', function($scope, Profile, GetSetActiveGroup, currentAuth, $state){
+.controller('JoinGroupsCtrl', ['$scope', '$ionicHistory', 'Profile', 'GetSetActiveGroup','currentAuth', '$state', function($scope, $ionicHistory, Profile, GetSetActiveGroup, currentAuth, $state){
   $scope.noResults = {};
   $scope.admin = {email: ""};
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
@@ -406,6 +406,7 @@ angular.module('roadWarrior.controllers', [])
             console.log("userGroupEntry before submission is ",userGroupEntry);
             currentUserGroupRef.update(userGroupEntry); 
             GetSetActiveGroup.set(activeGroupEntry, currentAuth.uid); 
+            $ionicHistory.clearCache();
             $state.go("tab.today");
           } else {
             $scope.$apply(function() {
@@ -424,7 +425,7 @@ angular.module('roadWarrior.controllers', [])
     };   
 }])
 
-.controller('NewGroupsCtrl', ['$scope', 'currentAuth', 'GetSetActiveGroup','$state', function($scope, currentAuth,GetSetActiveGroup, $state){
+.controller('NewGroupsCtrl', ['$scope', '$ionicHistory', 'currentAuth', 'GetSetActiveGroup','$state', function($scope, $ionicHistory, currentAuth,GetSetActiveGroup, $state){
   $scope.group = {};
 
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
@@ -470,6 +471,7 @@ angular.module('roadWarrior.controllers', [])
       adminsRef.update(adminEntry);
       currentUserGroupsRef.update(userGroupEntry);
       GetSetActiveGroup.set(activeGroupEntry, currentAuth.uid);
+      $ionicHistory.clearCache();
       $state.go("tab.today");
     };
 }])
