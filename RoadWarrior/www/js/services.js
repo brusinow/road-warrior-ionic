@@ -7,6 +7,43 @@ angular.module('roadWarrior.services', [])
 })
 
 
+// .service("FirebaseEnv", function(){
+//   this.initENV = function($firebaseObject){
+//     ref = new Firebase("https://roadwarrior.firebaseio.com/_admin/env/localhost");
+//     return $firebaseObject(ref);
+//   }
+// })
+
+.factory("FirebaseEnv", ["$firebaseObject",
+  function($firebaseObject) {
+    return function() {
+      // create a reference to the database node where we will store our data
+      var ref = new Firebase("https://roadwarrior.firebaseio.com/_admin/env/localhost");
+      // return it as a synchronized object
+      return $firebaseObject(ref);
+    }
+  }
+])
+
+
+
+// .factory("FirebaseEnv", function(){
+//   var ENV_FIREBASE_ORIGIN = 'https://roadwarrior.firebaseio.com';
+//   var jsonp = document.createElement('script')
+//   jsonp.src = ENV_FIREBASE_ORIGIN + '/_admin/env/' + $window.location.hostname.replace(/\./g,',') + '.json?callback=__loadFirebaseEnv';
+//   $document.head.appendChild(jsonp);
+
+//   var __loadFirebaseEnv = function(data) {
+//   $window.__env = data || {};
+//   $document.dispatchEvent(new CustomEvent('env', {detail: data || {}}));
+//   }
+  
+//   var init = function() {
+//   if (!__env) return;
+//   var ref = new Firebase('https://roadwarrior.firebaseio.com/_admin/env/');
+//   }
+
+// })
 
 .factory('Yahoo', function($http, YahooEndpoint) {
   console.log('YahooEndpoint', YahooEndpoint)
@@ -114,7 +151,11 @@ angular.module('roadWarrior.services', [])
  
 
 
-.factory("MyYelpAPI", function($http, YelpEndpoint) {
+.factory("MyYelpAPI", function($http, YelpEndpoint, FirebaseEnv) {
+    var ENV = FirebaseEnv();
+    console.log("what is ENV? ",ENV);
+
+
     function randomString(length, chars) {
                 var result = '';
                 for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
@@ -134,8 +175,8 @@ angular.module('roadWarrior.services', [])
                     callback: 'angular.callbacks._0',
                     location: event.address, 
                     cll: event.lat+','+event.lng,
-                    oauth_consumer_key: __env.YELP_CONSUMER_KEY, //Consumer Key
-                    oauth_token: __env.YELP_TOKEN, //Token
+                    oauth_consumer_key: ENV.YELP_CONSUMER_KEY, //Consumer Key
+                    oauth_token: ENV.YELP_TOKEN, //Token
                     oauth_signature_method: "HMAC-SHA1",
                     oauth_timestamp: new Date().getTime(),
                     oauth_nonce: randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),
@@ -146,11 +187,13 @@ angular.module('roadWarrior.services', [])
                 };
                 // console.log("callback in params is: ",params.callback);
 
-            var consumerSecret = __env.YELP_CONSUMER_SECRET; //Consumer Secret
-            var tokenSecret = __env.YELP_TOKEN_SECRET; //Token Secret
+            var consumerSecret = ENV.YELP_CONSUMER_SECRET; //Consumer Secret
+            var tokenSecret = ENV.YELP_TOKEN_SECRET; //Token Secret
             var signature = oauthSignature.generate(method, url, params, consumerSecret, tokenSecret, { encodeSignature: false});
             params['oauth_signature'] = signature;
-            $http.jsonp(url, {params: params}).success(callback).catch(err => console.log(err));;
+            $http.jsonp(url, {params: params}).success(callback).catch(function(error){
+              console.log("what is error? ",error);
+            });;
         }
     }
 })

@@ -580,7 +580,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
     activeUserObj.name = $scope.thisGroup.name;
     activeUserObj.level = "user";
     activeUserObj.$save().then(function(ref) {
-      console.log("ref is ",ref) // true
+      console.log("ref is ",ref.val()) // true
     }, function(error) {
       console.log("Error:", error);
     });
@@ -591,7 +591,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
     groupMemberObj.name = user.name;
     groupMemberObj.email = user.email;
     groupMemberObj.$save().then(function(ref) {
-     console.log("ref is ",ref) 
+     console.log("ref is ",ref.val()) 
     }, function(error) {
       console.log("Error:", error);
     });
@@ -605,7 +605,38 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
     currentUserObj.groupId = $scope.thisGroup.groupId;
     currentUserObj.name = $scope.thisGroup.name;
     currentUserObj.$save().then(function(ref) {
-     console.log("ref is ",ref) 
+     console.log("ref is ",ref.val()) 
+    }, function(error) {
+      console.log("Error:", error);
+    });
+
+  }
+
+
+    $scope.decline = function(user){
+    var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+user.$id);
+    var activeUserObj = $firebaseObject(activeGroupRef);
+    activeUserObj.$remove().then(function(ref) {
+  // data has been deleted locally and in the database
+    }, function(error) {
+        console.log("Error:", error);
+    });
+
+
+    var currentGroupMemberRef = new Firebase('https://roadwarrior.firebaseio.com/groups/'+$scope.thisGroup.groupId+'/members/'+user.$id);
+    var groupMemberObj = $firebaseObject(currentGroupMemberRef);
+    groupMemberObj.$remove().then(function(ref) {
+     console.log("ref is ",ref.val()) 
+    }, function(error) {
+      console.log("Error:", error);
+    });
+
+    var url = 'https://roadwarrior.firebaseio.com/users/'+user.$id+'/groups/'+$scope.thisGroup.groupId;
+    console.log("what is url? ",url);
+    var thisUserGroupRef = new Firebase(url);
+    var currentUserObj = $firebaseObject(thisUserGroupRef);
+    currentUserObj.$remove().then(function(ref) {
+     console.log("ref is ",ref.val()) 
     }, function(error) {
       console.log("Error:", error);
     });

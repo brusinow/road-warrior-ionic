@@ -20,6 +20,9 @@
     <div ng-if="thisGroup.access === false">
     <h3>Your attempt to join this group is still pending - Talk to your administrator.</h3>
     </div>
+      <div ng-if="!thisGroup.level">
+        <h3>You have no active group.</h3>
+      </div>
   </ion-content>
 </ion-view>
 

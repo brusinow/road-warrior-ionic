@@ -31,9 +31,19 @@ $lightAccent:                       #B7B5B3;
 
 
 
-/*.yelp.ng-hide-remove      { animation: .2s fadein linear; }*/
+.yelp.ng-hide-remove      { animation: .2s fadein linear; }
 
 
+/* The starting CSS styles for the enter animation */
+.fade.ng-enter {
+  transition:0.3s linear all;
+  opacity:0;
+}
+
+/* The finishing CSS styles for the enter animation */
+.fade.ng-enter.ng-enter-active {
+  opacity:1;
+}
 
 @keyframes fadein {
     from {
@@ -101,6 +111,13 @@ $lightAccent:                       #B7B5B3;
         opacity: 1;
     }
 }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+
+
 
 
 .ionic_datepicker_popup .popup-body .month_select:after, .ionic_datepicker_popup .popup-body .year_select:after {

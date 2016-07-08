@@ -103,7 +103,7 @@ Auth.$onAuth(function(authData){
         console.log("Login Failed!", error);
       } else {
         console.log("Login Successful!", authData);
-        $ionicHistory.clearCache();
+        $ionicHistory.clearCache().then(function(){ $state.go('tab.today') })
       }
     });
   };

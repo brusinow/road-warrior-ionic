@@ -78,8 +78,11 @@ angular.module('roadWarrior.controllers', [])
 
 
 
-.controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
-  
+.controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','FirebaseEnv', 'itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, FirebaseEnv, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
+
+
+
+
       $scope.$on("$ionicView.beforeEnter", function(event, data){
    // handle event
       console.log("State Params: ", data.stateParams);
@@ -107,6 +110,8 @@ angular.module('roadWarrior.controllers', [])
       "entertainment": false,
       "emergency": false
     }
+
+
     
 
     $scope.editItin = function(itin, event){
@@ -406,8 +411,7 @@ angular.module('roadWarrior.controllers', [])
             console.log("userGroupEntry before submission is ",userGroupEntry);
             currentUserGroupRef.update(userGroupEntry); 
             GetSetActiveGroup.set(activeGroupEntry, currentAuth.uid); 
-            $ionicHistory.clearCache();
-            $state.go("tab.today");
+            $ionicHistory.clearCache().then(function(){ $state.go('tab.today') })
           } else {
             $scope.$apply(function() {
             $scope.noResults = {"bool": true};
