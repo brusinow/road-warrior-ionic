@@ -378,7 +378,7 @@ angular.module('roadWarrior.controllers', [])
                     "Content-Type": "application/x-www-form-urlencoded",
                     "Authorization": "Basic " + mailgunApiKey
                 },
-                data: "from=" + "test@example.com" + "&to=" + "brusinow@gmail.com" + "&subject=" + "MailgunTest" + "&text=" + "blah blah"
+                data: "from=" + "brusinow@gmail.com" + "&to=" + "brusinow@gmail.com" + "&subject=" + "MailgunTest" + "&text=" + "blah blah"
             }
         ).then(function(success) {
             console.log("SUCCESS " + JSON.stringify(success));
