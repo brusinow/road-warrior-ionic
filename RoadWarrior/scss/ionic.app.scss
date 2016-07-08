@@ -118,7 +118,14 @@ $lightAccent:                       #B7B5B3;
 
 
 
+.load-bg {
+  background-color: $dark !important;
+}
 
+.logo-img {
+  display: inline-block;
+  margin-top: 42%;
+}
 
 .ionic_datepicker_popup .popup-body .month_select:after, .ionic_datepicker_popup .popup-body .year_select:after {
     right: 5px;
@@ -204,9 +211,9 @@ div.spinner {
 }
 
 ion-view.pane {
-
 background: $stable;
 }
+
 
 .no-margin {
   margin: 0px;
@@ -214,6 +221,10 @@ background: $stable;
 
 .center-text {
   text-align: center;
+}
+
+.no-group-cat {
+  margin-top: 25%;
 }
 
 .text-right {

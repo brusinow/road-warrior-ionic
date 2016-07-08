@@ -1,7 +1,7 @@
 angular.module('roadWarrior.controllers')
 
 
-.controller('SignupCtrl', ['$scope', 'Auth', 'currentAuth', '$state', function($scope, Auth, currentAuth, $state){
+.controller('SignupCtrl', ['$scope', '$ionicLoading', 'Auth', 'currentAuth', '$state', function($scope, $ionicLoading, Auth, currentAuth, $state){
 var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
 
 Auth.$onAuth(function(authData) {
@@ -28,39 +28,54 @@ Auth.$onAuth(function(authData) {
   }
 
 $scope.signup = function(){
-usersRef.createUser({
-      name: $scope.user.name,
-      email: $scope.user.email,
-      password: $scope.user.password,
-}, function(error, userData) {
-  if (error) {
-    console.log("Error creating user:", error);
-  } else {
-    console.log("Successfully created user account with uid:", userData.uid);
-     usersRef.authWithPassword({
+    $ionicLoading.show({
+    content: 'Loading',
+    animation: 'fade-in',
+    showBackdrop: true,
+    width: 100,
+    showDelay: 100
+    }).then(function(){
+       console.log("The loading indicator is now displayed");
+    
+    usersRef.createUser({
+          name: $scope.user.name,
           email: $scope.user.email,
-          password: $scope.user.password
-        }, function(error, authData) {
-          if (error) {
-            alert("Login Failed!", error);
-          } else {
-            console.log("Authenticated successfully with payload:", authData);
-            if (authData) {
-              // save the user's profile into Firebase
-              usersRef.child(authData.uid).set({
-                provider: authData.provider,
-                groups: {},
-                email: $scope.user.email,
-                name: $scope.user.name
+          password: $scope.user.password,
+    }, function(error, userData) {
+      if (error) {
+        console.log("Error creating user:", error);
+      } else {
+        console.log("Successfully created user account with uid:", userData.uid);
+         usersRef.authWithPassword({
+              email: $scope.user.email,
+              password: $scope.user.password
+            }, function(error, authData) {
+              if (error) {
+                alert("Login Failed!", error);
+              } else {
+                console.log("Authenticated successfully with payload:", authData);
+                if (authData) {
+                  // save the user's profile into Firebase
+                  usersRef.child(authData.uid).set({
+                    provider: authData.provider,
+                    groups: {},
+                    email: $scope.user.email,
+                    name: $scope.user.name
+                    
+                  });
+                };
+               console.log("should redirect to groups state");
+               $ionicLoading.hide().then(function(){
+                $state.go("groups");
+                console.log("The loading indicator is now hidden");
+                });
                 
-              });
-            };
-           console.log("should redirect to groups state");
-            $state.go("groups");
-          }
-        });
-    } 
-});
+              }
+            });
+        } 
+    });
+
+  });
 }
 }])
 

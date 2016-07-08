@@ -48,10 +48,7 @@
               <h3 class="no-margin">Your itinerary is empty.</h3>
               <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2> 
              </div>
-              <div class="no-itins center-text" ng-show="!event && itins.length === 0">
-              <div class="cat-time-no-event"></div>
-              <h3 class="no-margin">You have no event scheduled today.</h3> 
-             </div>
+           
           </div>  
     </ion-slide-page>
     <ion-slide-page>
@@ -221,15 +218,19 @@
     </ion-slide-page>
  
   </ion-slides>
-
-              <div ng-if="result === false">
-                <h4>There is no event scheduled today.</h4>
+             <div class="no-itins center-text" ng-if="!event && itins.length === 0">
+              <div class="cat-time-no-event"></div>
+              <h3 class="no-margin">You have no event scheduled today.</h3> 
               </div>
-              <div ng-if="thisGroup.access === false">
-              <h3>Your attempt to join this group is still pending - Talk to your administrator.</h3>
+              <div class="no-itins center-text" ng-if="thisGroup.access === false">
+                <div class="cat-time-no-event"></div>
+                  <h3 class="no-margin">Your attempt to join this group is still pending - Talk to your administrator.</h3> 
+                </div>
               </div>
-              <div ng-if="!thisGroup.level">
-              <h3>You have no active group.</h3>
+              <div class="no-group-cat center-text" ng-if="!thisGroup.level">
+                <div class="cat-time-no-event"></div>
+                  <h3 class="no-margin header-font-heavy">You have no active group.</h3> 
+                </div>
               </div>
 </ion-content>
 

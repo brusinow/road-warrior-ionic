@@ -88,6 +88,13 @@ $royal:                           #886aea !default;
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important; }
 
+.load-bg {
+  background-color: #931621 !important; }
+
+.logo-img {
+  display: inline-block;
+  margin-top: 42%; }
+
 .ionic_datepicker_popup .popup-body .month_select:after, .ionic_datepicker_popup .popup-body .year_select:after {
   right: 5px;
   color: #931621 !important; }
@@ -165,6 +172,9 @@ ion-view.pane {
 
 .center-text {
   text-align: center; }
+
+.no-group-cat {
+  margin-top: 25%; }
 
 .text-right {
   text-align: right; }

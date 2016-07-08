@@ -79,6 +79,16 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
       "currentAuth": authWait
     }
   })
+
+  //  .state('logoLoad', {
+  //   cache: false,
+  //   url: '/logoLoad',
+  //   templateUrl: 'templates/logoLoad.html',
+  //   resolve: {
+  //     "currentAuth": authWait
+  //   }
+  // })
+
   .state('groups', {
     cache: false,
     url: '/groups',

@@ -345,13 +345,10 @@ angular.module('roadWarrior.controllers', [])
   
 }])
 
-.controller('GroupsCtrl', ['$scope', 'currentAuth', '$state', function($scope, currentAuth, $state){
-  var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
-  usersRef.child(currentAuth.uid).on("value", function(user){
-    $scope.currentUser = user.val();
-  }, function (errorObject) {
-    alert("Sorry! There was an error getting your data:" + errorObject.code);
-  });
+.controller('GroupsCtrl', ['$scope', '$ionicLoading','Profile','currentAuth', '$state', function($scope, $ionicLoading, Profile, currentAuth, $state){
+   Profile(currentAuth.uid).$bindTo($scope,"profile").then(function(){
+   });
+
 
     $scope.toJoinGroup = function(){
     $state.go("joinGroup");
@@ -364,7 +361,33 @@ angular.module('roadWarrior.controllers', [])
 
 
 
-.controller('JoinGroupsCtrl', ['$scope', '$ionicHistory', 'Profile', 'GetSetActiveGroup','currentAuth', '$state', function($scope, $ionicHistory, Profile, GetSetActiveGroup, currentAuth, $state){
+.controller('JoinGroupsCtrl', ['$scope', '$http', '$ionicHistory', 'FirebaseEnv', 'Profile', 'GetSetActiveGroup','currentAuth', '$state', function($scope, $http, $ionicHistory, FirebaseEnv, Profile, GetSetActiveGroup, currentAuth, $state){
+  var ENV = FirebaseEnv();
+
+  var mailgunUrl = "sandbox244b4a8817e84888a7a999503925c789.mailgun.org";
+    var mailgunApiKey = window.btoa(ENV.MAILGUN)
+    
+ 
+    $scope.send = function() {
+      var message = "Your request to join a group has been sent to the group administrator. If approved, you will receive email confirmation. Thanks for using Road Warrior!  -The Road Warrior Team";
+        $http(
+            {
+                "method": "POST",
+                "url": "https://api.mailgun.net/v3/sandbox244b4a8817e84888a7a999503925c789.mailgun.org/messages",
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": "Basic " + mailgunApiKey
+                },
+                data: "from=" + "test@example.com" + "&to=" + "brusinow@gmail.com" + "&subject=" + "MailgunTest" + "&text=" + "blah blah"
+            }
+        ).then(function(success) {
+            console.log("SUCCESS " + JSON.stringify(success));
+        }, function(error) {
+            console.log("ERROR " + JSON.stringify(error));
+        });
+    }
+
+
   $scope.noResults = {};
   $scope.admin = {email: ""};
   var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
@@ -377,7 +400,12 @@ angular.module('roadWarrior.controllers', [])
    // usersRef.child(currentAuth.uid).on("value", function(user){
    //  $scope.currentUser = user.val();
    //  })
+
+
+ 
+
     $scope.joinGroup = function(){
+       
     $scope.noResults = {}; 
     var searchEmail = $scope.admin.email;
     adminsRef.orderByChild('email').startAt(searchEmail).endAt(searchEmail).once('value', function(snapshot) {
@@ -410,7 +438,8 @@ angular.module('roadWarrior.controllers', [])
             };
             console.log("userGroupEntry before submission is ",userGroupEntry);
             currentUserGroupRef.update(userGroupEntry); 
-            GetSetActiveGroup.set(activeGroupEntry, currentAuth.uid); 
+            GetSetActiveGroup.set(activeGroupEntry, currentAuth.uid);
+           
             $ionicHistory.clearCache().then(function(){ $state.go('tab.today') })
           } else {
             $scope.$apply(function() {
