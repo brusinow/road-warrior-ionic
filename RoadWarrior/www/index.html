@@ -16,30 +16,23 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
   <!-- Firebase -->
-    <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script>
         <!-- AngularFire -->
-   <!--  <script>
-    var ENV_FIREBASE_ORIGIN = 'https://roadwarrior.firebaseio.com';
-  /////////////////////////////////////
-    function __loadFirebaseEnv(data) {
-    window.__env = data || {};
-    document.dispatchEvent(new CustomEvent('env', {detail: data || {}}));
-    }
-    var jsonp = document.createElement('script')
-    jsonp.src = ENV_FIREBASE_ORIGIN + '/_admin/env/' + window.location.hostname.replace(/\./g,',') + '.json?callback=__loadFirebaseEnv';
-    document.head.appendChild(jsonp);
-    </script>
+   
+    <script src="https://cdn.firebase.com/libs/angularfire/2.0.0/angularfire.min.js"></script>
     <script>
-      var init = function() {
-      if (!__env) return;
-      var ref = new Firebase('https://roadwarrior.firebaseio.com/_admin/env/');
-      // start your application logic here!
-      // document.getElementById('heading').style.backgroundColor = __env.background_color;
-      }
-    document.addEventListener('env', init);
-    init();
-    </script> -->
-    <script src="lib/angularfire/angularfire.min.js"></script>
+    // Initialize Firebase
+    var config = {
+    apiKey: "AIzaSyB0piGQLKsBKvGzrseKKfsoV4apmBX2MDw",
+    authDomain: "roadwarrior.firebaseapp.com",
+    databaseURL: "https://roadwarrior.firebaseio.com",
+    storageBucket: "firebase-roadwarrior.appspot.com",
+    };
+    firebase.initializeApp(config);
+    </script>
+
+
+
     <script src="lib/oauth-signature/dist/oauth-signature.min.js"></script>
     <script src="lib/angular-messages/angular-messages.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>

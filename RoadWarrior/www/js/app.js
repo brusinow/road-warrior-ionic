@@ -1,6 +1,6 @@
 // Ionic Starter App
-var authWait = ["Auth", function(Auth) { return Auth.$waitForAuth(); }]
-var authRequire = ["Auth", function(Auth) { return Auth.$requireAuth(); }]
+var authWait = ["Auth", function(Auth) { return Auth.$waitForSignIn(); }]
+var authRequire = ["Auth", function(Auth) { return Auth.$requireSignIn(); }]
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'

@@ -4,20 +4,20 @@ angular.module('roadWarrior.controllers')
 .controller('SignupCtrl', ['$scope', '$ionicLoading', 'Auth', 'currentAuth', '$state', function($scope, $ionicLoading, Auth, currentAuth, $state){
 var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
 
-Auth.$onAuth(function(authData) {
-    if (authData === null) {
-      console.log("Not logged in yet");
-    } else {
-      console.log("Logged in as", authData.uid);
-      // get current user info
-      usersRef.child(authData.uid).on("value", function(user){
-        $scope.currentUser = user.val();
-      }, function (errorObject) {
-        alert("Sorry! There was an error getting your data:" + errorObject.code);
-      });
-    }
-    $scope.authData = authData;
-  });
+// Auth.$onAuth(function(authData) {
+//     if (authData === null) {
+//       console.log("Not logged in yet");
+//     } else {
+//       console.log("Logged in as", authData.uid);
+//       // get current user info
+//       usersRef.child(authData.uid).on("value", function(user){
+//         $scope.currentUser = user.val();
+//       }, function (errorObject) {
+//         alert("Sorry! There was an error getting your data:" + errorObject.code);
+//       });
+//     }
+//     $scope.authData = authData;
+//   });
 
 
 
@@ -80,29 +80,29 @@ $scope.signup = function(){
 }])
 
 .controller('LoginCtrl', ['$scope', '$ionicHistory', 'Auth', 'currentAuth', '$state', function($scope, $ionicHistory, Auth, currentAuth, $state){
-var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
+// var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
 
-Auth.$onAuth(function(authData){
-    if (authData === null) {
-      console.log("Not logged in yet.");
-    } else {
-      console.log("Logged in as", authData.uid);
-      // get current user info
-      usersRef.child(authData.uid).on("value", function(user){
-        $scope.currentUser = user.val();
-        console.log("current user is: ",$scope.currentUser);
-          if ($scope.currentUser.groups){
-            console.log("going to today page");
-            $state.transitionTo('tab.today', null, {reload: true, notify:true});
-          } else {
-            $state.go("groups");
-            }
-      }, function (errorObject){
-          alert("Sorry! There was an error getting your data:" + errorObject.code);
-        });
-      } 
-      $scope.authData = authData;
-  });
+// Auth.$onAuth(function(authData){
+//     if (authData === null) {
+//       console.log("Not logged in yet.");
+//     } else {
+//       console.log("Logged in as", authData.uid);
+//       // get current user info
+//       usersRef.child(authData.uid).on("value", function(user){
+//         $scope.currentUser = user.val();
+//         console.log("current user is: ",$scope.currentUser);
+//           if ($scope.currentUser.groups){
+//             console.log("going to today page");
+//             $state.transitionTo('tab.today', null, {reload: true, notify:true});
+//           } else {
+//             $state.go("groups");
+//             }
+//       }, function (errorObject){
+//           alert("Sorry! There was an error getting your data:" + errorObject.code);
+//         });
+//       } 
+//       $scope.authData = authData;
+//   });
   // bind form data to user model
   $scope.user = {
     email: '',
