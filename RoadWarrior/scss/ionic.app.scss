@@ -127,6 +127,10 @@ $lightAccent:                       #B7B5B3;
   margin-top: 42%;
 }
 
+.ionic_datepicker_popup .popup-body .month_select select, .ionic_datepicker_popup .popup-body .year_select select {
+    padding: 0 !important;
+}
+
 .ionic_datepicker_popup .popup-body .month_select:after, .ionic_datepicker_popup .popup-body .year_select:after {
     right: 5px;
     color: $dark !important;
