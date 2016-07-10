@@ -1,10 +1,10 @@
 angular.module('roadWarrior.controllers')
 
-.controller('AccountCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('AccountCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','Auth','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, Auth, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
     var geocoder = new google.maps.Geocoder();
-    var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
-    var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
-    var userGroupsRef = new Firebase("https://roadwarrior.firebaseio.com/users/"+currentAuth.uid+"/groups");
+    var usersRef = firebase.database().ref('users');
+    var eventsRef = firebase.database().ref('events');
+    var userGroupsRef = firebase.database().ref("users/"+currentAuth.uid+"/groups");
     $scope.submitted = false;
     console.log("submitted is ",$scope.submitted);
     $scope.selectedEvent = {};
@@ -76,7 +76,7 @@ angular.module('roadWarrior.controllers')
       $scope.event = {};
     
     $scope.logout = function(){
-      usersRef.unauth();
+      Auth.$signOut();
       $state.go("login");
     };
 
@@ -143,14 +143,16 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','currentAuth','Profile','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, currentAuth, Profile, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+  var ENV = FirebaseEnv();
+
   $scope.event = {};
   $scope.submitted = false;
   console.log("submitted is ",$scope.submitted);
   $scope.eventExists = false;
   Profile(currentAuth.uid).$bindTo($scope, "profile");
 
-  var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
+  var eventsRef = firebase.database().ref("events");
   ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
       $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId))
       $scope.events.$loaded()
@@ -214,7 +216,8 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
   });
 
 
-  $scope.openPopover = function($event) {
+  $scope.openPopover = function($event, query) {
+    console.log("what is $event? ",$event);
     $ionicLoading.show({
     content: 'Loading',
     animation: 'fade-in',
@@ -222,7 +225,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
     width: 100,
     showDelay: 100
     });
-    var fullQuery = '/api/place/textsearch/json?query=' + $scope.event.venue +" "+ $scope.event.cityState + '&key='+__env.GOOGLE_PLACES_KEY;
+    var fullQuery = '/api/place/textsearch/json?query=' + query.venue +" "+ query.cityState + '&key='+ENV.GOOGLE_PLACES_KEY;
     console.log(fullQuery);
     var req = {
       url: fullQuery,
@@ -243,7 +246,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
   $scope.closePopover = function() {
     $scope.popover.hide();
   };
-  $scope.selectAddress = function(result){
+  $scope.selectAddressVenue = function(result){
     console.log("result of click is: ",result);
     $scope.event.address = result.formatted_address;
     console.log("event address is: ",$scope.event.address);
@@ -270,9 +273,10 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 
 }])
 
-.controller('EditEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
-  var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
-  var userGroupsRef = new Firebase("https://roadwarrior.firebaseio.com/users/"+currentAuth.uid+"/groups");
+.controller('EditEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+   var ENV = FirebaseEnv();
+  var eventsRef = firebase.database().ref('events');
+  var userGroupsRef = firebase.database().ref("users/"+currentAuth.uid+"/groups");
   $scope.selection = {};
 
 
@@ -348,7 +352,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 
 
   $scope.openPopover = function($event) {
-    var fullQuery = '/api/place/textsearch/json?query=' + $scope.selection.mySelect.venue +" "+ $scope.selection.mySelect.cityState + '&key='+__env.GOOGLE_PLACES_KEY;
+    var fullQuery = '/api/place/textsearch/json?query=' + $scope.selection.mySelect.venue +" "+ $scope.selection.mySelect.cityState + '&key='+ENV.GOOGLE_PLACES_KEY;
     console.log(fullQuery);
     var req = {
       url: fullQuery,
@@ -563,7 +567,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
   ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
     var thisGroup = $scope.thisGroup.groupId;
     console.log("this group is ",thisGroup);
-    var memberRef = new Firebase("https://roadwarrior.firebaseio.com/groups/"+thisGroup+"/members");
+    var memberRef = firebase.database().ref("groups/"+thisGroup+"/members");
       $scope.pendingMembers = $firebaseArray(memberRef.orderByChild('userType').startAt('pending').endAt('pending'))
         $scope.pendingMembers.$loaded()
           .then(function(){
@@ -573,7 +577,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 
 
   $scope.accept = function(user){
-    var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+user.$id);
+    var activeGroupRef = firebase.database().ref('activeGroup/'+user.$id);
     var activeUserObj = $firebaseObject(activeGroupRef);
     activeUserObj.access = true;
     activeUserObj.groupId = $scope.thisGroup.groupId;
@@ -585,7 +589,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
       console.log("Error:", error);
     });
 
-    var currentGroupMemberRef = new Firebase('https://roadwarrior.firebaseio.com/groups/'+$scope.thisGroup.groupId+'/members/'+user.$id);
+    var currentGroupMemberRef = firebase.database().ref('groups/'+$scope.thisGroup.groupId+'/members/'+user.$id);
     var groupMemberObj = $firebaseObject(currentGroupMemberRef);
     groupMemberObj.userType = 'user';
     groupMemberObj.name = user.name;
@@ -596,9 +600,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
       console.log("Error:", error);
     });
 
-    var url = 'https://roadwarrior.firebaseio.com/users/'+user.$id+'/groups/'+$scope.thisGroup.groupId;
-    console.log("what is url? ",url);
-    var thisUserGroupRef = new Firebase(url);
+    var thisUserGroupRef = firebase.database().ref('users/'+user.$id+'/groups/'+$scope.thisGroup.groupId);
     var currentUserObj = $firebaseObject(thisUserGroupRef);
     currentUserObj.access = true;
     currentUserObj.level = "user";
@@ -614,7 +616,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
 
 
     $scope.decline = function(user){
-    var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+user.$id);
+    var activeGroupRef = firebase.database().ref('activeGroup/'+user.$id);
     var activeUserObj = $firebaseObject(activeGroupRef);
     activeUserObj.$remove().then(function(ref) {
   // data has been deleted locally and in the database
@@ -623,7 +625,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
     });
 
 
-    var currentGroupMemberRef = new Firebase('https://roadwarrior.firebaseio.com/groups/'+$scope.thisGroup.groupId+'/members/'+user.$id);
+    var currentGroupMemberRef = firebase.database().ref('groups/'+$scope.thisGroup.groupId+'/members/'+user.$id);
     var groupMemberObj = $firebaseObject(currentGroupMemberRef);
     groupMemberObj.$remove().then(function(ref) {
      console.log("ref is ",ref.val()) 
@@ -631,9 +633,7 @@ $ionicPopover.fromTemplateUrl('templates/popover.html', {
       console.log("Error:", error);
     });
 
-    var url = 'https://roadwarrior.firebaseio.com/users/'+user.$id+'/groups/'+$scope.thisGroup.groupId;
-    console.log("what is url? ",url);
-    var thisUserGroupRef = new Firebase(url);
+    var thisUserGroupRef = firebase.database().ref('users/'+user.$id+'/groups/'+$scope.thisGroup.groupId);
     var currentUserObj = $firebaseObject(thisUserGroupRef);
     currentUserObj.$remove().then(function(ref) {
      console.log("ref is ",ref.val()) 

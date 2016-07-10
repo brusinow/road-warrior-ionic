@@ -4,13 +4,30 @@
   <div class="spinner" ng-if="thisGroup.access === true" ng-hide="hideLoader()">
   <ion-spinner></ion-spinner>
   </div>
-  <ion-slides ng-if="thisGroup.access === true" options="options" slider="data.slider">
 
+  <div ng-if="result.today === false && hideLoader()">
+    <div style="padding-top:20px;" class="row">
+      <div  class="col col-75">
+        <h5 class="no-margin header-font">{{day_of_week}}</h5>
+        <h5 class="no-margin header-font">{{now_formatted_date}}</h5>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="no-itins center-text" ng-if="result.today === false && hideLoader()">
+    <div class="cat-time-no-event"></div>
+    <h3 class="no-margin">You have no event scheduled today.</h3> 
+  </div>
+
+
+
+
+  <ion-slides ng-if="thisGroup.access === true && event" options="options" slider="data.slider">
     <ion-slide-page>
                <div class="postLoad" ng-show="hideLoader()"> 
-                
-               
-                <div style="padding-top:20px;" class="row">
+                  <div style="padding-top:20px;" class="row">
                   <div  class="col col-75">
                   <h5 class="no-margin header-font">{{day_of_week}}</h5>
                   <h5 class="no-margin header-font">{{now_formatted_date}}</h5>
@@ -42,12 +59,20 @@
               </div>
             </ion-list>
             </div>
-             
+             <!-- When there are is an event but no itinerary items -->
              <div class="no-itins center-text" ng-show="itins.length === 0">
               <div class="cat-time"></div>
               <h3 class="no-margin">Your itinerary is empty.</h3>
               <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2> 
              </div>
+
+             
+              
+              <div class="no-group-cat center-text" ng-if="!thisGroup.level">
+                <div class="cat-time-no-event"></div>
+                  <h3 class="no-margin header-font-heavy">You have no active group.</h3> 
+                </div>
+              </div>
            
           </div>  
     </ion-slide-page>
@@ -216,22 +241,13 @@
         </div>
         </div>
     </ion-slide-page>
- 
+      
   </ion-slides>
-             <div class="no-itins center-text" ng-if="!event && itins.length === 0">
-              <div class="cat-time-no-event"></div>
-              <h3 class="no-margin">You have no event scheduled today.</h3> 
-              </div>
-              <div class="no-itins center-text" ng-if="thisGroup.access === false">
+      <div class="no-itins center-text" ng-if="thisGroup.access === false">
                 <div class="cat-time-no-event"></div>
                   <h3 class="no-margin">Your attempt to join this group is still pending - Talk to your administrator.</h3> 
                 </div>
-              </div>
-              <div class="no-group-cat center-text" ng-if="!thisGroup.level">
-                <div class="cat-time-no-event"></div>
-                  <h3 class="no-margin header-font-heavy">You have no active group.</h3> 
-                </div>
-              </div>
+              </div>         
 </ion-content>
 
 

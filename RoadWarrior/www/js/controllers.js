@@ -2,11 +2,11 @@ angular.module('roadWarrior.controllers', [])
 
 
 
-.controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'sendDataService', 'ActiveGroup', 'itineraryService', 'helperService','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, ActiveGroup, itineraryService, helperService, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+.controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'sendDataService', 'ActiveGroup', 'itineraryService', 'helperService','MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, ActiveGroup, itineraryService, helperService, MyYelpAPI, $state, $http, $q, moment,Yahoo){
   
   ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
     console.log("This group: ",$scope.thisGroup);
-    var eventRef = new Firebase("https://roadwarrior.firebaseio.com/events");
+    var eventRef = firebase.database().ref('events');
     $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId)) 
   })
               
@@ -25,7 +25,7 @@ angular.module('roadWarrior.controllers', [])
 }])
 
 
-.controller ('ListShowCtrl', ['$scope', '$firebaseArray','currentAuth', 'sendDataService', 'itineraryService', 'helperService','MyYelpAPI','userService', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, itineraryService, helperService, MyYelpAPI, userService, $state, $http, $q, moment,Yahoo){
+.controller ('ListShowCtrl', ['$scope', '$firebaseArray','currentAuth', 'sendDataService', 'itineraryService', 'helperService','MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, itineraryService, helperService, MyYelpAPI, $state, $http, $q, moment,Yahoo){
     $scope.toggleItin = function(itin) {
     if (itin.details){
     itin.show = !itin.show;
@@ -46,7 +46,7 @@ angular.module('roadWarrior.controllers', [])
       }
     }
 
-  var itinsRef = new Firebase('https://roadwarrior.firebaseio.com/itins');
+  var itinsRef = firebase.database().ref('itins');
   $scope.event = sendDataService.get();
   $scope.event.weekDay = moment($scope.event.unixDate).format('dddd');
   
@@ -98,11 +98,12 @@ angular.module('roadWarrior.controllers', [])
 
    
     $scope.yelpLoadList = [];
+
     $scope.result = {
       "weather": false,
-      "today": false,
-      "itins": false,
-      "complete": false,
+      "today": "",
+      "itins": "",
+      "complete": "",
       "director": ""
     }
     $scope.yelpShow = {
@@ -276,9 +277,9 @@ angular.module('roadWarrior.controllers', [])
     
     
     // console.log("this group id is: ",thisGroup.groupId);
-    var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
-    var eventsRef = new Firebase("https://roadwarrior.firebaseio.com/events");
-    var itinsRef = new Firebase('https://roadwarrior.firebaseio.com/itins');
+    var usersRef = firebase.database().ref('users');
+    var eventsRef = firebase.database().ref('events');
+    var itinsRef = firebase.database().ref('itins');
 
     
       // $scope.event = {};
@@ -296,8 +297,9 @@ angular.module('roadWarrior.controllers', [])
             console.log("events loaded: ",$scope.events);
               if ($scope.events.length === 0){
                 console.log("you have no events. None at all.");
+                $scope.result.today = false;
                 $scope.result.director = "noToday";
-              }
+              } else {
                     angular.forEach($scope.events, function(event) {
                     // console.log("event in forEach: ",event);
                       if (event.date === $scope.todayDate){
@@ -326,14 +328,14 @@ angular.module('roadWarrior.controllers', [])
                         });
                       } 
                     })
+                    $scope.yelpCall();
+                  }
+                  // end of loop to find today event in database
                     if (!$scope.result.today){
+                        $scope.result.today = false;
                         console.log("no today event!");
                         $scope.result.director = "noToday";
                     }
-                    $scope.yelpCall();
-
-          }).catch(function(data){
-            console.log("you have no events. ",data);
           });
         });
 
@@ -390,9 +392,9 @@ angular.module('roadWarrior.controllers', [])
 
   $scope.noResults = {};
   $scope.admin = {email: ""};
-  var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
-  var adminsRef = new Firebase("https://roadwarrior.firebaseio.com/admins");
-  var groupsRef = new Firebase("https://roadwarrior.firebaseio.com/groups");
+  var usersRef = firebase.database().ref('users');
+  var adminsRef = firebase.database().ref('admins');
+  var groupsRef = firebase.database().ref('groups');
   var currentUserRef = usersRef.child(currentAuth.uid);
   var currentUserGroupRef = currentUserRef.child("groups");
 
@@ -458,38 +460,38 @@ angular.module('roadWarrior.controllers', [])
     };   
 }])
 
-.controller('NewGroupsCtrl', ['$scope', '$ionicHistory', 'currentAuth', 'GetSetActiveGroup','$state', function($scope, $ionicHistory, currentAuth,GetSetActiveGroup, $state){
+.controller('NewGroupsCtrl', ['$scope', '$ionicHistory', 'currentAuth', 'Profile','GetSetActiveGroup','$state', function($scope, $ionicHistory, currentAuth,Profile, GetSetActiveGroup, $state){
   $scope.group = {};
 
-  var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
-  var adminsRef = new Firebase("https://roadwarrior.firebaseio.com/admins");
-  var groupsRef = new Firebase("https://roadwarrior.firebaseio.com/groups");
+  var usersRef = firebase.database().ref('users');
+  var adminsRef = firebase.database().ref('admins');
+  var groupsRef = firebase.database().ref('groups');
   var currentUserRef = usersRef.child(currentAuth.uid);
   var currentUserGroupsRef = currentUserRef.child("groups");
-  console.log("current auth is: ",currentAuth);
-   usersRef.child(currentAuth.uid).on("value", function(user){
-    $scope.currentUser = user.val();
-    console.log("current user is: ",$scope.currentUser);
-    })
+  
+  Profile(currentAuth.uid).$bindTo($scope, "profile");
+
     $scope.newGroup = function(){
+      console.log("submitting new group");
       var newGroupRef = groupsRef.push();
-      var groupId = newGroupRef.key();
+      var groupId = newGroupRef.key;
       var memberEntry = {};
       var adminEntry = {};
       var searchGroup = $scope.group.name;
       memberEntry[currentAuth.uid] = {
-        "name": $scope.currentUser.name,
-        "email": $scope.currentUser.email,
+        "name": $scope.profile.name,
+        "email": $scope.profile.email,
         "userType": "admin"
       };
+      console.log("what is memberEntry? ",memberEntry);
       adminEntry[currentAuth.uid] = {
-        "name": $scope.currentUser.name,
-        "email": $scope.currentUser.email,
+        "name": $scope.profile.name,
+        "email": $scope.profile.email,
         "groupName": searchGroup,
         "groupId": groupId
       }
       console.log("what is adminEntry? ",adminEntry)
-      groupsRef.child(groupId).set({
+      newGroupRef.set({
         "name": searchGroup,
         "members": memberEntry
       })

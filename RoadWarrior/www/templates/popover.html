@@ -2,7 +2,7 @@
   <ion-content>
     <ion-list ng-if="results">
       <ion-item style="font-size: 13px; text-align: center;" ng-repeat="result in results">
-        <a ng-click="selectAddress(result)"><span style="font-weight: bold;">{{result.name}}</span><br>
+        <a ng-click="selectAddressVenue(result)"><span style="font-weight: bold;">{{result.name}}</span><br>
         {{result.formatted_address}}</a>
       </ion-item>
     </ion-list>

@@ -19,7 +19,8 @@ angular.module('roadWarrior.services', [])
   function($firebaseObject) {
     return function() {
       // create a reference to the database node where we will store our data
-      var ref = new Firebase("https://roadwarrior.firebaseio.com/_admin/env/localhost");
+      var ref = firebase.database().ref('_admin/env/localhost');
+      // var ref = new Firebase("https://roadwarrior.firebaseio.com/_admin/env/localhost");
       // return it as a synchronized object
       return $firebaseObject(ref);
     }
@@ -70,9 +71,7 @@ angular.module('roadWarrior.services', [])
 .factory("Profile", ["$firebaseObject",
   function($firebaseObject) {
     return function(userId) {
-      // create a reference to the database node where we will store our data
-      var usersRef = new Firebase("https://roadwarrior.firebaseio.com/users");
-      var profileRef = usersRef.child(userId);
+      var profileRef = firebase.database().ref('users/'+userId)
 
       // return it as a synchronized object
       return $firebaseObject(profileRef);
@@ -84,8 +83,8 @@ angular.module('roadWarrior.services', [])
 .factory("ActiveGroup", ["$firebaseObject",
   function($firebaseObject) {
     return function(userId) {
-      // create a reference to the database node where we will store our data
-      var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+userId);
+      var activeGroupRef = firebase.database().ref('activeGroup/'+userId)
+      // var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+userId);
       return $firebaseObject(activeGroupRef);
     }
   }
@@ -94,8 +93,8 @@ angular.module('roadWarrior.services', [])
 .factory("EditItin", ["$firebaseObject",
   function($firebaseObject) {
     return function(id) {
-      // create a reference to the database node where we will store our data
-      var itinRef = new Firebase('https://roadwarrior.firebaseio.com/itins/'+id);
+      var itinRef = firebase.database().ref('itins/'+id)
+      // var itinRef = new Firebase('https://roadwarrior.firebaseio.com/itins/'+id);
       return $firebaseObject(itinRef);
     }
   }
@@ -107,7 +106,8 @@ angular.module('roadWarrior.services', [])
   function set(data, userId) {
     console.log("data is ",data);
     console.log("userId is ",userId);
-    var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+userId);
+    var activeGroupRef = firebase.database().ref('activeGroup/'+userId);
+    // var activeGroupRef = new Firebase('https://roadwarrior.firebaseio.com/activeGroup/'+userId);
     var obj = $firebaseObject(activeGroupRef);
     obj.name = data.name;
     obj.groupId = data.groupId;
@@ -132,21 +132,21 @@ angular.module('roadWarrior.services', [])
 
 
 
-.factory('userService', function($q){
-     var _url = 'https://roadwarrior.firebaseio.com/users';
-    var usersRef = new Firebase(_url);
-  var myObject = {
-    currentGroupData: function(userId){
-      var deferred = $q.defer();
-      usersRef.child(userId).child("groups").on("child_added", function(groupData){
-          console.log("should have data");
-          deferred.resolve(groupData)
-      });
-      return deferred.promise;
-    }
-  }
-  return myObject;
-})
+// .factory('userService', function($q){
+//      var _url = 'https://roadwarrior.firebaseio.com/users';
+//     var usersRef = new Firebase(_url);
+//   var myObject = {
+//     currentGroupData: function(userId){
+//       var deferred = $q.defer();
+//       usersRef.child(userId).child("groups").on("child_added", function(groupData){
+//           console.log("should have data");
+//           deferred.resolve(groupData)
+//       });
+//       return deferred.promise;
+//     }
+//   }
+//   return myObject;
+// })
 
 
  
@@ -296,8 +296,8 @@ angular.module('roadWarrior.services', [])
 
 
 .factory('eventsService', ['ActiveGroup','GetSetActiveGroup', function(ActiveGroup, GetSetActiveGroup) {
-    var eventsRef = new Firebase('https://roadwarrior.firebaseio.com/events');
-
+    // var eventsRef = new Firebase('https://roadwarrior.firebaseio.com/events');
+    var eventsRef = firebase.database().ref('events');
 
     
     return {
@@ -371,7 +371,7 @@ angular.module('roadWarrior.services', [])
                                 $scope.event.groupName = $scope.thisGroup.name;
                                 var newEventEntry = {};
                                 var newEventRef = eventsRef.push();
-                                var eventId = newEventRef.key();
+                                var eventId = newEventRef.key;
                                 $scope.event.eventId = eventId;
                                 console.log("new event to be submitted: ",$scope.event);
                                 newEventEntry[eventId] = $scope.event;
@@ -396,8 +396,7 @@ angular.module('roadWarrior.services', [])
 ])
 
 .factory('itineraryService', function() {
-  var _url = 'https://roadwarrior.firebaseio.com/itins';
-  var itinRef = new Firebase(_url)
+  var itinRef = firebase.database().ref('itins');
 
   return {
     createItinItem: function($scope){
@@ -418,7 +417,7 @@ angular.module('roadWarrior.services', [])
       console.log("itin object is: ",$scope.itin);
       var newItinEntry = {};
       var newItinRef = itinRef.push();
-      var itinId = newItinRef.key();
+      var itinId = newItinRef.key;
       $scope.itin.id = itinId;
       newItinEntry[itinId] = $scope.itin;
       itinRef.update(newItinEntry);
