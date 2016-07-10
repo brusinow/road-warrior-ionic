@@ -8,12 +8,6 @@ angular.module('roadWarrior.services', [])
 ])
 
 
-// .service("FirebaseEnv", function(){
-//   this.initENV = function($firebaseObject){
-//     ref = new Firebase("https://roadwarrior.firebaseio.com/_admin/env/localhost");
-//     return $firebaseObject(ref);
-//   }
-// })
 
 .factory("FirebaseEnv", ["$firebaseObject",
   function($firebaseObject) {
@@ -29,44 +23,71 @@ angular.module('roadWarrior.services', [])
 
 
 
-// .factory("FirebaseEnv", function(){
-//   var ENV_FIREBASE_ORIGIN = 'https://roadwarrior.firebaseio.com';
-//   var jsonp = document.createElement('script')
-//   jsonp.src = ENV_FIREBASE_ORIGIN + '/_admin/env/' + $window.location.hostname.replace(/\./g,',') + '.json?callback=__loadFirebaseEnv';
-//   $document.head.appendChild(jsonp);
 
-//   var __loadFirebaseEnv = function(data) {
-//   $window.__env = data || {};
-//   $document.dispatchEvent(new CustomEvent('env', {detail: data || {}}));
-//   }
-  
-//   var init = function() {
-//   if (!__env) return;
-//   var ref = new Firebase('https://roadwarrior.firebaseio.com/_admin/env/');
-//   }
 
-// })
+
+.factory('Popover', ["$http", "$ionicLoading", "FirebaseEnv", 
+  function($http, $ionicLoading, FirebaseEnv){
+  var ENV = FirebaseEnv(); 
+  console.log("what is ENV? ",ENV);
+
+
+
+  var openPopover = function(query){
+   
+    $ionicLoading.show({
+    content: 'Loading',
+    animation: 'fade-in',
+    showBackdrop: true,
+    width: 100,
+    showDelay: 100
+    });
+    var fullQuery = '/api/place/textsearch/json?query=' + query.venue +" "+ query.cityState + '&key='+ENV.GOOGLE_PLACES_KEY;
+    console.log(fullQuery);
+    var req = {
+      url: fullQuery,
+      method: 'GET',
+    }
+
+    return $http(req).then(function success(results) {
+      // var results = res.data.results;
+      $ionicLoading.hide();
+      return results;
+    }, function error(res) {
+    //do something if the response has an error
+        console.log(res);
+      }); 
+  }
+  return {
+    openPopover: openPopover
+  };
+}])
+
+
+
 
 .factory('Yahoo', function($http, YahooEndpoint) {
   console.log('YahooEndpoint', YahooEndpoint)
 
-  var getYahooData = function(lat,lng) {
-    // console.log("lat: ",lat);
-    // console.log("lng: ",lng);
-    var url = YahooEndpoint.url + "/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(SELECT%20woeid%20FROM%20geo.places%20WHERE%20text%3D%22("+lat+"%2C"+lng+")%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+    var getYahooData = function(lat,lng) {
+      // console.log("lat: ",lat);
+      // console.log("lng: ",lng);
+      var url = YahooEndpoint.url + "/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(SELECT%20woeid%20FROM%20geo.places%20WHERE%20text%3D%22("+lat+"%2C"+lng+")%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 
-    return $http.get(url)
-      .then(function(data) {
-        // console.log('Got some data: ', data.data.query.results.channel.item);
-        var weatherResults = data.data.query.results.channel.item;
-        return weatherResults;
-      });
-  };
+      return $http.get(url)
+        .then(function(data) {
+          // console.log('Got some data: ', data.data.query.results.channel.item);
+          var weatherResults = data.data.query.results.channel.item;
+          return weatherResults;
+        });
+    };
 
   return {
     getYahooData: getYahooData
   };
 })
+
+
 
 .factory("Profile", ["$firebaseObject",
   function($firebaseObject) {
@@ -90,6 +111,8 @@ angular.module('roadWarrior.services', [])
   }
 ])
 
+
+
 .factory("EditItin", ["$firebaseObject",
   function($firebaseObject) {
     return function(id) {
@@ -102,7 +125,6 @@ angular.module('roadWarrior.services', [])
 
 
 .factory('GetSetActiveGroup', ["$firebaseObject", function($firebaseObject) {
-  
   function set(data, userId) {
     console.log("data is ",data);
     console.log("userId is ",userId);
@@ -126,29 +148,6 @@ angular.module('roadWarrior.services', [])
 }
 ])
 
-
-
-
-
-
-
-// .factory('userService', function($q){
-//      var _url = 'https://roadwarrior.firebaseio.com/users';
-//     var usersRef = new Firebase(_url);
-//   var myObject = {
-//     currentGroupData: function(userId){
-//       var deferred = $q.defer();
-//       usersRef.child(userId).child("groups").on("child_added", function(groupData){
-//           console.log("should have data");
-//           deferred.resolve(groupData)
-//       });
-//       return deferred.promise;
-//     }
-//   }
-//   return myObject;
-// })
-
-
  
 
 
@@ -166,10 +165,6 @@ angular.module('roadWarrior.services', [])
 
     return {
         retrieveYelp: function(event, searchTerm, radius, limitNumber, sort, callback) {
-            // var count = angular.callbacks.counter;
-            // id = id + count;
-            // console.log("what is callback id? ",count);
-            // console.log("running Yelp")
             var method = 'GET';
             var url = YelpEndpoint.url+'?callback=JSON_CALLBACK';
             var params = {
@@ -200,15 +195,6 @@ angular.module('roadWarrior.services', [])
 })
 
 
-// $http.jsonp("api.yelp.com/v2/search?callback=JSON_CALLBACK", yourParams) 
-// .success(function() {
-//      //success callback
-// })
-// .error(function(){
-//      //error callback
-// }) ;
-
-
 
 
 
@@ -227,23 +213,6 @@ angular.module('roadWarrior.services', [])
  }
 
 })
-
-
-// .factory('GetGroup', function() {
-//   var currentGroup = {}
-//  function set(data) {
-//    currentGroup = data;
-//  }
-//  function get() {
-//   return currentGroup;
-//  }
-
-//  return {
-//   set: set,
-//   get: get
-//  }
-
-// })
 
 
 .factory('helperService', function() {
@@ -287,12 +256,6 @@ angular.module('roadWarrior.services', [])
 
         };
 })
-
-
-
-
-
-
 
 
 .factory('eventsService', ['ActiveGroup','GetSetActiveGroup', function(ActiveGroup, GetSetActiveGroup) {

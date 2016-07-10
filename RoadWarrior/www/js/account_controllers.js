@@ -143,7 +143,7 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','currentAuth','Profile','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, currentAuth, Profile, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','Popover','currentAuth', 'Profile','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, Popover, currentAuth, Profile, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
   var ENV = FirebaseEnv();
 
   $scope.event = {};
@@ -160,11 +160,6 @@ angular.module('roadWarrior.controllers')
         console.log("events list is ",$scope.events);
       })
     })
-
-
-
-
-
 
 
   $scope.submitNewEvent = function() {
@@ -209,43 +204,23 @@ angular.module('roadWarrior.controllers')
       ionicDatePicker.openDatePicker(ipObj1);
     };
 
-$ionicPopover.fromTemplateUrl('templates/popover.html', {
+  $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope
   }).then(function(popover) {
     $scope.popover = popover;
   });
 
 
-  $scope.openPopover = function($event, query) {
-    console.log("what is $event? ",$event);
-    $ionicLoading.show({
-    content: 'Loading',
-    animation: 'fade-in',
-    showBackdrop: true,
-    width: 100,
-    showDelay: 100
-    });
-    var fullQuery = '/api/place/textsearch/json?query=' + query.venue +" "+ query.cityState + '&key='+ENV.GOOGLE_PLACES_KEY;
-    console.log(fullQuery);
-    var req = {
-      url: fullQuery,
-      method: 'GET',
-    }
-
-    $http(req).then(function success(res) {
-      $ionicLoading.hide();
-      console.log(res)
-      $scope.results = res.data.results;
-      console.log("results for popover are: ",$scope.results);
+  $scope.openPopover = function($event, query){
+    console.log("what is query? ",query);
+    Popover.openPopover(query).then(function(data){
+      console.log("what is data? ",data);
+      $scope.results = data.data.results;
       $scope.popover.show($event);
-    }, function error(res) {
-    //do something if the response has an error
-        console.log(res);
-      }); 
-  };
-  $scope.closePopover = function() {
-    $scope.popover.hide();
-  };
+    })  
+  }
+
+
   $scope.selectAddressVenue = function(result){
     console.log("result of click is: ",result);
     $scope.event.address = result.formatted_address;

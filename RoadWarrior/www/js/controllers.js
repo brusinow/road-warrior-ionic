@@ -10,13 +10,6 @@ angular.module('roadWarrior.controllers', [])
     $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId)) 
   })
               
-  // $scope.events.$loaded().then(function(){
-  //     angular.forEach($scope.events, function(event) {
-  //       console.log("event in loop: ",event)
-  //       event.dayOfWeek = helperService.dayOfWeek((event.unixDate/1000));
-  //       console.log("Should be day of week? ", $scope.event.dayOfWeek);
-  //     })
-  // })
 
   $scope.viewDay = function(event){
     sendDataService.set(event);

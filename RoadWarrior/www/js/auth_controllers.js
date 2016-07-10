@@ -3,23 +3,6 @@ angular.module('roadWarrior.controllers')
 
 .controller('SignupCtrl', ['$scope', '$ionicLoading', 'Auth', 'currentAuth','$firebaseAuth','$firebaseObject', '$state', function($scope, $ionicLoading, Auth, currentAuth, $firebaseAuth, $firebaseObject, $state){
 $scope.user = {}
-$scope.authObj = $firebaseAuth();
-// Auth.$onAuthStateChanged(function(firebaseUser) {
-//   if (firebaseUser) {
-//     console.log("Logged in as:", firebaseUser.uid);
-//      // var user = Auth.currentUser;
-//      // console.log("what is user? ",user);
-     
-//   } else {
-//     console.log("Logged out");
-//   }
-// });
-
-
-
-
-
- 
 
 
 $scope.signup = function() {
@@ -32,7 +15,7 @@ $scope.signup = function() {
     showDelay: 100
   }).then(function(){
         console.log("The loading indicator is now displayed");
-      $scope.authObj.$createUserWithEmailAndPassword($scope.user.email, $scope.user.password)
+      Auth.$createUserWithEmailAndPassword($scope.user.email, $scope.user.password)
       .then(function(firebaseUser) {
         console.log("User " + firebaseUser.uid + " created successfully!");
         firebaseUser.updateProfile({
@@ -64,83 +47,6 @@ $scope.signup = function() {
     });
   })
 };
-
-      // if ($scope.currentUser.groups){
-          //   console.log("going to today page");
-          //   $ionicHistory.clearCache().then(function(){ $state.go('tab.today') });
-          // } else {
-          //   $state.go("groups");
-          //   }
-
-
-
-
-  
-
-
-     
- 
-
-
-
-
-
-
-
-
-
-
-
-// $scope.signup = function(){
-//     $ionicLoading.show({
-//     content: 'Loading',
-//     animation: 'fade-in',
-//     showBackdrop: true,
-//     width: 100,
-//     showDelay: 100
-//     }).then(function(){
-//        console.log("The loading indicator is now displayed");
-    
-//     usersRef.createUser({
-//           name: $scope.user.name,
-//           email: $scope.user.email,
-//           password: $scope.user.password,
-//     }, function(error, userData) {
-//       if (error) {
-//         console.log("Error creating user:", error);
-//       } else {
-//         console.log("Successfully created user account with uid:", userData.uid);
-//          usersRef.authWithPassword({
-//               email: $scope.user.email,
-//               password: $scope.user.password
-//             }, function(error, authData) {
-//               if (error) {
-//                 alert("Login Failed!", error);
-//               } else {
-//                 console.log("Authenticated successfully with payload:", authData);
-//                 if (authData) {
-//                   // save the user's profile into Firebase
-//                   usersRef.child(authData.uid).set({
-//                     provider: authData.provider,
-//                     groups: {},
-//                     email: $scope.user.email,
-//                     name: $scope.user.name
-                    
-//                   });
-//                 };
-//                console.log("should redirect to groups state");
-//                $ionicLoading.hide().then(function(){
-//                 $state.go("groups");
-//                 console.log("The loading indicator is now hidden");
-//                 });
-                
-//               }
-//             });
-//         } 
-//     });
-
-//   });
-// }
 }])
 
 .controller('LoginCtrl', ['$scope', '$ionicHistory', 'Auth', 'currentAuth', '$state', function($scope, $ionicHistory, Auth, currentAuth, $state){
@@ -171,10 +77,7 @@ Auth.$onAuthStateChanged(function(firebaseUser) {
 
 
   // bind form data to user model
-  $scope.user = {
-    email: '',
-    password: ''
-  }
+  $scope.user = {}
 
 
   $scope.login = function() {
@@ -188,20 +91,7 @@ Auth.$onAuthStateChanged(function(firebaseUser) {
   console.error("Authentication failed:", error);
   })
   };
-  // $scope.login = function(){
-  //   console.log("current auth is: ",currentAuth);
-  //   usersRef.authWithPassword({
-  //     email: $scope.user.email,
-  //     password: $scope.user.password
-  //   }, function(error, authData) {
-  //     if (error) {
-  //       console.log("Login Failed!", error);
-  //     } else {
-  //       console.log("Login Successful!", authData);
-  //       $ionicHistory.clearCache().then(function(){ $state.go('tab.today') })
-  //     }
-  //   });
-  // };
+
   $scope.logout = function(){
     Auth.$signOut();
   };
