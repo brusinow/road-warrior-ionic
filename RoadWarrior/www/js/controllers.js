@@ -293,18 +293,16 @@ angular.module('roadWarrior.controllers', [])
                 $scope.result.today = false;
                 $scope.result.director = "noToday";
               } else {
-                    angular.forEach($scope.events, function(event) {
-                    // console.log("event in forEach: ",event);
-                      if (event.date === $scope.todayDate){
+                    for (i=0; i < $scope.events.length; i++){
+                      if ($scope.events[i].date === $scope.todayDate){
                         $scope.result.today = true;
-                        $scope.event = event;
+                        $scope.event = $scope.events[i];
                         console.log("saves the correct day");
-
                         var lat = $scope.event.lat;
                         var lng = $scope.event.lng;
                       //WEATHER CALL
                         $scope.weatherCall(lat,lng);
-
+                        $scope.yelpCall();
                         $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
                         $scope.itins.$loaded()
                         .then(function(){
@@ -312,32 +310,29 @@ angular.module('roadWarrior.controllers', [])
                           if ($scope.itins.length > 0){
                             $scope.result.itins = true;
                             console.log("itins result is ",$scope.result.itins);
+                            
                           } else {
                             console.log("you have no itins for this day.")
                             $scope.result.director = "noItins";
+                          
                           }
                         }).catch(function(data){
                           console.log("no itins data came back. ",data);
                         });
-                      } 
-                    })
-                    $scope.yelpCall();
-                  }
-                  // end of loop to find today event in database
-                    if (!$scope.result.today){
+                        break;
+                      }
+                    }
+
+                     if (!$scope.result.today){
                         $scope.result.today = false;
                         console.log("no today event!");
                         $scope.result.director = "noToday";
-                    }
+                    }  
+                  }                  
           });
         });
 
     
-
-
-
-
-  
 }])
 
 .controller('GroupsCtrl', ['$scope', '$ionicLoading','Profile','currentAuth', '$state', function($scope, $ionicLoading, Profile, currentAuth, $state){
