@@ -24,6 +24,17 @@ angular.module('roadWarrior.services', [])
 
 
 
+.factory("chatMessages", ["$firebaseArray",
+  function($firebaseArray) {
+    return function(groupId) {
+      var chatRef = firebase.database().ref('messages/'+groupId+'/main')
+
+      // return it as a synchronized object
+      return $firebaseArray(chatRef);
+    }
+  }
+])
+
 
 
 .factory('Popover', ["$http", "$ionicLoading", "FirebaseEnv", 

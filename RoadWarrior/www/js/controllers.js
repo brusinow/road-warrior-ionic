@@ -404,7 +404,7 @@ angular.module('roadWarrior.controllers', [])
       if ($scope.results !== null){
         adminsRef.orderByChild('email').startAt(searchEmail).endAt(searchEmail).on('child_added', function(snap){
           var foundAdmin = snap.val();
-          var foundKey = snap.key();
+          var foundKey = snap.key;
           var groupId = foundAdmin.groupId;  
           if (foundAdmin.groupName === $scope.admin.groupName ){
             var memberEntry = {};
@@ -500,24 +500,64 @@ angular.module('roadWarrior.controllers', [])
 }])
 
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
+.controller('ChatsCtrl', ['$scope','$timeout','$ionicScrollDelegate','chatMessages','ActiveGroup','Profile','currentAuth', function($scope, $timeout, $ionicScrollDelegate, chatMessages, ActiveGroup, Profile, currentAuth) {
+  Profile(currentAuth.uid).$bindTo($scope, "profile").then(function(){
+    $scope.myId = $scope.profile.$id;
+  })
+  
+  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+    $scope.messages = chatMessages($scope.thisGroup.groupId);
+  });
+  $ionicScrollDelegate.scrollBottom(true);
+  $scope.data = {};
+
+
+  $scope.hideTime = true;
+
+  var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+
+  $scope.sendMessage = function() {
+
+    var d = new Date();
+    d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+
+    $scope.messages.$add({
+      userId: $scope.profile.$id,
+      userName: $scope.profile.name,
+      text: $scope.data.message,
+      time: d
+    });
+
+    delete $scope.data.message;
+    $ionicScrollDelegate.scrollBottom(true);
+
   };
-})
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
+
+  $scope.inputUp = function() {
+    console.log("input up");
+    if (isIOS) $scope.data.keyboardHeight = 216;
+    $timeout(function() {
+      $ionicScrollDelegate.scrollBottom(true);
+    }, 300);
+
+  };
+
+  $scope.inputDown = function() {
+    console.log("input down");
+    if (isIOS) $scope.data.keyboardHeight = 0;
+    $ionicScrollDelegate.resize();
+  };
+
+  $scope.closeKeyboard = function() {
+    // cordova.plugins.Keyboard.close();
+  };
+
+
+  
+
+}]);
 
 
 
