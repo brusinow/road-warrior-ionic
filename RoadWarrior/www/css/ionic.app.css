@@ -544,6 +544,9 @@ textarea::-webkit-input-placeholder {
   background: #931621 !important;
   opacity: 0.2; }
 
+ion-slides {
+  height: 110% !important; }
+
 /*.yelp {
   opacity: 1;
   -webkit-transition: opacity .4s linear; 

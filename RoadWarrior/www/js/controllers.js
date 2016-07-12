@@ -76,18 +76,18 @@ angular.module('roadWarrior.controllers', [])
 
 
 
-      $scope.$on("$ionicView.beforeEnter", function(event, data){
-   // handle event
-      console.log("State Params: ", data.stateParams);
-      });
+   //    $scope.$on("$ionicView.beforeEnter", function(event, data){
+   // // handle event
+   //    console.log("State Params: ", data.stateParams);
+   //    });
 
-      $scope.$watch('event.address', function(newEvent, oldEvent) {
-          console.log("Old event is ",oldEvent);  
-          console.log("New event is ",newEvent);
+     $scope.$watchCollection('events', function(newEvents, oldEvents) {
+          console.log("Old event are ",oldEvents);  
+          console.log("New event are ",newEvents);
           console.log("CHANGE!!!!");
           $scope.yelpCall();
           $scope.weatherCall($scope.event.lat, $scope.event.lng);
-      });
+    });
 
    
     $scope.yelpLoadList = [];
@@ -321,6 +321,7 @@ angular.module('roadWarrior.controllers', [])
                         });
                         break;
                       }
+                      console.log("WHERE I WILL PUT STUFF!!!!!!!!!!");
                     }
 
                      if (!$scope.result.today){
@@ -332,7 +333,11 @@ angular.module('roadWarrior.controllers', [])
           });
         });
 
-    
+      
+
+
+
+
 }])
 
 .controller('GroupsCtrl', ['$scope', '$ionicLoading','Profile','currentAuth', '$state', function($scope, $ionicLoading, Profile, currentAuth, $state){

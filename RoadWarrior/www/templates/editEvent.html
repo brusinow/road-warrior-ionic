@@ -1,11 +1,11 @@
 <ion-view view-title="Edit Event">
-   <ion-content class="padding">
+   <ion-scroll direction="y" style="right: 0;bottom: 0;left: 0;position: absolute;" class="has-header has-subheader padding">
         <div class="list">        
            <label class = "item item-input-itin item-select item-select-itin">
           <div class = "input-label-itin">
           Choose Event:
           </div>
-          <select ng-model="selection.mySelect" ng-init="selection.mySelect=events[0]" ng-change = "whatSelected()"  ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate'>
+          <select ng-model="selection.mySelect" ng-init="selection.mySelect=events[0]"  ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate'>
             </select>
           </label>
           </div>
@@ -31,8 +31,8 @@
             <textarea ng-model="selection.mySelect.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
           </label> 
           
-         <button class="button button-block button-stable" ng-click ="updateEvents()">Submit</button>
+         <button class="button button-block button-dark" ng-click ="updateEvents()">Submit</button>
         </div>    
        
-      </ion-content>
+      </ion-scroll>
 </ion-view>

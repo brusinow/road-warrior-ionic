@@ -413,6 +413,7 @@ angular.module('roadWarrior.controllers')
     $scope.submitted = false;
     console.log("submitted is ",$scope.submitted);
 
+
     $scope.itin = EditItin(data.itin.id);
     console.log("nextDay is ",data.itin.nextDay);
     // $scope.toggleSwitch = function(startTimeUnix){
@@ -474,43 +475,43 @@ angular.module('roadWarrior.controllers')
 
 
 
-    // var ipObj2 = {
-    //   callback: function (val) {      //Mandatory
-    //     if (typeof (val) === 'undefined') {
-    //       console.log('Time not selected');
-    //     } else {
-    //       $scope.itin.startTimeUnix = val;
-    //       console.log("startTime Unix: ",$scope.itin.startTimeUnix);
-    //       $scope.itin.startTime = helperService.timeFormat($scope, val);
-    //       console.log("converted time? ",$scope.itin.startTime);
+    var ipObj2 = {
+      callback: function (val) {      //Mandatory
+        if (typeof (val) === 'undefined') {
+          console.log('Time not selected');
+        } else {
+          $scope.itin.startTimeUnix = val;
+          console.log("startTime Unix: ",$scope.itin.startTimeUnix);
+          $scope.itin.startTime = helperService.timeFormat($scope, val);
+          console.log("converted time? ",$scope.itin.startTime);
 
-    //     }
-    //   },
-    //   inputTime: $scope.itin.startTimeUnix,   //Optional
-    //   format: 12,         //Optional
-    //   step: 15,           //Optional
-    //   setLabel: 'Set'    //Optional
-    // };
-// .format('hh:mm A');
-  //   var ipObj3 = {
-  //     callback: function (val) {      //Mandatory
-  //       if (typeof (val) === 'undefined') {
-  //         console.log('Time not selected');
-  //       } else {
-  //         $scope.itin.endTimeUnix = val;
-  //         console.log("val is: ",$scope.itin.endTimeUnix);
-  //         $scope.itin.endTime = helperService.timeFormat($scope, val);
-  //         console.log("converted time? ",$scope.itin.endTime);
-  //         // var selectedTime = new Date(val * 1000);
-  //         // console.log("selected time is: ",selectedTime);
-  //         // console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), 'H :', selectedTime.getUTCMinutes(), 'M');
-  //       }
-  //   },
-  //   inputTime: $scope.itin.endTimeUnix,   //Optional
-  //   format: 12,         //Optional
-  //   step: 15,           //Optional
-  //   setLabel: 'Set'    //Optional
-  // };
+        }
+      },
+      // inputTime: 50400,   //Optional
+      format: 12,         //Optional
+      step: 15,           //Optional
+      setLabel: 'Set'    //Optional
+    };
+
+    var ipObj3 = {
+      callback: function (val) {      //Mandatory
+        if (typeof (val) === 'undefined') {
+          console.log('Time not selected');
+        } else {
+          $scope.itin.endTimeUnix = val;
+          console.log("val is: ",$scope.itin.endTimeUnix);
+          $scope.itin.endTime = helperService.timeFormat($scope, val);
+          console.log("converted time? ",$scope.itin.endTime);
+          var selectedTime = new Date(val * 1000);
+          console.log("selected time is: ",selectedTime);
+          console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), 'H :', selectedTime.getUTCMinutes(), 'M');
+        }
+    },
+    // inputTime: 50400,   //Optional
+    format: 12,         //Optional
+    step: 15,           //Optional
+    setLabel: 'Set'    //Optional
+  };
 
     $scope.openStartTimePicker = function(){
       ionicTimePicker.openTimePicker(ipObj2);
