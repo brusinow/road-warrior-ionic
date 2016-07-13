@@ -45,7 +45,6 @@ angular.module('roadWarrior.services', [])
 
 
   var openPopover = function(query){
-   
     $ionicLoading.show({
     content: 'Loading',
     animation: 'fade-in',
@@ -53,7 +52,7 @@ angular.module('roadWarrior.services', [])
     width: 100,
     showDelay: 100
     });
-    var fullQuery = '/api/place/textsearch/json?query=' + query.venue +" "+ query.cityState + '&key='+ENV.GOOGLE_PLACES_KEY;
+    var fullQuery = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' + query.venue +" "+ query.cityState + '&key='+ENV.GOOGLE_PLACES_KEY;
     console.log(fullQuery);
     var req = {
       url: fullQuery,
