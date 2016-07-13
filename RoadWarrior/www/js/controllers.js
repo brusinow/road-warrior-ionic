@@ -81,13 +81,51 @@ angular.module('roadWarrior.controllers', [])
    //    console.log("State Params: ", data.stateParams);
    //    });
 
-     $scope.$watchCollection('events', function(newEvents, oldEvents) {
-          console.log("Old event are ",oldEvents);  
-          console.log("New event are ",newEvents);
-          console.log("CHANGE!!!!");
-          $scope.yelpCall();
-          $scope.weatherCall($scope.event.lat, $scope.event.lng);
-    });
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+    //  $scope.$watch(function(){
+    //   console.log("running my watch");
+    //   return $scope.event;
+
+    // }, function(newValue, oldValue) {
+    //       console.log("Old value is ",oldValue);  
+    //       console.log("New value is ",newValue);
+    //       console.log("running API calls");
+    //       $scope.event = newValue;
+    //       $scope.yelpCall();
+    //       $scope.weatherCall($scope.event.lat, $scope.event.lng);
+          // $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt(newValue.$id).endAt(newValue.$id))
+          // $scope.itins.$loaded()
+          // .then(function(){
+          //   // console.log("itins are ",$scope.itins);
+          //   if ($scope.itins.length > 0){
+          //     $scope.result.itins = true;
+          //     // console.log("itins result is ",$scope.result.itins);
+              
+          //   } else {
+          //     console.log("you have no itins for this day.")
+          //     $scope.result.director = "noItins";
+            
+          //   }
+          // }).catch(function(data){
+          //   console.log("no itins data came back. ",data);
+          // });
+          
+    // }, true);
+
+    
 
    
     $scope.yelpLoadList = [];
@@ -162,12 +200,19 @@ angular.module('roadWarrior.controllers', [])
 
     $scope.hideLoader = function(){
       if ($scope.result.director === "noToday"){
+        // console.log("NO TODAY!!!");
         return true;
       } else if ($scope.result.director === "noItins" && $scope.result.weather){
+        // console.log("EVENT, BUT NO ITINS!!!");
         return true;
       } else if ($scope.result.weather && $scope.result.today && $scope.result.itins){
+         // console.log("WE HAVE A TODAY EVENT!!");
         return true;
       } else {
+        // console.log("RETURNING FALSE!?!?!?!");
+        // console.log("director is ",$scope.result.director);
+        // console.log("today result is ",$scope.result.today)
+        // console.log("itin results is ",$scope.result.itins);
         return false;
       }
     }
@@ -182,7 +227,7 @@ angular.module('roadWarrior.controllers', [])
     });
     MyYelpAPI.retrieveYelp($scope.event, "coffee", 500, 1, "2", function(data){
       $scope.yelp.coffee = data.businesses[0];
-      console.log("Coffee results: ",$scope.yelp.coffee);
+      // console.log("Coffee results: ",$scope.yelp.coffee);
       $scope.yelpLoadList[1] = true;
     });
     MyYelpAPI.retrieveYelp($scope.event, "gyms", 500, 1, "2", function(data){
@@ -220,8 +265,8 @@ angular.module('roadWarrior.controllers', [])
         Yahoo.getYahooData(lat,lng).then(function(data){
           if (data){
             $scope.result.weather = true;
-            // console.log("weather result is ",$scope.result.weather);
-            // console.log("weather data is ",data);
+            console.log("weather result is ",$scope.result.weather);
+            console.log("weather data is ",data);
           }
           $scope.weatherData = data;
           }).catch(function(data){
@@ -283,7 +328,7 @@ angular.module('roadWarrior.controllers', [])
 
     
       ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-        console.log("$scope.thisGroup.groupId: ",$scope.thisGroup.groupId);
+        // console.log("$scope.thisGroup.groupId: ",$scope.thisGroup.groupId);
         $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').equalTo($scope.thisGroup.groupId))
         $scope.events.$loaded()
           .then(function(){
@@ -295,9 +340,11 @@ angular.module('roadWarrior.controllers', [])
               } else {
                     for (i=0; i < $scope.events.length; i++){
                       if ($scope.events[i].date === $scope.todayDate){
-                        $scope.result.today = true;
-                        $scope.event = $scope.events[i];
-                        console.log("saves the correct day");
+                         
+                            $scope.result.today = true;
+                            $scope.event = $scope.events[i];
+                          
+                        // console.log("saves the correct day");
                         var lat = $scope.event.lat;
                         var lng = $scope.event.lng;
                       //WEATHER CALL
@@ -306,10 +353,10 @@ angular.module('roadWarrior.controllers', [])
                         $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
                         $scope.itins.$loaded()
                         .then(function(){
-                          console.log("itins are ",$scope.itins);
+                          // console.log("itins are ",$scope.itins);
                           if ($scope.itins.length > 0){
                             $scope.result.itins = true;
-                            console.log("itins result is ",$scope.result.itins);
+                            // console.log("itins result is ",$scope.result.itins);
                             
                           } else {
                             console.log("you have no itins for this day.")
@@ -321,7 +368,7 @@ angular.module('roadWarrior.controllers', [])
                         });
                         break;
                       }
-                      console.log("WHERE I WILL PUT STUFF!!!!!!!!!!");
+                      // console.log("WHERE I WILL PUT STUFF!!!!!!!!!!");
                     }
 
                      if (!$scope.result.today){
