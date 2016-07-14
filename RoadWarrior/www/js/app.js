@@ -61,7 +61,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
-  $ionicConfigProvider.scrolling.jsScrolling(false);
+  // $ionicConfigProvider.scrolling.jsScrolling(false);
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
   $stateProvider
