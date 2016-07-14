@@ -73,14 +73,6 @@ angular.module('roadWarrior.controllers', [])
 
 .controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','FirebaseEnv', 'itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, FirebaseEnv, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
 
-
-
-
-
-   
-
-    
-
    
     $scope.yelpLoadList = [];
 
@@ -150,6 +142,7 @@ angular.module('roadWarrior.controllers', [])
         return true;
       } else {
         return false;
+        console.log("what is yelp loading? ",$scope.yelpLoadList);
       }
     }
 
@@ -173,10 +166,11 @@ angular.module('roadWarrior.controllers', [])
     }
 
 
-  $scope.yelpCall = function(){            
+  $scope.yelpCall = function(){ 
+    $scope.yelpLoadList = [];           
     $scope.yelp = {};
     if ($scope.result.today) {
-    MyYelpAPI.retrieveYelp($scope.event, "restaurants", 500, 4, "2", function(data){
+    MyYelpAPI.retrieveYelp($scope.event, "restaurants", 500, 3, "2", function(data){
       $scope.yelp.restaurants = data.businesses;
       $scope.yelpLoadList[0] = true;
     });

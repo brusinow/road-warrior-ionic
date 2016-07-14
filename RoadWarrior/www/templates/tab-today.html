@@ -1,6 +1,6 @@
 
 <ion-view view-title="Today">
-<ion-content class="padding" scroll="true">
+<ion-content class="padding" has-header="true" scroll="false">
   <div class="spinner" ng-if="thisGroup.access === true" ng-hide="hideLoader()">
   <ion-spinner></ion-spinner>
   </div>
@@ -12,36 +12,34 @@
         <h5 class="no-margin header-font">{{now_formatted_date}}</h5>
       </div>
     </div>
-  </div>
-
-
-
-  <div class="no-itins center-text" ng-if="result.today === false && hideLoader()">
+  <div class="no-itins center-text">
     <div class="cat-time-no-event"></div>
     <h3 class="no-margin">You have no event scheduled today.</h3> 
   </div>
-
+ </div>
 
 
 
   <ion-slides ng-if="thisGroup.access === true && event" options="options" slider="data.slider">
-    <ion-slide-page>
+    <ion-slide-page disable-scroll="false">
                <div class="postLoad" ng-show="result.today && hideLoader()"> 
-                  <div style="padding-top:20px;" class="row">
-                  <div  class="col col-75">
-                  <h5 class="no-margin header-font">{{day_of_week}}</h5>
-                  <h5 class="no-margin header-font">{{now_formatted_date}}</h5>
-                  <h4 ng-if="result" class="no-margin header-font-heavy">{{event.venue}}</h4>
-                  <h5 ng-if="result" class="no-margin header-font">{{event.cityState}}</h5>
+                <scroll direction="y" style="height:2000px">
+                  <div style="padding-top:10px;" class="row">
+                  <div  class="col col-67">
+                  <h4 class="no-margin header-font">{{day_of_week}}</h4>
+                  <h4 class="no-margin header-font">{{now_formatted_date}}</h4>
+                  <h3 ng-if="result" class="no-margin header-font-heavy">{{event.venue}}</h3>
+                  <h4 ng-if="result" class="no-margin header-font">{{event.cityState}}</h4>
                   </div>
-                  <div ng-show="result.weather" class="weather-box col col-25">
+                  <div ng-show="result.weather" class="weather-box col col-33">
                     <span class="weather-image"><i class="wi wi-yahoo-{{weatherData.condition.code}}"></i></span>
                     <h3 class="weather-main-temp center-text">{{weatherData.condition.temp}}<span ng-show="weatherData">°</span></h3>
-                    <h5 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h5>
+                    <h4 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h4>
                   </div>
                 </div>
-                <div style="padding-top:20px;" >
+                <div style="padding-top:0px;" >
                 <ion-list  ng-hide="itins.length === 0">
+               
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
                       <ion-item class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
                         <div class="row">
@@ -57,8 +55,10 @@
                         {{itin.details}}
                       </ion-item>
               </div>
+             
             </ion-list>
             </div>
+             </scroll>
              <!-- When there are is an event but no itinerary items -->
              <div class="no-itins center-text" ng-show="itins.length === 0">
               <div class="cat-time"></div>
@@ -76,7 +76,7 @@
            
           </div>  
     </ion-slide-page>
-    <ion-slide-page>
+    <ion-slide-page disable-scroll="true">
     <div ng-if="yelpLoading()">
       <h5 class="center-text no-margin">Powered by <img class="yelp-logo" src="img/yelp.png"></h5>
         <h4 class="center-text no-margin header-font-heavy">What's Nearby</h4>
@@ -94,10 +94,10 @@
               <div class="item-itin item-divider">
                 <h5 class="no-margin header-font">Food</h5>
               </div>
-                <ion-item class="item-itin no-padding yelp-list" ng-repeat="restaurant in yelp.restaurants">
+                <ion-item class="item-itin yelp-list" ng-repeat="restaurant in yelp.restaurants">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
-                      <span class='yelp-name'>{{restaurant.name | cut:false:45:'...'}}</span><br>
+                      <span class='yelp-name'>{{restaurant.name | cut:false:25:'...'}}</span><br>
                       <div class='yelp-review'><img ng-src="{{restaurant.rating_img_url_small}}"></div><div class='yelp-review-count'>{{restaurant.review_count}} Reviews</div><br>
                       <span class="yelp-address">{{restaurant.location.display_address[0]}} {{restaurant.location.city}}</span>
                     </div>
@@ -113,10 +113,10 @@
                 <div class="item-itin item-divider">
                   <h5 class="no-margin header-font">Coffee/Tea</h5>
                 </div>
-                <ion-item class="item-itin no-padding yelp-list">
+                <ion-item class="item-itin yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
-                      <span class='yelp-name'>{{yelp.coffee.name | cut:false:45:'...'}}</span><br>
+                      <span class='yelp-name'>{{yelp.coffee.name | cut:false:25:'...'}}</span><br>
                       <div class='yelp-review'><img ng-src="{{yelp.coffee.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.coffee.review_count}} Reviews</div><br>
                       <span class="yelp-address">{{yelp.coffee.location.display_address[0]}} {{yelp.coffee.location.city}}</span>
                     </div>
@@ -132,10 +132,10 @@
               <div class="item-itin item-divider">
                 <h5 class="no-margin header-font">Gym</h5>
               </div>
-                <ion-item class="item-itin no-padding yelp-list">
+                <ion-item class="item-itin yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
-                      <span class='yelp-name'>{{yelp.gym.name | cut:false:45:'...'}}</span><br>
+                      <span class='yelp-name'>{{yelp.gym.name | cut:false:25:'...'}}</span><br>
                       <div class='yelp-review'><img ng-src="{{yelp.gym.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.gym.review_count}} Reviews</div><br>
                       <span class="yelp-address">{{yelp.gym.location.display_address[0]}} {{yelp.gym.location.city}}</span>
                     </div>
@@ -149,10 +149,10 @@
               <div class="item-itin item-divider">
                 <h5 class="no-margin header-font">Movie Theater</h5>
               </div>
-                <ion-item class="item-itin no-padding yelp-list">
+                <ion-item class="item-itin yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
-                      <span class='yelp-name'>{{yelp.movie.name | cut:false:45:'...'}}</span><br>
+                      <span class='yelp-name'>{{yelp.movie.name | cut:false:25:'...'}}</span><br>
                       <div class='yelp-review'><img ng-src="{{yelp.movie.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.movie.review_count}} Reviews</div><br>
                       <span class="yelp-address">{{yelp.movie.location.display_address[0]}} {{yelp.movie.location.city}}</span>
                     </div>
@@ -166,10 +166,10 @@
               <div class="item-itin item-divider">
                 <h5 class="no-margin header-font">Bookstore</h5>
               </div>
-                <ion-item class="item-itin no-padding yelp-list">
+                <ion-item class="item-itin yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
-                      <span class='yelp-name'>{{yelp.bookstore.name | cut:false:45:'...'}}</span><br>
+                      <span class='yelp-name'>{{yelp.bookstore.name | cut:false:25:'...'}}</span><br>
                       <div class='yelp-review'><img ng-src="{{yelp.bookstore.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.bookstore.review_count}} Reviews</div><br>
                       <span class="yelp-address">{{yelp.bookstore.location.display_address[0]}} {{yelp.bookstore.location.city}}</span>
                     </div>
@@ -185,10 +185,10 @@
               <div class="item-itin item-divider">
                 <h5 class="no-margin header-font">Pharmacy</h5>
               </div>
-                <ion-item class="item-itin no-padding yelp-list">
+                <ion-item class="item-itin yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
-                      <span class='yelp-name'>{{yelp.pharmacy.name | cut:false:45:'...'}}</span><br>
+                      <span class='yelp-name'>{{yelp.pharmacy.name | cut:false:25:'...'}}</span><br>
                       <div class='yelp-review'><img ng-src="{{yelp.pharmacy.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.pharmacy.review_count}} Reviews</div><br>
                       <span class="yelp-address">{{yelp.pharmacy.location.display_address[0]}} {{yelp.pharmacy.location.city}}</span>
                     </div>
@@ -204,10 +204,10 @@
               <div class="item-itin item-divider">
                 <h5 class="no-margin header-font">Urgent Care Clinic</h5>
               </div>
-                <ion-item class="item-itin no-padding yelp-list">
+                <ion-item class="item-itin yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
-                      <span class='yelp-name'>{{yelp.urgent.name | cut:false:45:'...'}}</span><br>
+                      <span class='yelp-name'>{{yelp.urgent.name | cut:false:25:'...'}}</span><br>
                       <div class='yelp-review'><img ng-src="{{yelp.urgent.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.urgent.review_count}} Reviews</div><br>
                       <span class="yelp-address">{{yelp.urgent.location.display_address[0]}} {{yelp.urgent.location.city}}</span>
                     </div>
@@ -223,10 +223,10 @@
               <div class="item-itin item-divider">
                 <h5 class="no-margin header-font">Hospital</h5>
               </div>
-                <ion-item class="item-itin no-padding yelp-list">
+                <ion-item class="item-itin yelp-list">
                   <div class="row">
                     <div class="col col-50 no-padding-top">
-                      <span class='yelp-name'>{{yelp.hospital.name | cut:false:45:'...'}}</span><br>
+                      <span class='yelp-name'>{{yelp.hospital.name | cut:false:25:'...'}}</span><br>
                       <div class='yelp-review'><img ng-src="{{yelp.hospital.rating_img_url_small}}"></div><div class='yelp-review-count'>{{yelp.hospital.review_count}} Reviews</div><br>
                       <span class="yelp-address">{{yelp.hospital.location.display_address[0]}} {{yelp.hospital.location.city}}</span>
                     </div>
