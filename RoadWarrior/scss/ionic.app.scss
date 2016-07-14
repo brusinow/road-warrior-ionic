@@ -868,16 +868,27 @@ textarea::-webkit-input-placeholder {
 }
 
 .messageName {
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-  text-align: right;
-  .message.slide-right {
-    -webkit-transform: translate3d(120px, 0, 0);
-    -moz-transform: translate3d(120px, 0, 0);
-    transform: translate3d(120px, 0, 0);
-  }
-  
+    font-weight: 600;
+    padding-right: 15px;
+/*    -webkit-transition: all 250ms ease-in-out;
+    transition: all 250ms ease-in-out;*/
+    text-align: right;
+/*    -webkit-transform: translate3d(-120px, 0, 0);
+    -moz-transform: translate3d(-120px, 0, 0);
+    transform: translate3d(-120px, 0, 0);*/
+ 
+
+} 
+
+.messageName.slide-right {
+/*    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);*/
+}
+
+.post-img {
+  max-width: 150px;
+  border-radius: 4px;
 }
 
 
