@@ -4,7 +4,7 @@
 
 
     <div ng-repeat="post in posts" ng-class="{other:post.user !== profile.name}" class="messages">
-
+    <div ng-if="post.user !== profile.name" class="messageName slide-right" ng-class="{'slide-right': !showTime, '': showTime}">{{post.user}}</div>
       <div class="message slide-right" ng-class="{'slide-right': !showTime, '': showTime}">
         <span ng-if="post.message">{{post.message}}</span>
         <img ng-if="post.img" ng-src="{{post.img}}" class="post-img" />
