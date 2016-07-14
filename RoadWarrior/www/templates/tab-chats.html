@@ -1,18 +1,16 @@
 <ion-view view-title="Group Messaging">
- <ion-content class="content-stable"
-                 on-swipe-left="hideTime = false"
-                 on-swipe-right="hideTime = true">
+  <ion-content class="content-stable" on-tap="showTime = !showTime">
       <div ng-repeat="message in messages">  
       <div ng-class="{other: message.userId != myId}" class="user-div message-user">
         {{message.userName}}
       </div>         
       <div ng-class="{other: message.userId != myId}" class="messages">
  <!--        <div class="message" ng-class="{'slide-right': hideTime, '': !hideTime}"> -->
-          <div class="message">
+          <div class="message" ng-class="{'slide-right': showTime, '': !showTime}">
           <span>{{ message.text }}</span>
         </div>
 
-        <!-- <div class="time" ng-class="{'slide-right': hideTime, '': !hideTime}">{{message.time}}</div> -->
+        <div class="time" ng-class="{'slide-right': showTime, '': !showTime}">{{message.time}}</div>
 
 
       </div>

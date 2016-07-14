@@ -526,7 +526,7 @@ angular.module('roadWarrior.controllers', [])
   $scope.data = {};
 
 
-  $scope.hideTime = true;
+  $scope.showTime = true;
 
   var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
 
@@ -545,11 +545,10 @@ angular.module('roadWarrior.controllers', [])
     delete $scope.data.message;
     $ionicScrollDelegate.scrollBottom(true);
 
-  };
+    };
 
 
   $scope.inputUp = function() {
-    console.log("input up");
     if (isIOS) $scope.data.keyboardHeight = 216;
     $timeout(function() {
       $ionicScrollDelegate.scrollBottom(true);
@@ -558,7 +557,6 @@ angular.module('roadWarrior.controllers', [])
   };
 
   $scope.inputDown = function() {
-    console.log("input down");
     if (isIOS) $scope.data.keyboardHeight = 0;
     $ionicScrollDelegate.resize();
   };
