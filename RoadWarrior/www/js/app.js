@@ -7,7 +7,7 @@ var authRequire = ["Auth", function(Auth) { return Auth.$requireSignIn(); }]
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter'])
+angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter','ngCordova'])
 
 
 
@@ -23,44 +23,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
   url: 'https://api.yelp.com/v2/search'
 })
 
-
-.directive('input', function($timeout) {
-  return {
-    restrict: 'E',
-    scope: {
-      'returnClose': '=',
-      'onReturn': '&',
-      'onFocus': '&',
-      'onBlur': '&'
-    },
-    link: function(scope, element, attr) {
-      element.bind('focus', function(e) {
-        if (scope.onFocus) {
-          $timeout(function() {
-            scope.onFocus();
-          });
-        }
-      });
-      element.bind('blur', function(e) {
-        if (scope.onBlur) {
-          $timeout(function() {
-            scope.onBlur();
-          });
-        }
-      });
-      element.bind('keydown', function(e) {
-        if (e.which == 13) {
-          if (scope.returnClose) element[0].blur();
-          if (scope.onReturn) {
-            $timeout(function() {
-              scope.onReturn();
-            });
-          }
-        }
-      });
-    }
-  }
-})
 
 
 .run(['$ionicPlatform', '$rootScope', '$state', function($ionicPlatform, $rootScope, $state) {
@@ -231,6 +193,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
 
   .state('tab.chats', {
       url: '/chats',
+      cache: false,
       views: {
         'tab-chats': {
           templateUrl: 'templates/tab-chats.html',

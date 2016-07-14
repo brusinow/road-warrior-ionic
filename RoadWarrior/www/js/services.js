@@ -30,7 +30,7 @@ angular.module('roadWarrior.services', [])
       var chatRef = firebase.database().ref('messages/'+groupId+'/main')
 
       // return it as a synchronized object
-      return $firebaseArray(chatRef);
+      return $firebaseArray(chatRef.limitToLast(100));
     }
   }
 ])

@@ -514,62 +514,171 @@ angular.module('roadWarrior.controllers', [])
 
 
 
-.controller('ChatsCtrl', ['$scope','$timeout','$ionicScrollDelegate','chatMessages','ActiveGroup','Profile','currentAuth', function($scope, $timeout, $ionicScrollDelegate, chatMessages, ActiveGroup, Profile, currentAuth) {
-  Profile(currentAuth.uid).$bindTo($scope, "profile").then(function(){
-    $scope.myId = $scope.profile.$id;
-  })
+// .controller('ChatsCtrl', ['$scope','$timeout','$ionicScrollDelegate','chatMessages','ActiveGroup','Profile','currentAuth', function($scope, $timeout, $ionicScrollDelegate, chatMessages, ActiveGroup, Profile, currentAuth) {
+ 
+
+//   // Profile(currentAuth.uid).$bindTo($scope, "profile").then(function(){
+//   //   $scope.myId = $scope.profile.$id;
+//   // })
   
-  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-    $scope.messages = chatMessages($scope.thisGroup.groupId);
-  });
-  $ionicScrollDelegate.scrollBottom(true);
-  $scope.data = {};
+//   // ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+//   //   $scope.messages = chatMessages($scope.thisGroup.groupId);
+//   //     console.log("start at bottom of page?");
+//   //     $ionicScrollDelegate.scrollBottom(true);
+//   // });
+  
 
 
-  $scope.showTime = true;
+//   $scope.showTime = false;
 
-  var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+//   var alternate,
+//     isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
 
-  $scope.sendMessage = function() {
+//   $scope.sendMessage = function() {
+//     alternate = !alternate;
 
-    var d = new Date();
-    d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+//     var d = new Date();
+//   d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
 
-    $scope.messages.$add({
-      userId: $scope.profile.$id,
-      userName: $scope.profile.name,
-      text: $scope.data.message,
-      time: d
+//     $scope.messages.push({
+//       userId: alternate ? '12345' : '54321',
+//       text: $scope.data.message,
+//       time: d
+//     });
+
+//     delete $scope.data.message;
+//     $ionicScrollDelegate.scrollBottom(true);
+
+//   };
+
+
+//   $scope.inputUp = function() {
+//     if (isIOS) $scope.data.keyboardHeight = 216;
+//     $timeout(function() {
+//       $ionicScrollDelegate.scrollBottom(true);
+//     }, 300);
+
+//   };
+
+//   $scope.inputDown = function() {
+//     if (isIOS) $scope.data.keyboardHeight = 0;
+//     $ionicScrollDelegate.resize();
+//   };
+
+//   $scope.closeKeyboard = function() {
+//     // cordova.plugins.Keyboard.close();
+//   };
+
+
+//   $scope.data = {};
+//   $scope.myId = '12345';
+//   $scope.messages = [];
+
+
+// }]);
+
+.controller('ChatsCtrl', function($scope, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout) {
+  
+  $scope.showTime = false;
+  console.log($scope.showTime);
+
+  function scrollBottom() {
+    $ionicScrollDelegate.$getByHandle('chat').scrollBottom();
+  }
+
+  function addPost(message, img) {
+    chatMessages($scope.thisGroup.groupId).$add({
+      message: message ? message : null,
+      img: img ? img : null,
+      timestamp: new Date().getTime(),
+      user: $scope.profile.name,
+      userId: $scope.profile.$id 
     });
-
-    delete $scope.data.message;
-    $ionicScrollDelegate.scrollBottom(true);
-
-    };
-
-
+  }
+  $scope.data = {};
+  var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
   $scope.inputUp = function() {
-    if (isIOS) $scope.data.keyboardHeight = 216;
-    $timeout(function() {
-      $ionicScrollDelegate.scrollBottom(true);
-    }, 300);
+    window.addEventListener('native.keyboardshow', function() {
+      if (isIOS) {
+        $scope.data.keyboardHeight = 216;
+      }
+      $timeout(function() {
+        $ionicScrollDelegate.scrollBottom(true);
+      }, 300);
 
+    });
   };
 
   $scope.inputDown = function() {
-    if (isIOS) $scope.data.keyboardHeight = 0;
+    if (isIOS) {
+      $scope.data.keyboardHeight = 0;
+    }
     $ionicScrollDelegate.resize();
   };
 
-  $scope.closeKeyboard = function() {
-    // cordova.plugins.Keyboard.close();
-  };
+    Profile(currentAuth.uid).$bindTo($scope, "profile").then(function(){
+    $scope.myId = $scope.profile.$id;
+    })
+
+
+    ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+    $scope.posts = chatMessages($scope.thisGroup.groupId);
+    $scope.posts.$watch(scrollBottom);
+  });
 
 
   
 
-}]);
+  $scope.add = function(message) {
+    addPost(message);
+    // pretty things up
+    $scope.message = null;
+  };
 
+  $scope.takePicture = function() {
+    $ionicActionSheet.show({
+      buttons: [{
+        text: 'Picture'
+      }, {
+        text: 'Selfie'
+      }, {
+        text: 'Saved Photo'
+      }],
+      titleText: 'Take a...',
+      cancelText: 'Cancel',
+      buttonClicked: function(index) {
+        ionic.Platform.isWebView() ? takeARealPicture(index) : takeAFakePicture();
+        return true;
+      }
+    });
+
+    function takeARealPicture(cameraIndex) {
+      var options = {
+        quality: 50,
+        sourceType: cameraIndex === 2 ? 2 : 1,
+        cameraDirection: cameraIndex,
+        destinationType: Camera.DestinationType.DATA_URL,
+        encodingType: Camera.EncodingType.JPEG,
+        targetWidth: 500,
+        targetHeight: 600,
+        saveToPhotoAlbum: false
+      };
+      $cordovaCamera.getPicture(options).then(function(imageData) {
+        var photo = 'data:image/jpeg;base64,' + imageData;
+        addPost(null, photo);
+      }, function(err) {
+        // error
+        console.error(err);
+        takeAFakePicture();
+      });
+    }
+
+    function takeAFakePicture() {
+      addPost(null, $cordovaCamera.getPlaceholder());
+    }
+  };
+
+});
 
 
 
