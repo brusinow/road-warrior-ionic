@@ -76,54 +76,8 @@ angular.module('roadWarrior.controllers', [])
 
 
 
-   //    $scope.$on("$ionicView.beforeEnter", function(event, data){
-   // // handle event
-   //    console.log("State Params: ", data.stateParams);
-   //    });
 
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-    //  $scope.$watch(function(){
-    //   console.log("running my watch");
-    //   return $scope.event;
-
-    // }, function(newValue, oldValue) {
-    //       console.log("Old value is ",oldValue);  
-    //       console.log("New value is ",newValue);
-    //       console.log("running API calls");
-    //       $scope.event = newValue;
-    //       $scope.yelpCall();
-    //       $scope.weatherCall($scope.event.lat, $scope.event.lng);
-          // $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt(newValue.$id).endAt(newValue.$id))
-          // $scope.itins.$loaded()
-          // .then(function(){
-          //   // console.log("itins are ",$scope.itins);
-          //   if ($scope.itins.length > 0){
-          //     $scope.result.itins = true;
-          //     // console.log("itins result is ",$scope.result.itins);
-              
-          //   } else {
-          //     console.log("you have no itins for this day.")
-          //     $scope.result.director = "noItins";
-            
-          //   }
-          // }).catch(function(data){
-          //   console.log("no itins data came back. ",data);
-          // });
-          
-    // }, true);
+   
 
     
 
@@ -192,6 +146,7 @@ angular.module('roadWarrior.controllers', [])
 
     $scope.yelpLoading = function(){
       if ($scope.event && $scope.yelpLoadList.length === 8){
+           console.log("yelp loading is true");
         return true;
       } else {
         return false;
@@ -332,24 +287,33 @@ angular.module('roadWarrior.controllers', [])
         $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').equalTo($scope.thisGroup.groupId))
         $scope.events.$loaded()
           .then(function(){
+            $scope.$watch('events', function(newValue, oldValue){    
+            console.log("old value of events list: ",oldValue);   
+            console.log("new value of events list: ",newValue);      
+              $scope.events = newValue;
+              $scope.result.today = '';
             console.log("events loaded: ",$scope.events);
               if ($scope.events.length === 0){
                 console.log("you have no events. None at all.");
                 $scope.result.today = false;
                 $scope.result.director = "noToday";
               } else {
+                    
                     for (i=0; i < $scope.events.length; i++){
                       if ($scope.events[i].date === $scope.todayDate){
-                         
                             $scope.result.today = true;
-                            $scope.event = $scope.events[i];
-                          
-                        // console.log("saves the correct day");
-                        var lat = $scope.event.lat;
-                        var lng = $scope.event.lng;
-                      //WEATHER CALL
-                        $scope.weatherCall(lat,lng);
-                        $scope.yelpCall();
+                            $scope.event = $scope.events[i]; 
+
+                                $scope.$watch('event', function(newEvent, oldEvent) {
+                                console.log("Old value is ",oldEvent);  
+                                console.log("New value is ",newEvent);
+                                console.log("API CALLS!!!!!!!!!!!!!!");
+                                var lat = $scope.event.lat;
+                                var lng = $scope.event.lng;
+                                $scope.weatherCall(lat,lng);
+                                $scope.yelpCall();
+                                },true);
+
                         $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
                         $scope.itins.$loaded()
                         .then(function(){
@@ -367,16 +331,19 @@ angular.module('roadWarrior.controllers', [])
                           console.log("no itins data came back. ",data);
                         });
                         break;
-                      }
-                      // console.log("WHERE I WILL PUT STUFF!!!!!!!!!!");
+                      }                      
                     }
+                     
+                          if (!$scope.result.today){
+                          $scope.result.today = false;
+                          console.log("no today event!");
+                          $scope.result.director = "noToday";
+                          }
+                       
+                      
+                  }    
 
-                     if (!$scope.result.today){
-                        $scope.result.today = false;
-                        console.log("no today event!");
-                        $scope.result.director = "noToday";
-                    }  
-                  }                  
+            },true);                    
           });
         });
 

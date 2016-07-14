@@ -180,7 +180,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
   // Each tab has its own nav history stack:
   .state('tab.today', {
     url: '/today',
-    cache: false,
     views: {
       'tab-today': {
         templateUrl: 'templates/tab-today.html',
