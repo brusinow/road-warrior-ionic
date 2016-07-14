@@ -14,14 +14,14 @@
       <div class="col col-50">
         <label ng-class="{'valError': submitted && myForm.startTime.$error.required}" class="item item-input item-input-time">
           <span class="input-label">Start Time: </span>
-            <input ng-model="itin.startTime" type="text" name="startTime" ng-click="openStartTimePicker()" required>
+            <input ng-model="itin.startTime" type="text" name="startTime" ng-readonly="true" ng-click="openStartTimePicker()" required>
 
         </label>  
       </div>  
       <div class="col col-50">
         <label class="item item-input item-input-time">
           <span class="input-label">End Time: </span>
-          <input ng-model="itin.endTime" type="text" ng-click="openEndTimePicker()">
+          <input ng-model="itin.endTime" type="text" ng-readonly="true" ng-click="openEndTimePicker()">
         </label>  
       </div> 
       </div>   

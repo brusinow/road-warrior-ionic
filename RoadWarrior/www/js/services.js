@@ -60,11 +60,11 @@ angular.module('roadWarrior.services', [])
     }
 
     return $http(req).then(function success(results) {
-      // var results = res.data.results;
+      console.log("what are results? ",results);
       $ionicLoading.hide();
       return results;
     }, function error(res) {
-    //do something if the response has an error
+        console.log("ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         console.log(res);
       }); 
   }

@@ -171,8 +171,6 @@ angular.module('roadWarrior.controllers')
 
 
 
-
-
  var ipObj1 = {
       callback: function (val) {  //Mandatory
         $scope.eventExists = false;
@@ -248,7 +246,7 @@ angular.module('roadWarrior.controllers')
 
 }])
 
-.controller('EditEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('EditEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','Popover','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, Popover, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
    var ENV = FirebaseEnv();
   var eventsRef = firebase.database().ref('events');
   var userGroupsRef = firebase.database().ref("users/"+currentAuth.uid+"/groups");
@@ -326,24 +324,17 @@ angular.module('roadWarrior.controllers')
   });
 
 
-  $scope.openPopover = function($event) {
-    var fullQuery = '/api/place/textsearch/json?query=' + $scope.selection.mySelect.venue +" "+ $scope.selection.mySelect.cityState + '&key='+ENV.GOOGLE_PLACES_KEY;
-    console.log(fullQuery);
-    var req = {
-      url: fullQuery,
-      method: 'GET',
-    }
 
-    $http(req).then(function success(res) {
-      console.log(res)
-      $scope.results = res.data.results;
-      console.log("results for popover are: ",$scope.results);
+  $scope.openPopover = function($event, query){
+    console.log("what is query? ",query);
+    Popover.openPopover(query).then(function(data){
+      console.log("what is data? ",data);
+      $scope.results = data.data.results;
       $scope.popover.show($event);
-    }, function error(res) {
-    //do something if the response has an error
-        console.log(res);
-      }); 
-  };
+    })  
+  }
+
+
   $scope.closePopover = function() {
     $scope.popover.hide();
   };
@@ -407,6 +398,9 @@ angular.module('roadWarrior.controllers')
 
 .controller('EditItinCtrl', ['$scope', '$http','$firebaseArray','$firebaseObject','$ionicHistory', 'EditItin', 'sendDataService', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $firebaseObject, $ionicHistory, EditItin, sendDataService, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
     
+
+
+    
     var data = sendDataService.get();
     console.log("what is data? ",data);
     $scope.event = data.event;
@@ -416,6 +410,9 @@ angular.module('roadWarrior.controllers')
 
     $scope.itin = EditItin(data.itin.id);
     console.log("nextDay is ",data.itin.nextDay);
+   
+  
+ 
     // $scope.toggleSwitch = function(startTimeUnix){
     //   if (startTimeUnix >= 86400){
     //     return true;
@@ -487,7 +484,7 @@ angular.module('roadWarrior.controllers')
 
         }
       },
-      // inputTime: 50400,   //Optional
+      inputTime: data.itin.startTimeUnix,   //Optional
       format: 12,         //Optional
       step: 15,           //Optional
       setLabel: 'Set'    //Optional
@@ -507,7 +504,7 @@ angular.module('roadWarrior.controllers')
           console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), 'H :', selectedTime.getUTCMinutes(), 'M');
         }
     },
-    // inputTime: 50400,   //Optional
+    inputTime: data.itin.endTimeUnix || 50400,   //Optional
     format: 12,         //Optional
     step: 15,           //Optional
     setLabel: 'Set'    //Optional
