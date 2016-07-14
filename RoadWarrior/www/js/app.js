@@ -68,12 +68,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
 
-    // if (ionic.Platform.isIOS()){
-    //   setTimeout(function(){
-    //     console.log("should hide splashscreen!!!!!");
-    //     navigator.splashscreen.hide();
-    //   }, 4000);
-    // }
+
 
 
 
