@@ -23,8 +23,7 @@
   <ion-slides ng-if="thisGroup.access === true && event" options="options" slider="data.slider">
     <ion-slide-page disable-scroll="false">
                <div class="postLoad" ng-show="result.today && hideLoader()"> 
-                <scroll direction="y" style="height:2000px">
-                  <div style="padding-top:10px;" class="row">
+                  <div class="row">
                   <div  class="col col-67">
                   <h4 class="no-margin header-font">{{day_of_week}}</h4>
                   <h4 class="no-margin header-font">{{now_formatted_date}}</h4>
@@ -37,8 +36,9 @@
                     <h4 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h4>
                   </div>
                 </div>
-                <div style="padding-top:0px;" >
-                <ion-list  ng-hide="itins.length === 0">
+                <div style="padding-top:14px;" >
+                <ion-scroll direction="y" style="height: 379px;">
+                <ion-list ng-hide="itins.length === 0">
                
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
                       <ion-item class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
@@ -57,8 +57,8 @@
               </div>
              
             </ion-list>
+            </ion-scroll>
             </div>
-             </scroll>
              <!-- When there are is an event but no itinerary items -->
              <div class="no-itins center-text" ng-show="itins.length === 0">
               <div class="cat-time"></div>
@@ -80,7 +80,7 @@
     <div ng-if="yelpLoading()">
       <h5 class="center-text no-margin">Powered by <img class="yelp-logo" src="img/yelp.png"></h5>
         <h4 class="center-text no-margin header-font-heavy">What's Nearby</h4>
-        <div class="row">
+        <div class="row" style="margin-bottom: 15px;">
           <div class="col col-50 col-offset-25">
             <div class="button-bar">
               <a ng-click="yelpShowFood()" class="button button-dark button-yelp"><i class="icon ion-pizza"></i></a>

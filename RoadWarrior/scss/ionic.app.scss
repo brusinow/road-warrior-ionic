@@ -396,7 +396,7 @@ textarea::-webkit-input-placeholder {
 
 .yelp-list {
   line-height: 1;
-  padding: 10px 5px 10px 5px !important;
+  padding: 5px !important;
 }
 
 .yelp-name {
@@ -421,6 +421,7 @@ textarea::-webkit-input-placeholder {
   display: inline-block; 
   font-size: 10pt;
   color: #555555; 
+  margin-left: 2px;
 }
 
 .yelp-distance {
@@ -795,9 +796,6 @@ textarea::-webkit-input-placeholder {
 }
 
 
-.scroll {
-  padding: 10px 0 50px !important;
-}
 .messages {
   display: -webkit-box !important;
   display: -moz-box !important;

@@ -313,7 +313,7 @@ textarea::-webkit-input-placeholder {
 
 .yelp-list {
   line-height: 1;
-  padding: 10px 5px 10px 5px !important; }
+  padding: 5px !important; }
 
 .yelp-name {
   font-size: 12pt;
@@ -332,7 +332,8 @@ textarea::-webkit-input-placeholder {
 .yelp-review-count {
   display: inline-block;
   font-size: 10pt;
-  color: #555555; }
+  color: #555555;
+  margin-left: 2px; }
 
 .yelp-distance {
   color: #555555;
@@ -651,9 +652,6 @@ textarea::-webkit-input-placeholder {
   color: #aaa;
   margin-left: 20px;
   margin-right: 20px; }
-
-.scroll {
-  padding: 10px 0 50px !important; }
 
 .messages {
   display: -webkit-box !important;
