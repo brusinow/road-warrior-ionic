@@ -192,6 +192,8 @@ ion-view.pane {
   display: none; }
 
 .platform-ios .popover {
+  background-color: white;
+  border-radius: 0px;
   max-width: 100%;
   width: 92%;
   left: 4% !important; }
@@ -661,7 +663,7 @@ textarea::-webkit-input-placeholder {
     -webkit-flex: 1 1 auto;
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
-    padding: 10px;
+    padding: 2px 10px 5px 10px;
     -webkit-transition: all 250ms ease-in-out;
     transition: all 250ms ease-in-out;
     overflow: hidden;
@@ -681,6 +683,7 @@ textarea::-webkit-input-placeholder {
       -webkit-mask-box-image: url("data:image/svg+xml;charset=utf-8,<svg height='35' viewBox='0 0 96 70' width='48' xmlns='http://www.w3.org/2000/svg'><path d='m96 35c1 7-5 37-42 35-37 2-43-28-42-35-1-7 5-37 42-35 37-2 43 28 42 35z'/><path d='m0 70c6-2 12-10 12-19v-16l14 27s-8 8-26 8z'/></svg>") 50% 42% 46% 56%; }
 
 .time {
+  color: #aaa;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
   -webkit-flex: 0 1 auto;
@@ -721,7 +724,7 @@ textarea::-webkit-input-placeholder {
 
 .messageName {
   font-weight: 600;
-  padding-right: 15px;
+  padding-right: 24px;
   /*    -webkit-transition: all 250ms ease-in-out;
     transition: all 250ms ease-in-out;*/
   text-align: right;
@@ -737,6 +740,35 @@ textarea::-webkit-input-placeholder {
 .post-img {
   max-width: 150px;
   border-radius: 4px; }
+
+.fullscreen-image {
+  max-width: 100%;
+  max-height: 100%;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  overflow: auto;
+  position: fixed;
+  right: 0;
+  top: 0; }
+
+.transparent {
+  background: transparent !important; }
+
+.image-modal {
+  width: 100% !important;
+  height: 100%;
+  top: 0 !important;
+  left: 0 !important; }
+
+@media (max-width: 679px) {
+  .active .modal-backdrop-bg {
+    opacity: .5; }
+  .modal-backdrop-bg {
+    -webkit-transition: opacity 300ms ease-in-out;
+    transition: opacity 300ms ease-in-out;
+    background-color: #000;
+    opacity: 0; } }
 
 /*!
   Ionicons, v2.0.1
