@@ -338,7 +338,8 @@ angular.module('roadWarrior.controllers')
   $scope.closePopover = function() {
     $scope.popover.hide();
   };
-  $scope.selectAddress = function(result){
+
+  $scope.selectAddressVenue = function(result){
     console.log("result of click is: ",result);
     $scope.selection.mySelect.address = result.formatted_address;
     console.log("event address is: ",$scope.selection.mySelect.address);

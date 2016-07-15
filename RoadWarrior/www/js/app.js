@@ -25,12 +25,14 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
 
 
 
-.run(['$ionicPlatform', '$rootScope', '$state', function($ionicPlatform, $rootScope, $state) {
+.run(['$ionicPlatform', '$rootScope', '$state','$cordovaStatusbar', function($ionicPlatform, $rootScope, $state, $cordovaStatusbar) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
 
-
+    if (window.StatusBar) {
+       $cordovaStatusbar.style(3);
+    }
 
 
 
@@ -39,10 +41,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
     }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
+  
   });
   $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
     // catch the error thrown when the $requireAuth promise is rejected and redirect user back to the home page
@@ -164,7 +163,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
 
   .state('tab.list', {
       url: '/list',
-      cache: false,
       views: {
         'tab-list': {
           templateUrl: 'templates/tab-list.html',
@@ -177,11 +175,23 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
     })
       .state('tab.listShow', {
       url: '/list/show',
-      cache: false,
       views: {
         'tab-list': {
           templateUrl: 'templates/tab-listShow.html',
           controller: 'ListShowCtrl'
+        }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
+    })
+    .state('tab.list-editItin', {
+      url: '/list/editItin',
+      cache: false,
+      views: {
+        'tab-list': {
+          templateUrl: 'templates/editItin.html',
+          controller: 'EditItinCtrl'
         }
       },
       resolve: {

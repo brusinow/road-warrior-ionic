@@ -43,7 +43,7 @@
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
                       <ion-item class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
                         <div class="row">
-                          <button ng-if="thisGroup.level === 'admin'" ng-click="editItin(itin, event)" class="button button-inverse button-borderless button-small"><i class="ion ion-edit"></i></button>
+                          <button ng-if="thisGroup.level === 'admin'" ng-click="editItin(itin, event)" class="button button-primary button-small edit-button"><i class="ion ion-edit"></i></button>
                          
                             <div ng-click="toggleItin(itin)" class="col itin-list itin-name"> {{itin.mainItem}}  </div>
                             <div ng-click="toggleItin(itin)" class="col itin-list itin-time">{{itin.startTime}}<span ng-show="itin.endTime"> - </span>{{itin.endTime}} <i class="icon icon-list" ng-if="itin.details" ng-class="isItinShown(itin) ? 'ion-minus-circled' : 'ion-plus-circled'"></i></div>
@@ -83,9 +83,9 @@
         <div class="row" style="margin-bottom: 15px;">
           <div class="col col-50 col-offset-25">
             <div class="button-bar">
-              <a ng-click="yelpShowFood()" class="button button-dark button-yelp"><i class="icon ion-pizza"></i></a>
-              <a ng-click="yelpShowEntertainment()" class="button button-dark button-yelp"><i class="icon ion-film-marker"></i></a>
-              <a ng-click="yelpShowEmergency()" class="button button-outline button-dark button-yelp"><i class="icon ion-medkit"></i></a>
+              <a ng-click="yelpShowFood()" class="button button-secondary button-yelp"><i class="icon ion-pizza"></i></a>
+              <a ng-click="yelpShowEntertainment()" class="button button-secondary button-yelp"><i class="icon ion-film-marker"></i></a>
+              <a ng-click="yelpShowEmergency()" class="button button-outline button-stable button-emergency button-yelp"><i class="icon ion-medkit"></i></a>
             </div>
           </div>
         </div>

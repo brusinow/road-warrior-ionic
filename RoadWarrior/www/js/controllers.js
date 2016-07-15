@@ -18,7 +18,22 @@ angular.module('roadWarrior.controllers', [])
 }])
 
 
-.controller ('ListShowCtrl', ['$scope', '$firebaseArray','currentAuth', 'sendDataService', 'itineraryService', 'helperService','MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, itineraryService, helperService, MyYelpAPI, $state, $http, $q, moment,Yahoo){
+.controller ('ListShowCtrl', ['$scope', '$firebaseArray','currentAuth', 'sendDataService', 'itineraryService', 'helperService', 'ActiveGroup', 'MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, itineraryService, helperService, ActiveGroup, MyYelpAPI, $state, $http, $q, moment,Yahoo){
+    ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+      console.log("this group loaded");
+    });
+
+
+    $scope.editItin = function(itin, event){
+      var eventWithItin = {
+        itin: itin,
+        event: event
+      };
+
+      sendDataService.set(eventWithItin);
+      $state.go("tab.list-editItin");
+    }
+
     $scope.toggleItin = function(itin) {
     if (itin.details){
     itin.show = !itin.show;
@@ -65,6 +80,24 @@ angular.module('roadWarrior.controllers', [])
         }
       })
     });
+
+    $scope.data = {};
+    $scope.$watch('data.slider', function(nv, ov) {
+    $scope.slider = $scope.data.slider;
+    })
+
+    $scope.options = {
+    loop: false,
+    effect: 'slide',
+    speed: 500,
+    }
+
+    function dataChangeHandler(){
+    // call this function when data changes, such as an HTTP request, etc (Slide)
+      if ( $scope.slider ){
+      $scope.slider.updateLoop();
+      }
+    }
     
 
 }])
@@ -513,69 +546,6 @@ angular.module('roadWarrior.controllers', [])
 }])
 
 
-
-// .controller('ChatsCtrl', ['$scope','$timeout','$ionicScrollDelegate','chatMessages','ActiveGroup','Profile','currentAuth', function($scope, $timeout, $ionicScrollDelegate, chatMessages, ActiveGroup, Profile, currentAuth) {
- 
-
-//   // Profile(currentAuth.uid).$bindTo($scope, "profile").then(function(){
-//   //   $scope.myId = $scope.profile.$id;
-//   // })
-  
-//   // ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-//   //   $scope.messages = chatMessages($scope.thisGroup.groupId);
-//   //     console.log("start at bottom of page?");
-//   //     $ionicScrollDelegate.scrollBottom(true);
-//   // });
-  
-
-
-//   $scope.showTime = false;
-
-//   var alternate,
-//     isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
-
-//   $scope.sendMessage = function() {
-//     alternate = !alternate;
-
-//     var d = new Date();
-//   d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
-
-//     $scope.messages.push({
-//       userId: alternate ? '12345' : '54321',
-//       text: $scope.data.message,
-//       time: d
-//     });
-
-//     delete $scope.data.message;
-//     $ionicScrollDelegate.scrollBottom(true);
-
-//   };
-
-
-//   $scope.inputUp = function() {
-//     if (isIOS) $scope.data.keyboardHeight = 216;
-//     $timeout(function() {
-//       $ionicScrollDelegate.scrollBottom(true);
-//     }, 300);
-
-//   };
-
-//   $scope.inputDown = function() {
-//     if (isIOS) $scope.data.keyboardHeight = 0;
-//     $ionicScrollDelegate.resize();
-//   };
-
-//   $scope.closeKeyboard = function() {
-//     // cordova.plugins.Keyboard.close();
-//   };
-
-
-//   $scope.data = {};
-//   $scope.myId = '12345';
-//   $scope.messages = [];
-
-
-// }]);
 
 .controller('ChatsCtrl', function($scope, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout) {
   
