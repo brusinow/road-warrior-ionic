@@ -547,8 +547,9 @@ angular.module('roadWarrior.controllers', [])
 
 
 
-.controller('ChatsCtrl', function($scope, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout) {
-  
+.controller('ChatsCtrl', function($scope, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, moment) {
+   
+  $scope.postDate = {};
   $scope.showTime = false;
   $scope.showChat = false;
   console.log($scope.showTime);
@@ -689,7 +690,19 @@ angular.module('roadWarrior.controllers', [])
     }
   
 
-
+    $scope.sameDay = function(thisUnix, lastUnix){
+      if (!lastUnix){
+        return true
+      } else {
+        var newest = moment(thisUnix).format('MMMM Do, YYYY');
+        var oldest = moment(lastUnix).format('MMMM Do, YYYY');
+        if (newest !== oldest){
+        return true;
+        } else {
+        return false;
+        }
+      }
+    }
 
 
 

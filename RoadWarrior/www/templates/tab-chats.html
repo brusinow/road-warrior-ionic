@@ -3,7 +3,10 @@
   class="content-stable mh-padding">
 
     <div ng-if="showChat" ng-repeat="post in posts track by $index" >
+    <div class="chat-date" ng-if="sameDay(post.timestamp, posts[$index-1].timestamp)">{{post.timestamp | toDate}}</div>
+   
      <div ng-if="post.user !== profile.name && post.user !== posts[$index - 1].user" class="messageName slide-right" ng-class="{'slide-right': !showTime, '': showTime}">{{post.user}}</div>
+    
     <div ng-class="{other:post.user !== profile.name}" class="messages">
       <div class="message slide-right" ng-class="{'slide-right': !showTime, '': showTime}">
         <span ng-if="post.message">{{post.message}}</span>

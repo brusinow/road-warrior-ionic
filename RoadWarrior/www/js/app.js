@@ -339,6 +339,14 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
 })
 
 
+.filter('toDate', function(moment){
+  return function(unixTime){
+    var date = moment(unixTime).format('MMMM Do, YYYY');
+    return date;
+  }
+})
+
+
 .filter('cut', function () {
         return function (value, wordwise, max, tail) {
             if (!value) return '';
