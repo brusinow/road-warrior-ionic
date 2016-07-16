@@ -13,8 +13,9 @@
            
             <input ng-model="event.cityState" type="text" placeholder="City">
           </label>
+          <button type="button" class="button button-block center-text button-dark" ng-click="openPopover($event, event)">Get Address Suggestion</button>
           <label  class="item item-input">
-            <input ng-model="event.address" ng-click="openPopover($event, event)" type="text" placeholder="Complete Address">
+            <input ng-model="event.address" type="text" placeholder="Complete Address">
           </label>
 
           

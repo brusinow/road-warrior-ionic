@@ -1,11 +1,11 @@
 
 <ion-view view-title="Today">
 <ion-content class="padding" scroll="false">
-  <div class="spinner" ng-if="thisGroup.access === true" ng-hide="hideLoader()">
+  <div class="spinner" ng-if="thisGroup.access === true" ng-hide="loaded && itinsLoaded && weatherLoaded">
   <ion-spinner></ion-spinner>
   </div>
 
-  <div ng-if="result.today === false && hideLoader()">
+  <div ng-if="noToday">
     <div style="padding-top:20px;" class="row">
       <div  class="col col-75">
         <h5 class="no-margin header-font">{{day_of_week}}</h5>
@@ -22,23 +22,23 @@
 
   <ion-slides ng-if="thisGroup.access === true && event" options="options" slider="data.slider">
     <ion-slide-page disable-scroll="false">
-               <div class="postLoad" ng-show="result.today && hideLoader()"> 
+               <div class="postLoad" ng-show="loaded && itinsLoaded && weatherLoaded"> 
                   <div class="row">
                   <div  class="col col-67">
                   <h4 class="no-margin header-font">{{day_of_week}}</h4>
                   <h4 class="no-margin header-font">{{now_formatted_date}}</h4>
-                  <h3 ng-if="result" class="no-margin header-font-heavy">{{event.venue}}</h3>
-                  <h4 ng-if="result" class="no-margin header-font">{{event.cityState}}</h4>
+                  <h3 ng-if="event" class="no-margin header-font-heavy">{{event.venue}}</h3>
+                  <h4 ng-if="event" class="no-margin header-font">{{event.cityState}}</h4>
                   </div>
-                  <div ng-show="result.weather" class="weather-box col col-33">
+                  <div ng-show="weatherData.condition.temp" class="weather-box col col-33">
                     <span class="weather-image"><i class="wi wi-yahoo-{{weatherData.condition.code}}"></i></span>
                     <h3 class="weather-main-temp center-text">{{weatherData.condition.temp}}<span ng-show="weatherData">°</span></h3>
                     <h4 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h4>
                   </div>
                 </div>
                 <div style="padding-top:14px;" >
-                <ion-scroll direction="y" style="height: 337px;">
-                <ion-list ng-hide="itins.length === 0">
+                <ion-scroll direction="y" ng-hide="itins.length === 0" style="height: 337px;">
+                <ion-list>
                
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
                       <ion-item class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
@@ -76,7 +76,7 @@
            
           </div>  
     </ion-slide-page>
-    <ion-slide-page>
+    <ion-slide-page ng-if="event.lng && event.lat">
     <div ng-if="yelpLoading()">
       <h5 class="center-text no-margin">Powered by <img class="yelp-logo" src="img/yelp.png"></h5>
         <h4 class="center-text no-margin header-font-heavy">What's Nearby</h4>
@@ -102,7 +102,7 @@
                       <span class="yelp-address">{{restaurant.location.display_address[0]}} {{restaurant.location.city}}</span>
                     </div>
                     <div class="col col-50 no-padding-top text-right">
-                      <span class="yelp-distance">{{metersToMiles(restaurant.distance)}} mi</span><br><span class="yelp-category">{{restaurant.categories[0][0]}}</span>
+                      <span ng-show="event.address" class="yelp-distance">{{metersToMiles(restaurant.distance)}} mi</span><br><span class="yelp-category">{{restaurant.categories[0][0]}}</span>
                     </div>
                   </div>
                 </ion-item>
@@ -121,7 +121,7 @@
                       <span class="yelp-address">{{yelp.coffee.location.display_address[0]}} {{yelp.coffee.location.city}}</span>
                     </div>
                     <div class="col col-50 no-padding-top text-right">
-                      <span class="yelp-distance">{{metersToMiles(yelp.coffee.distance)}} mi</span><br><span class="yelp-category">{{yelp.coffee.categories[0][0]}}</span>
+                      <span ng-show="event.address" class="yelp-distance">{{metersToMiles(yelp.coffee.distance)}} mi</span><br><span class="yelp-category">{{yelp.coffee.categories[0][0]}}</span>
                     </div>
                   </div>
                 </ion-item>
@@ -140,7 +140,7 @@
                       <span class="yelp-address">{{yelp.gym.location.display_address[0]}} {{yelp.gym.location.city}}</span>
                     </div>
                     <div class="col col-50 no-padding-top text-right">
-                      <span class="yelp-distance">{{metersToMiles(yelp.gym.distance)}} mi</span><br><span class="yelp-category">{{yelp.gym.categories[0][0]}}</span>
+                      <span ng-show="event.address" class="yelp-distance">{{metersToMiles(yelp.gym.distance)}} mi</span><br><span class="yelp-category">{{yelp.gym.categories[0][0]}}</span>
                     </div>
                   </div>
                 </ion-item>
@@ -157,7 +157,7 @@
                       <span class="yelp-address">{{yelp.movie.location.display_address[0]}} {{yelp.movie.location.city}}</span>
                     </div>
                     <div class="col col-50 no-padding-top text-right">
-                      <span class="yelp-distance">{{metersToMiles(yelp.movie.distance)}} mi</span><br><span class="yelp-category">{{yelp.movie.categories[0][0]}}</span>
+                      <span ng-show="event.address" class="yelp-distance">{{metersToMiles(yelp.movie.distance)}} mi</span><br><span class="yelp-category">{{yelp.movie.categories[0][0]}}</span>
                     </div>
                   </div>
                 </ion-item>
@@ -174,7 +174,7 @@
                       <span class="yelp-address">{{yelp.bookstore.location.display_address[0]}} {{yelp.bookstore.location.city}}</span>
                     </div>
                     <div class="col col-50 no-padding-top text-right">
-                      <span class="yelp-distance">{{metersToMiles(yelp.bookstore.distance)}} mi</span><br><span class="yelp-category">{{yelp.bookstore.categories[0][0]}}</span>
+                      <span ng-show="event.address" class="yelp-distance">{{metersToMiles(yelp.bookstore.distance)}} mi</span><br><span class="yelp-category">{{yelp.bookstore.categories[0][0]}}</span>
                     </div>
                   </div>
                 </ion-item>
@@ -193,7 +193,7 @@
                       <span class="yelp-address">{{yelp.pharmacy.location.display_address[0]}} {{yelp.pharmacy.location.city}}</span>
                     </div>
                     <div class="col col-50 no-padding-top text-right">
-                      <span class="yelp-distance">{{metersToMiles(yelp.pharmacy.distance)}} mi</span><br><span class="yelp-category">{{yelp.pharmacy.categories[0][0]}}</span><br>
+                      <span ng-show="event.address" class="yelp-distance">{{metersToMiles(yelp.pharmacy.distance)}} mi</span><br><span class="yelp-category">{{yelp.pharmacy.categories[0][0]}}</span><br>
                        <span class='yelp-phone'><a ng-href='tel:{{yelp.pharmacy.display_phone}}'>{{yelp.pharmacy.formattedPhone}}</a></span>
                     </div>
                   </div>
@@ -212,7 +212,7 @@
                       <span class="yelp-address">{{yelp.urgent.location.display_address[0]}} {{yelp.urgent.location.city}}</span>
                     </div>
                     <div class="col col-50 no-padding-top text-right">
-                      <span class="yelp-distance">{{metersToMiles(yelp.urgent.distance)}} mi</span><br><span class="yelp-category">{{yelp.urgent.categories[0][0]}}</span><br>
+                      <span ng-show="event.address" class="yelp-distance">{{metersToMiles(yelp.urgent.distance)}} mi</span><br><span class="yelp-category">{{yelp.urgent.categories[0][0]}}</span><br>
                        <span class='yelp-phone'><a ng-href='tel:{{yelp.urgent.display_phone}}'>{{yelp.urgent.formattedPhone}}</a></span>
                     </div>
                   </div>
@@ -231,7 +231,7 @@
                       <span class="yelp-address">{{yelp.hospital.location.display_address[0]}} {{yelp.hospital.location.city}}</span>
                     </div>
                     <div class="col col-50 no-padding-top text-right">
-                      <span class="yelp-distance">{{metersToMiles(yelp.hospital.distance)}} mi</span><br><span class="yelp-category">{{yelp.hospital.categories[0][0]}}</span><br>
+                      <span ng-show="event.address" class="yelp-distance">{{metersToMiles(yelp.hospital.distance)}} mi</span><br><span class="yelp-category">{{yelp.hospital.categories[0][0]}}</span><br>
                        <span class='yelp-phone'><a ng-href='tel:{{yelp.hospital.display_phone}}'>{{yelp.hospital.formattedPhone}}</a></span>
   
                     </div>

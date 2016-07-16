@@ -1,34 +1,38 @@
-<ion-view view-title="New Lodging">
-   <ion-content class="padding">
-        <form name="myForm" ng-submit="submitNewEvent()" novalidate>
+<ion-view view-title="Add Lodging">
+   <ion-scroll direction="y" class="has-header padding">
         <div class="list">        
+           <label class = "item item-input-itin item-select item-select-itin">
+          <div class = "input-label-itin">
+          Choose Event:
+          </div>
+          <select ng-model="selection.mySelect" ng-init="selection.mySelect=events[0]"  ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate'>
+            </select>
+          </label>
+          </div>
+          <div class="list"> 
             <label class="item item-input">
              <span class="input-label">Date: </span>
-            <input ng-model="event.longDate" style="padding-top: 0px;" type="text" ng-click="openDatePicker()">
+            <input ng-model="selection.mySelect.longDate" style="padding-top: 0px;" type="text" ng-readonly="true" ng-click="openDatePicker()">
           </label>     
           <label class="item item-input">
-            <input ng-model="event.venue" type="text" placeholder="Venue/Event Name">
+            <input ng-model="selection.mySelect.venue" type="text" placeholder="Venue/Event Name">
           </label>
           <label class="item item-input">
            
-            <input ng-model="event.cityState" type="text" placeholder="City">
+            <input ng-model="selection.mySelect.cityState" type="text" placeholder="City">
           </label>
           <label  class="item item-input">
-            <input ng-model="event.address" ng-click="openPopover($event, event)" type="text" placeholder="Complete Address">
+            <input ng-model="selection.mySelect.address" ng-click="openPopover($event, selection.mySelect)" type="text" placeholder="Complete Address">
           </label>
 
           
          
           <label class="item item-input">
-            <textarea ng-model="event.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
+            <textarea ng-model="selection.mySelect.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
           </label> 
           
-         <button class="button button-block button-stable" type="submit">Submit</button>
-        </div> 
-        </form>   
-          <div class="alert alert-danger" ng-show="submitted && eventExists" role="alert">
-              <i class="icon ion-alert-circled"></i>
-                Event with this date already exists. Please choose a different date or edit an existing one.
-              </div>
-      </ion-content>
+         <button class="button button-block button-dark" ng-click ="updateEvents()">Submit</button>
+        </div>    
+       
+      </ion-scroll>
 </ion-view>

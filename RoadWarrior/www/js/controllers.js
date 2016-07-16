@@ -153,13 +153,23 @@ angular.module('roadWarrior.controllers', [])
     $scope.navTitle = '<img class="nav-title" src="img/logo-large.png">'
     $scope.yelpLoadList = [];
 
-    $scope.result = {
-      "weather": false,
-      "today": "",
-      "itins": "",
-      "complete": "",
-      "director": ""
-    }
+    $scope.loaded = false;
+    $scope.foundToday = false;
+    $scope.weatherLoaded = false;
+    $scope.itinsLoaded = false;
+    $scope.noToday = false;
+    $scope.weatherData = {};
+
+
+
+
+    // $scope.result = {
+    //   "weather": false,
+    //   "today": "",
+    //   "itins": "",
+    //   "complete": "",
+    //   "director": ""
+    // }
     $scope.yelpShow = {
       "food": true,
       "entertainment": false,
@@ -223,30 +233,30 @@ angular.module('roadWarrior.controllers', [])
       }
     }
 
-    $scope.hideLoader = function(){
-      if ($scope.result.director === "noToday"){
-        // console.log("NO TODAY!!!");
-        return true;
-      } else if ($scope.result.director === "noItins" && $scope.result.weather){
-        // console.log("EVENT, BUT NO ITINS!!!");
-        return true;
-      } else if ($scope.result.weather && $scope.result.today && $scope.result.itins){
-         // console.log("WE HAVE A TODAY EVENT!!");
-        return true;
-      } else {
-        // console.log("RETURNING FALSE!?!?!?!");
-        // console.log("director is ",$scope.result.director);
-        // console.log("today result is ",$scope.result.today)
-        // console.log("itin results is ",$scope.result.itins);
-        return false;
-      }
-    }
+    // $scope.hideLoader = function(){
+    //   if ($scope.result.director === "noToday"){
+    //     // console.log("NO TODAY!!!");
+    //     return true;
+    //   } else if ($scope.result.director === "noItins" && $scope.result.weather){
+    //     // console.log("EVENT, BUT NO ITINS!!!");
+    //     return true;
+    //   } else if ($scope.result.weather && $scope.result.today && $scope.result.itins){
+    //      // console.log("WE HAVE A TODAY EVENT!!");
+    //     return true;
+    //   } else {
+    //     // console.log("RETURNING FALSE!?!?!?!");
+    //     // console.log("director is ",$scope.result.director);
+    //     // console.log("today result is ",$scope.result.today)
+    //     // console.log("itin results is ",$scope.result.itins);
+    //     return false;
+    //   }
+    // }
 
 
   $scope.yelpCall = function(){ 
+    console.log("making Yelp API Call!!!!!!!!!!!!!!!!!!")
     $scope.yelpLoadList = [];           
     $scope.yelp = {};
-    if ($scope.result.today) {
     MyYelpAPI.retrieveYelp($scope.event, "restaurants", 500, 3, "2", function(data){
       $scope.yelp.restaurants = data.businesses;
       $scope.yelpLoadList[0] = true;
@@ -284,18 +294,16 @@ angular.module('roadWarrior.controllers', [])
       $scope.yelpLoadList[7] = true;
     }); 
     console.log("end of yelp calls");
-    }
+    
   }
 
       $scope.weatherCall = function(lat, lng){
         Yahoo.getYahooData(lat,lng).then(function(data){
           if (data){
-            $scope.result.weather = true;
-            console.log("weather result is ",$scope.result.weather);
-            console.log("weather data is ",data);
+            $scope.weatherLoaded = true;
+            $scope.weatherData = data;
           }
-          $scope.weatherData = data;
-          }).catch(function(data){
+        }).catch(function(data){
             console.log("You have no weather data. ",data);
         });
       }
@@ -362,30 +370,37 @@ angular.module('roadWarrior.controllers', [])
             console.log("old value of events list: ",oldValue);   
             console.log("new value of events list: ",newValue);      
               $scope.events = newValue;
-              $scope.result.today = '';
+              $scope.foundToday = false;
+              $scope.loaded = false;
+              $scope.weatherLoaded = false;
+              $scope.itinsLoaded = false;
+              $scope.noToday = false;
+              $scope.weatherData = {};
             console.log("events loaded: ",$scope.events);
               if ($scope.events.length === 0){
                 console.log("you have no events. None at all.");
-                $scope.result.today = false;
-                $scope.result.director = "noToday";
-              } else {
-                    
+                $scope.noToday = true;
+              } else {      
                     for (i=0; i < $scope.events.length; i++){
-                      if ($scope.events[i].date === $scope.todayDate){
-                            $scope.result.today = true;
+                      if ($scope.events[i].date === $scope.todayDate){ 
                             $scope.event = $scope.events[i]; 
-
+                            $scope.foundToday = true;
+                            $scope.loaded = true;
+                            console.log("loaded is ",$scope.loaded);
                                 $scope.$watch('event', function(newEvent, oldEvent) {
                                 console.log("Old value is ",oldEvent);  
                                 console.log("New value is ",newEvent);
                                 console.log("API CALLS!!!!!!!!!!!!!!");
+                                if ($scope.event.lat && $scope.event.lng){
+                                console.log("LOCATION SPECIFIC TASKS HERE!!!!!!!")
                                 var lat = $scope.event.lat;
                                 var lng = $scope.event.lng;
-                                if (lat && lng){
                                 $scope.weatherCall(lat,lng);
                                 $scope.yelpCall();
                                 } else {
-                                $scope.result.weather = false;
+                                  console.log("NO LOCATION STUFF!!!!!")
+                                $scope.weatherLoaded = true;
+                                console.log("weather loaded is ",$scope.weatherLoaded);
                                 } 
                                 },true);
 
@@ -394,13 +409,13 @@ angular.module('roadWarrior.controllers', [])
                         .then(function(){
                           // console.log("itins are ",$scope.itins);
                           if ($scope.itins.length > 0){
-                            $scope.result.itins = true;
+                            $scope.itinsLoaded = true;
                             // console.log("itins result is ",$scope.result.itins);
                             
                           } else {
                             console.log("you have no itins for this day.")
-                            $scope.result.director = "noItins";
-                          
+                            $scope.itinsLoaded = true;
+                            console.log("itins loaded is ",$scope.itinsLoaded);
                           }
                         }).catch(function(data){
                           console.log("no itins data came back. ",data);
@@ -409,10 +424,12 @@ angular.module('roadWarrior.controllers', [])
                       }                      
                     }
                      
-                          if (!$scope.result.today){
-                          $scope.result.today = false;
+                          if (!$scope.foundToday){
+                          $scope.loaded = true;
+                          $scope.itinsLoaded = true;
+                          $scope.weatherLoaded = true;
+                          $scope.noToday = true;
                           console.log("no today event!");
-                          $scope.result.director = "noToday";
                           }
                        
                       

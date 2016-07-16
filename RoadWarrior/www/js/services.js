@@ -177,7 +177,9 @@ angular.module('roadWarrior.services', [])
         retrieveYelp: function(event, searchTerm, radius, limitNumber, sort, callback) {
             var method = 'GET';
             var url = YelpEndpoint.url+'?callback=JSON_CALLBACK';
-            var params = {
+              if (event.address){
+                console.log("BAD!!!!!!!!!!!!!!!!!!!!!!!")
+                var params = {
                     callback: 'angular.callbacks._0',
                     location: event.address, 
                     cll: event.lat+','+event.lng,
@@ -191,7 +193,23 @@ angular.module('roadWarrior.services', [])
                     limit: limitNumber,
                     category_filter: searchTerm 
                 };
-                // console.log("callback in params is: ",params.callback);
+              } else {
+                console.log("DO NOT HAVE AN ADDRESS!!!!!!!!!!");
+                var params = {
+                    callback: 'angular.callbacks._0',
+                    location: event.cityState, 
+                    cll: event.lat+','+event.lng,
+                    oauth_consumer_key: ENV.YELP_CONSUMER_KEY, //Consumer Key
+                    oauth_token: ENV.YELP_TOKEN, //Token
+                    oauth_signature_method: "HMAC-SHA1",
+                    oauth_timestamp: new Date().getTime(),
+                    oauth_nonce: randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                    sort: sort, 
+                    radius_filter: radius,
+                    limit: limitNumber,
+                    category_filter: searchTerm 
+                };
+              }
 
             var consumerSecret = ENV.YELP_CONSUMER_SECRET; //Consumer Secret
             var tokenSecret = ENV.YELP_TOKEN_SECRET; //Token Secret
@@ -199,7 +217,7 @@ angular.module('roadWarrior.services', [])
             params['oauth_signature'] = signature;
             $http.jsonp(url, {params: params}).success(callback).catch(function(error){
               console.log("what is error? ",error);
-            });;
+            });
         }
     }
 })
@@ -301,87 +319,132 @@ angular.module('roadWarrior.services', [])
         })
       },
       createEvent: function($scope){
-        console.log("new event is ",$scope.event);
-        console.log("scope is ",$scope);
           angular.forEach($scope.events, function(childData) {
-          console.log("childData is ",childData);
             if ($scope.event.date === childData.date){
               $scope.eventExists = true;
-              console.log("found one here already. Don't do anything.");
-              // console.log("actual today event from service is: ",childData);
               return true;
             }  
           });
           if ($scope.eventExists === false){
-            console.log("Nothing exists here - go ahead and do stuff.");
+            if ($scope.event.address && $scope.event.address.length > 0) {
+              if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+              this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                    $scope.event.lat = results[0].geometry.location.lat();
+                    $scope.event.lng = results[0].geometry.location.lng();
+                    $scope.event.address = results[0].formatted_address;
+                    var latlng = {lat: $scope.event.lat, lng: $scope.event.lng};
+                    this.geocoder = new google.maps.Geocoder();
+                    this.geocoder.geocode({'location': latlng}, function(results, status) {
+                      if (status === google.maps.GeocoderStatus.OK) {
+                        for (var ac = 0; ac < results[0].address_components.length; ac++) {
+                          var component = results[0].address_components[ac];
+                            switch(component.types[0]) {
+                              case 'locality':
+                                $scope.event.city = component.long_name;
+                                break;
+                              case 'administrative_area_level_1':
+                                $scope.event.state = component.short_name;
+                                break;
+                            }
+                        };
+                        $scope.event.cityState = $scope.event.city+", "+$scope.event.state; 
+                        $scope.event.groupId = $scope.thisGroup.groupId;
+                        $scope.event.groupName = $scope.thisGroup.name;
+                        var newEventEntry = {};
+                        var newEventRef = eventsRef.push();
+                        var eventId = newEventRef.key;
+                        $scope.event.eventId = eventId;
+                        console.log("new event to be submitted: ",$scope.event);
+                        newEventEntry[eventId] = $scope.event;
+                        eventsRef.update(newEventEntry);                          
+                        } else {
+                          console.log('No first geocode results.');
+                        }
+                      });
 
+                  } else {
+                      alert("Sorry, this search produced no results.");
+                  }
+              });
 
-
-
-                if ($scope.event.address && $scope.event.address.length > 0) {
-            if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
-            this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                  console.log("results are: ",results)
-                  $scope.event.lat = results[0].geometry.location.lat();
-                  $scope.event.lng = results[0].geometry.location.lng();
-                  $scope.event.address = results[0].formatted_address;
-                  var latlng = {lat: $scope.event.lat, lng: $scope.event.lng};
-                  console.log("lat/lng is: ",latlng);
-                  this.geocoder = new google.maps.Geocoder();
-                  this.geocoder.geocode({'location': latlng}, function(results, status) {
+            } else {
+              if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+                this.geocoder.geocode({ 'address': $scope.event.cityState }, function (results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                    $scope.event.lat = results[0].geometry.location.lat();
+                    $scope.event.lng = results[0].geometry.location.lng();
+                    var latlng = {lat: $scope.event.lat, lng: $scope.event.lng};                
+                    $scope.event.groupId = $scope.thisGroup.groupId;
+                    $scope.event.groupName = $scope.thisGroup.name;
+                    var newEventEntry = {};
+                    var newEventRef = eventsRef.push();
+                    var eventId = newEventRef.key;
+                    $scope.event.eventId = eventId;
+                    newEventEntry[eventId] = $scope.event;
+                    eventsRef.update(newEventEntry); 
+                  } else {
+                      alert("Sorry, this search produced no results.");
+                  }
+              });       
+            }
+          }         
+        },
+        editEvent: function($scope){
+        console.log("what is $scope.events? ",$scope.events);
+          angular.forEach($scope.events, function(event) {
+          if (event.address){
+          console.log("event in loop: ",event)
+          this.geocoder = new google.maps.Geocoder();
+              this.geocoder.geocode({ 'address': event.address }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {               
+                  event.lat = results[0].geometry.location.lat();
+                  event.lng = results[0].geometry.location.lng();
+                  event.address = results[0].formatted_address;
+                  var latlng = {lat: event.lat, lng: event.lng};
+                    this.geocoder = new google.maps.Geocoder();
+                    this.geocoder.geocode({'location': latlng}, function(results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
-                          for (var ac = 0; ac < results[0].address_components.length; ac++) {
-                                    var component = results[0].address_components[ac];
-                                    console.log("what is component? ",component);
-                                    switch(component.types[0]) {
-                                        case 'locality':
-                                            $scope.event.city = component.long_name;
-                                            break;
-                                        case 'administrative_area_level_1':
-                                            $scope.event.state = component.short_name;
-                                            break;
-                                    }
-                                };
-                                $scope.event.cityState = $scope.event.city+", "+$scope.event.state; 
-                                $scope.event.groupId = $scope.thisGroup.groupId;
-                                $scope.event.groupName = $scope.thisGroup.name;
-                                var newEventEntry = {};
-                                var newEventRef = eventsRef.push();
-                                var eventId = newEventRef.key;
-                                $scope.event.eventId = eventId;
-                                console.log("new event to be submitted: ",$scope.event);
-                                newEventEntry[eventId] = $scope.event;
-                                eventsRef.update(newEventEntry);
-                                // $scope.newEventModal.hide();
-                         
-                    } else {
-                      window.alert('No first geocode results.');
+                      for (var ac = 0; ac < results[0].address_components.length; ac++) {
+                        var component = results[0].address_components[ac];
+                        switch(component.types[0]) {
+                          case 'locality':
+                            event.city = component.long_name;
+                            break;
+                          case 'administrative_area_level_1':
+                            event.state = component.short_name;
+                            break;
+                        }
+                      };
+                      event.cityState = event.city+", "+event.state;
+                      $scope.events.$save(event).then(function(ref) {
+                      });
+                    }
+                  })
+                } 
+              });
+       
+
+            } else {
+
+                if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+                    this.geocoder.geocode({ 'address': event.cityState }, function (results, status) {
+                      if (status == google.maps.GeocoderStatus.OK) {
+                        event.lat = results[0].geometry.location.lat();
+                        event.lng = results[0].geometry.location.lng();               
+                        $scope.events.$save(event).then(function(ref) {
+                        });
+                                             
+
+                      } else {
+                          alert("Sorry, this search produced no results.");
                       }
-                  });
-
-                } else {
-                    alert("Sorry, this search produced no results.");
-                }
-            });
-
-          } else {
-            $scope.event.groupId = $scope.thisGroup.groupId;
-            $scope.event.groupName = $scope.thisGroup.name;
-            var newEventEntry = {};
-            var newEventRef = eventsRef.push();
-            var eventId = newEventRef.key;
-            $scope.event.eventId = eventId;
-            console.log("new event to be submitted: ",$scope.event);
-            newEventEntry[eventId] = $scope.event;
-            console.log("SUBMITTING ANYWAY!!!!!!!!!!!");
-            eventsRef.update(newEventEntry);         
-          }
-        }
-        
-      }   
+                });       
+            }   
+          })
+        }   
+      }
     }
-}
 ])
 
 .factory('itineraryService', function() {

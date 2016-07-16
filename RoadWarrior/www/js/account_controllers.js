@@ -269,49 +269,8 @@ angular.module('roadWarrior.controllers')
   }
 
   $scope.updateEvents = function(){
-      console.log("what is $scope.events? ",$scope.events);
-      angular.forEach($scope.events, function(event) {
-        if (event.address){
-        console.log("event in loop: ",event)
-          this.geocoder = new google.maps.Geocoder();
-              this.geocoder.geocode({ 'address': event.address }, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                  // console.log("results are: ",results)
-                  
-                  event.lat = results[0].geometry.location.lat();
-                  event.lng = results[0].geometry.location.lng();
-                  event.address = results[0].formatted_address;
-                  var latlng = {lat: event.lat, lng: event.lng};
-                  // console.log("lat/lng is: ",latlng);
-                    this.geocoder = new google.maps.Geocoder();
-                    this.geocoder.geocode({'location': latlng}, function(results, status) {
-                    if (status === google.maps.GeocoderStatus.OK) {
-                      for (var ac = 0; ac < results[0].address_components.length; ac++) {
-                        var component = results[0].address_components[ac];
-                        switch(component.types[0]) {
-                          case 'locality':
-                            event.city = component.long_name;
-                            break;
-                          case 'administrative_area_level_1':
-                            event.state = component.short_name;
-                            break;
-                        }
-                      };
-                      event.cityState = event.city+", "+event.state;
-                      $scope.events.$save(event).then(function(ref) {
-                      });
-                    }
-                  })
-                } 
-              });
-       
-
-       } else {
-         $scope.events.$save(event).then(function(ref) {
-          });
-       }   
-      })
-      $state.go("tab.account");
+    eventsService.editEvent($scope);
+    $state.go("tab.account");
   }
 
 
