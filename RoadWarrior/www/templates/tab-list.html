@@ -10,10 +10,10 @@
       <ion-list class="event-list">
         <ion-item class="event-list-item" ng-repeat="event in events | tooOld | orderBy: 'unixDate'" ng-click="viewDay(event)">
           <div class="row">
-            <div class="col col-33">
+            <div class="col col-50">
             <span class="list-dow">{{event.dayOfWeek}}</span> <br> <span class="list-date">{{event.longDate}}</span>
             </div>
-            <div class="col col-67 text-right">
+            <div class="col col-50 text-right">
             <span class="list-venue">{{event.venue}}</span> <br> <span class="list-city">{{event.cityState}}</span>
             </div>
           </div>

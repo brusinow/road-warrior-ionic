@@ -29,9 +29,10 @@
         <select ng-model="selected"  ng-change="switchGroup(selected)" ng-options='group.name for group in groups'>
         </select>
       </label> 
-      <ion-item ng-click="logout()">
+      <button type="button" class="col button button-small button-block button-dark" ng-click="logout()"><span style="font-weight: 600;">Log out</span></button>
+    <!--   <ion-item >
         Log out
-      </ion-item>
+      </ion-item> -->
       <div ng-if="thisGroup.level === 'admin'">
       <div class="item item-divider">
         Admin
