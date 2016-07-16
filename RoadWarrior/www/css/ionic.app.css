@@ -364,17 +364,19 @@ textarea::-webkit-input-placeholder {
   line-height: 46px; }
 
 /*.itin-list {
-  font-size: 12px;
+  
 }*/
 .itin-name {
   text-align: left;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 300 !important;
   padding-left: 10px !important; }
 
 .itin-time {
   text-align: right;
-  font-size: 12px; }
+  font-family: 'Scope One', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 13px; }
 
 .button-group {
   margin: 0px 10px; }
@@ -445,6 +447,11 @@ textarea::-webkit-input-placeholder {
   font-weight: bold;
   text-decoration: underline;
   margin-bottom: 4px; }
+
+.nav-title {
+  height: 40px;
+  vertical-align: bottom;
+  padding: 0 0 10px 10px; }
 
 .list .item.item-accordion {
   background-color: #f8f8f8;
@@ -701,6 +708,7 @@ textarea::-webkit-input-placeholder {
       -webkit-mask-box-image: url("data:image/svg+xml;charset=utf-8,<svg height='35' viewBox='0 0 96 70' width='48' xmlns='http://www.w3.org/2000/svg'><path d='m96 35c1 7-5 37-42 35-37 2-43-28-42-35-1-7 5-37 42-35 37-2 43 28 42 35z'/><path d='m0 70c6-2 12-10 12-19v-16l14 27s-8 8-26 8z'/></svg>") 50% 42% 46% 56%; }
 
 .time {
+  font-size: 12px !important;
   color: #aaa;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;

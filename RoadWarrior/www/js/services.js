@@ -314,6 +314,10 @@ angular.module('roadWarrior.services', [])
           });
           if ($scope.eventExists === false){
             console.log("Nothing exists here - go ahead and do stuff.");
+
+
+
+
                 if ($scope.event.address && $scope.event.address.length > 0) {
             if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
             this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
@@ -360,7 +364,19 @@ angular.module('roadWarrior.services', [])
                     alert("Sorry, this search produced no results.");
                 }
             });
-        }
+
+          } else {
+            $scope.event.groupId = $scope.thisGroup.groupId;
+            $scope.event.groupName = $scope.thisGroup.name;
+            var newEventEntry = {};
+            var newEventRef = eventsRef.push();
+            var eventId = newEventRef.key;
+            $scope.event.eventId = eventId;
+            console.log("new event to be submitted: ",$scope.event);
+            newEventEntry[eventId] = $scope.event;
+            console.log("SUBMITTING ANYWAY!!!!!!!!!!!");
+            eventsRef.update(newEventEntry);         
+          }
         }
         
       }   

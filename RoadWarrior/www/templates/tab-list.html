@@ -1,6 +1,12 @@
 <ion-view view-title="Event List">
   <ion-content class="padding" >
-    <div ng-if="events.length > 0 && thisGroup.access === true">
+
+   <div class="spinner" ng-if="thisGroup.access === true" ng-hide="loaded">
+  <ion-spinner></ion-spinner>
+  </div>
+
+
+    <div class="postLoad" ng-show="events.length > 0 && thisGroup.access === true && loaded">
       <ion-list class="event-list">
         <ion-item class="event-list-item" ng-repeat="event in events | tooOld | orderBy: 'unixDate'" ng-click="viewDay(event)">
           <div class="row">
@@ -14,13 +20,13 @@
         </ion-item>
       </ion-list>
     </div>
-    <div ng-if="events.length === 0 && thisGroup.access === true">
+    <div class="postLoad" ng-if="events.length === 0 && thisGroup.access === true && loaded">
     <h3>You have no events.</h3>
     </div>
-    <div ng-if="thisGroup.access === false">
+    <div class="postLoad" ng-if="thisGroup.access === false">
     <h3>Your attempt to join this group is still pending - Talk to your administrator.</h3>
     </div>
-       <div class="no-group-cat center-text" ng-if="!thisGroup.level">
+       <div class="no-group-cat center-text postLoad" ng-if="!thisGroup.level">
                 <div class="cat-time-no-event"></div>
                   <h3 class="no-margin header-font-heavy">You have no active group.</h3> 
                 </div>

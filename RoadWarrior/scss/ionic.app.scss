@@ -465,19 +465,21 @@ textarea::-webkit-input-placeholder {
 }
 
 /*.itin-list {
-  font-size: 12px;
+  
 }*/
 
 .itin-name {
   text-align: left;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 300 !important;
   padding-left: 10px !important;
 }
 
 .itin-time {
   text-align: right;
-  font-size: 12px;
+  font-family: 'Scope One', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 13px;
 }
 
 .button-group {
@@ -560,6 +562,13 @@ textarea::-webkit-input-placeholder {
   text-decoration: underline;
   margin-bottom: 4px;
 }
+
+.nav-title {
+  height: 40px;
+  vertical-align: bottom;
+  padding: 0 0 10px 10px;
+}
+
 
 .list .item.item-accordion {
   background-color: $stable;
@@ -852,6 +861,7 @@ textarea::-webkit-input-placeholder {
 }
 
 .time {
+  font-size: 12px !important;
   color: #aaa;
   -webkit-box-flex: 0;
   -moz-box-flex: 0;

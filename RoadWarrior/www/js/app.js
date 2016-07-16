@@ -254,6 +254,20 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
     }
   })
 
+   .state('tab.account-newLodging', {
+    url: '/account/newLodging',
+    cache: false,
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/newLodging.html',
+        controller: 'NewLodgingCtrl'
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+
   .state('tab.account-newItin', {
     url: '/account/newItin',
     cache: false,

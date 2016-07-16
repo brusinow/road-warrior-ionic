@@ -3,11 +3,14 @@ angular.module('roadWarrior.controllers', [])
 
 
 .controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'sendDataService', 'ActiveGroup', 'itineraryService', 'helperService','MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, ActiveGroup, itineraryService, helperService, MyYelpAPI, $state, $http, $q, moment,Yahoo){
-  
+  $scope.loaded = false;
+
+
   ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
     console.log("This group: ",$scope.thisGroup);
     var eventRef = firebase.database().ref('events');
-    $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId)) 
+    $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId));
+    $scope.loaded = true;
   })
               
 
@@ -18,7 +21,24 @@ angular.module('roadWarrior.controllers', [])
 }])
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 .controller ('ListShowCtrl', ['$scope', '$firebaseArray','currentAuth', 'sendDataService', 'itineraryService', 'helperService', 'ActiveGroup', 'MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, itineraryService, helperService, ActiveGroup, MyYelpAPI, $state, $http, $q, moment,Yahoo){
+    $scope.loaded = false;
+    $scope.weatherLoaded = false;
+    $scope.itinsLoaded = false;
+    $scope.weatherData = {};
+
     ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
       console.log("this group loaded");
     });
@@ -57,8 +77,21 @@ angular.module('roadWarrior.controllers', [])
   var itinsRef = firebase.database().ref('itins');
   $scope.event = sendDataService.get();
   $scope.event.weekDay = moment($scope.event.unixDate).format('dddd');
+  $scope.loaded = true;
+  console.log("loaded is ",$scope.loaded)
   
   $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id));
+  $scope.itins.$loaded()
+  .then(function(){
+    $scope.itinsLoaded = true;
+    console.log("itins are ",$scope.itinsLoaded)
+  });
+
+
+
+
+
+
 
   $scope.toList = function(){
     $state.go("tab.list");
@@ -68,8 +101,9 @@ angular.module('roadWarrior.controllers', [])
 
     var lat = $scope.event.lat;
     var lng = $scope.event.lng;
+    if (lat && lng){
     Yahoo.getYahooData(lat,lng).then(function(data){
-      console.log(data.title);
+      console.log("WHAT IS DATA???? ",data);
       var thisDayFormatted = moment($scope.event.unixDate).format('DD MMM YYYY');
       console.log("this day formatted is: ",thisDayFormatted);
       var forecasts = data.forecast;
@@ -77,9 +111,19 @@ angular.module('roadWarrior.controllers', [])
       angular.forEach(forecasts, function(forecast) {
         if (forecast.date === thisDayFormatted){
           $scope.weatherData = forecast;
-        }
+          $scope.weatherLoaded = true;
+          console.log("weatherloaded is ",$scope.weatherLoaded);
+        }       
       })
+  
+      if (!$scope.weatherLoaded){
+        $scope.weatherLoaded = true;
+        console.log("weatherloaded is ",$scope.weatherLoaded);
+      }
     });
+   } else {
+    $scope.weatherLoaded = true;
+   }
 
     $scope.data = {};
     $scope.$watch('data.slider', function(nv, ov) {
@@ -106,7 +150,7 @@ angular.module('roadWarrior.controllers', [])
 
 .controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','FirebaseEnv', 'itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, FirebaseEnv, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
 
-   
+    $scope.navTitle = '<img class="nav-title" src="img/logo-large.png">'
     $scope.yelpLoadList = [];
 
     $scope.result = {
@@ -171,7 +215,7 @@ angular.module('roadWarrior.controllers', [])
 
     $scope.yelpLoading = function(){
       if ($scope.event && $scope.yelpLoadList.length === 8){
-           console.log("yelp loading is true");
+           // console.log("yelp loading is true");
         return true;
       } else {
         return false;
@@ -337,8 +381,12 @@ angular.module('roadWarrior.controllers', [])
                                 console.log("API CALLS!!!!!!!!!!!!!!");
                                 var lat = $scope.event.lat;
                                 var lng = $scope.event.lng;
+                                if (lat && lng){
                                 $scope.weatherCall(lat,lng);
                                 $scope.yelpCall();
+                                } else {
+                                $scope.result.weather = false;
+                                } 
                                 },true);
 
                         $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))

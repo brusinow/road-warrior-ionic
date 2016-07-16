@@ -5,7 +5,8 @@
           <div class = "input-label-itin">
           Choose Event:
           </div>
-          <select ng-model="selection.mySelect" ng-init="selection.mySelect=events[0]"  ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate'>
+
+          <select ng-model="selection.mySelect" ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: "unixDate"' ng-init="selection.mySelect = events[0]" >
             </select>
           </label>
           </div>
