@@ -392,9 +392,11 @@ angular.module('roadWarrior.services', [])
         },
         editEvent: function($scope){
         console.log("what is $scope.events? ",$scope.events);
+          var counter = 0;
           angular.forEach($scope.events, function(event) {
           if (event.address){
-          console.log("event in loop: ",event)
+            if (event.address !== $scope.oldEvents[counter].address || event.cityState !== $scope.oldEvents[counter].cityState){
+          console.log("GEOCODING!!!!!!!!!!!");
           this.geocoder = new google.maps.Geocoder();
               this.geocoder.geocode({ 'address': event.address }, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {               
@@ -419,14 +421,23 @@ angular.module('roadWarrior.services', [])
                       event.cityState = event.city+", "+event.state;
                       $scope.events.$save(event).then(function(ref) {
                       });
+                      counter++;
                     }
                   })
                 } 
               });
        
+            } else {
+              $scope.events.$save(event).then(function(ref) {
+              });
+              counter++;
+            }
+
+
 
             } else {
-
+                if (event.cityState !== $scope.oldEvents[counter].cityState){
+                  console.log("GEOCODING!!!!!!!!!!!");
                 if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
                     this.geocoder.geocode({ 'address': event.cityState }, function (results, status) {
                       if (status == google.maps.GeocoderStatus.OK) {
@@ -434,12 +445,20 @@ angular.module('roadWarrior.services', [])
                         event.lng = results[0].geometry.location.lng();               
                         $scope.events.$save(event).then(function(ref) {
                         });
+                        counter++;
                                              
 
                       } else {
                           alert("Sorry, this search produced no results.");
                       }
-                });       
+                }); 
+
+
+                } else {
+                  $scope.events.$save(event).then(function(ref) {
+                  });
+                  counter++;
+                }
             }   
           })
         }   

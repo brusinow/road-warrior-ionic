@@ -37,7 +37,7 @@
                   </div>
                 </div>
                 <div ng-hide="itins.length === 0" style="padding-top:14px;" >
-                <button ng-if="thisGroup.level === 'admin'" class="button button-small button-assertive"><i class="ion ion-plus"></i> Add an Itinerary Item</button>
+               <!--  <button ng-if="thisGroup.level === 'admin'" class="button button-small button-assertive"><i class="ion ion-plus"></i> Add an Itinerary Item</button> -->
                 <ion-scroll direction="y" style="height: 337px;">
                 <ion-list>
                
@@ -77,7 +77,7 @@
            
           </div>  
     </ion-slide-page>
-    <ion-slide-page ng-if="event.lng && event.lat">
+    <ion-slide-page ng-show="event.lng && event.lat">
     <div ng-if="yelpLoading()">
       <h5 class="center-text no-margin">Powered by <img class="yelp-logo" src="img/yelp.png"></h5>
         <h4 class="center-text no-margin header-font-heavy">What's Nearby</h4>
