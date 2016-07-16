@@ -387,6 +387,7 @@ textarea::-webkit-input-placeholder {
 
 .edit-button {
   font-size: 16px !important;
+  border-radius: 0px !important;
   background-color: #f8f8f8 !important;
   color: #be737a !important;
   border-color: #be737a !important; }
@@ -461,9 +462,9 @@ textarea::-webkit-input-placeholder {
   padding-top: 5px;
   padding-bottom: 0;
   margin: -1px 3px;
-  -webkit-transition: height .1s linear;
+  -webkit-transition: height .2s ease-out;
   /* Safari */
-  transition: height .1s linear; }
+  transition: height .2s ease-out; }
 
 .list .item.item-accordion.ng-hide {
   height: 0px; }

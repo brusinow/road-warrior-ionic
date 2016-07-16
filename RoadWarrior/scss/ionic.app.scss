@@ -493,6 +493,7 @@ textarea::-webkit-input-placeholder {
 
 .edit-button {
   font-size: 16px !important;
+  border-radius: 0px !important;
   background-color: $stable !important;
   color: $secondaryAccent !important;
   border-color: $secondaryAccent !important;
@@ -578,8 +579,8 @@ textarea::-webkit-input-placeholder {
   padding-top: 5px;
   padding-bottom: 0;
   margin: -1px 3px;
-  -webkit-transition: height .1s linear; /* Safari */
-  transition: height .1s linear;
+  -webkit-transition: height .2s ease-out; /* Safari */
+  transition: height .2s ease-out;
 }
 .list .item.item-accordion.ng-hide {
   height: 0px;

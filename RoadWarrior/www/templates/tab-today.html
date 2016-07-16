@@ -36,8 +36,9 @@
                     <h4 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h4>
                   </div>
                 </div>
-                <div style="padding-top:14px;" >
-                <ion-scroll direction="y" ng-hide="itins.length === 0" style="height: 337px;">
+                <div ng-hide="itins.length === 0" style="padding-top:14px;" >
+                <button ng-if="thisGroup.level === 'admin'" class="button button-small button-assertive"><i class="ion ion-plus"></i> Add an Itinerary Item</button>
+                <ion-scroll direction="y" style="height: 337px;">
                 <ion-list>
                
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">

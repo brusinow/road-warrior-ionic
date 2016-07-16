@@ -18,7 +18,7 @@
             <h4 ng-if="event" class="no-margin header-font-heavy">{{event.venue}}</h4>
             <h4 ng-if="event" class="no-margin header-font">{{event.cityState}}</h4>
           </div>
-          <div ng-show="weatherData.high" class="weather-box col col-33">
+          <div ng-show="weatherData.high && weatherData.low && weatherData.code" class="weather-box col col-33">
             <span class="weather-image-list"><i class="wi wi-yahoo-{{weatherData.code}}"></i></span>
             <h4 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.high}}<span>°</span> / <i class="wi wi-direction-down"></i> {{weatherData.low}}<span>°</span></h4>
           </div>

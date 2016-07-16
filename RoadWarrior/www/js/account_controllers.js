@@ -255,10 +255,18 @@ angular.module('roadWarrior.controllers')
 
   ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
       $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId))
+      eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId).on('value', function(snapshot) {
+        $scope.oldEvents = snapshot.val();
+        console.log("what is oldEvents? ",$scope.oldEvents);
+      });
+
+
+      
+      
       $scope.groups = $firebaseArray(userGroupsRef);
         $scope.groups.$loaded()
           .then(function(){
-           // $scope.selection.mySelect = {};
+           
           })
   })
 
