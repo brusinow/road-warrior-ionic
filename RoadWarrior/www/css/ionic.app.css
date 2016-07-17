@@ -394,7 +394,7 @@ textarea::-webkit-input-placeholder {
   font-size: 14px;
   vertical-align: middle;
   font-weight: 600 !important;
-  padding-left: 7px !important; }
+  padding-left: 4px !important; }
 
 .itin-time {
   text-align: right;
@@ -473,9 +473,9 @@ textarea::-webkit-input-placeholder {
   margin-bottom: 4px; }
 
 .nav-title {
-  height: 40px;
-  vertical-align: bottom;
-  padding: 0 0 10px 10px; }
+  height: 35px;
+  padding: 5px;
+  vertical-align: middle; }
 
 .list .item.item-accordion {
   background-color: #f8f8f8;

@@ -150,7 +150,7 @@ angular.module('roadWarrior.controllers', [])
 
 .controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','FirebaseEnv', 'itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, FirebaseEnv, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
 
-    $scope.navTitle = '<img class="nav-title" src="img/logo-large.png">'
+    $scope.navTitle = '<img class="nav-title" src="img/bus-invert.png">'
     $scope.yelpLoadList = [];
 
     $scope.loaded = false;
@@ -161,23 +161,12 @@ angular.module('roadWarrior.controllers', [])
     $scope.weatherData = {};
 
 
-
-
-    // $scope.result = {
-    //   "weather": false,
-    //   "today": "",
-    //   "itins": "",
-    //   "complete": "",
-    //   "director": ""
-    // }
     $scope.yelpShow = {
       "food": true,
       "entertainment": false,
       "emergency": false
     }
 
-
-    
 
     $scope.editItin = function(itin, event){
       var eventWithItin = {
