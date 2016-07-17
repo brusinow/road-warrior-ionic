@@ -67,7 +67,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
 
   // setup an abstract state for the tabs directive
    .state('signup', {
-    cache: false,
     url: '/signup',
     templateUrl: 'templates/signup.html',
     controller: 'SignupCtrl',
@@ -77,7 +76,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
   })
 
   .state('login', {
-    cache: false,
     url: '/login',
     templateUrl: 'templates/login.html',
     controller: 'LoginCtrl',

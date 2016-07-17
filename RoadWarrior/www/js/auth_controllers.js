@@ -4,6 +4,9 @@ angular.module('roadWarrior.controllers')
 .controller('SignupCtrl', ['$scope', '$ionicLoading', 'Auth', 'currentAuth','$firebaseAuth','$firebaseObject', '$state', function($scope, $ionicLoading, Auth, currentAuth, $firebaseAuth, $firebaseObject, $state){
 $scope.user = {}
 
+$scope.goToLogin = function(){
+  $state.go("login");
+}
 
 $scope.signup = function() {
   // Create a new user
@@ -51,7 +54,9 @@ $scope.signup = function() {
 
 .controller('LoginCtrl', ['$scope', '$ionicHistory', 'Auth', 'currentAuth', '$state', function($scope, $ionicHistory, Auth, currentAuth, $state){
 
-
+$scope.goToSignup = function(){
+  $state.go("signup");
+}
 
 
 Auth.$onAuthStateChanged(function(firebaseUser) {

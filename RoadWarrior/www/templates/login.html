@@ -1,8 +1,9 @@
-<ion-view title="Log in to RoadWarrior">
+<ion-view class="setup-bg" title="Log in">
  <ion-content overflow-scroll="true" padding="'true'" scroll="false" class="has-header">
         <!-- Show if there is no current user -->
         <div ng-hide="authData">
-            <form class="list">
+            <img class="logo-large" src="img/roadwarrior-logo-black.png" />
+            <form style="margin-bottom: 0px;"class="list">
                 <ion-list>
                     <label class="item item-input">
                         <span class="input-label">Email</span>
@@ -13,12 +14,12 @@
                         <input type="password" ng-model="user.password" placeholder="">
                     </label>
                 </ion-list>
-                <button class="button button-block" ng-click="login()">
+                <button class="col col-50 col-offset-25 button button-small button-block button-dark" ng-click="login()">
                     Log in!
                 </button>
             </form>
            
-            <a href="#/signup" class="button button-positive button-clear button-block ">
+            <a ng-click="goToSignup()" style="margin-top: 0px;"class="button button-dark button-small button-clear button-block ">
                 Need an account?
             </a>
         </div>

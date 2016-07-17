@@ -1,8 +1,9 @@
 <ion-view hide-back-button="true" cache-view="false" title="Groups">
     <ion-content overflow-scroll="false" padding="'true'" scroll="true" class="has-header">
-       <h2 class="center-text">Groups</h2>
-       <h3>{{currentUser.name}}</h3>
-        <button class="button button-dark button-block" ng-click="toNewGroup()">Create New Group</button>
-        <button class="button button-dark button-block" ng-click="toJoinGroup()">Join Group</button>
+       <h4 style="margin-top:30%; margin-bottom: 15%" class="center-text header-font-heavy">What would you like to do?</h4>
+         <div class="button-bar bar-dark">
+          <a ng-click="toNewGroup()" class="button">Create New Group</a>
+          <a ng-click="toJoinGroup()" class="button">Join Existing Group</a>
+        </div>
     </ion-content>
 </ion-view>

@@ -18,12 +18,18 @@ $royal:                           #886aea !default;
 
 
 $stable:                          #f8f8f8 !default;
-$dark:                            #75111b !default;
+$orangeTint:                      #fffcf7 !default;
+$dark:                            #c42644 !default;
+$grey:                            #484041 !default;
 $assertive:                       #ef4e3a  !default;
-$secondary:                      #931622 !default;
-$secondaryAccent:                #be737a !default;
-$textHeader:                      #222 !default;
-$accentColor:                       #FF6700 !default;  
+$secondary:                      #c42644 !default;
+$secondaryDark:                  #981F25 !default;
+$secondaryAccent:                #d5677c !default;
+$tertiary:                        #64b6b0 !default;
+$tertiaryLight:                   #a2d3cf !default;
+$tertiaryDark:                   #428c86 !default;
+$textHeader:                      #444 !default;
+$accentColor:                       #ff8532 !default;  
 $lightAccent:                       #B7B5B3 !default;        
 /* when showing the picture */
 
@@ -115,6 +121,18 @@ $lightAccent:                       #B7B5B3 !default;
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
+}
+
+
+
+.bar.bar-dark {
+  border-color: $dark !important;
+  background-image: linear-gradient(0deg, $dark, $dark 50%, transparent 50%) !important;
+}
+
+.tabs-dark > .tabs {
+  border-color: $dark !important;
+  background-image: linear-gradient(0deg, $dark, $dark 50%, transparent 50%) !important;
 }
 
 
@@ -216,9 +234,23 @@ div.spinner {
 }
 
 ion-view.pane {
-background: $stable;
+background: $orangeTint;
 }
 
+.chat-bg {
+  background: $stable !important;
+}
+
+.setup-bg {
+  background: $orangeTint !important;
+}
+
+.logo-large {
+  width: 90%;
+  margin-left:5%;
+  margin-bottom: 15px;
+  margin-top:25%;
+}
 
 .no-margin {
   margin: 0px;
@@ -273,6 +305,9 @@ background: $stable;
 
 .item-itin {
   margin: -1px 3px !important;
+  background-color: white !important;
+ /* border-bottom-color: $orangeTint !important;
+  border-top-color: $orangeTint !important;*/
 }
 
 .input-label {
@@ -464,9 +499,9 @@ textarea::-webkit-input-placeholder {
   line-height: 46px;
 }
 
-/*.itin-list {
-  
-}*/
+.itin-list {
+  color: #444 !important;
+}
 
 .itin-name {
   text-align: left;
@@ -492,11 +527,11 @@ textarea::-webkit-input-placeholder {
 }
 
 .edit-button {
-  font-size: 16px !important;
-  border-radius: 0px !important;
-  background-color: $stable !important;
-  color: $secondaryAccent !important;
-  border-color: $secondaryAccent !important;
+  font-size: 17px !important;
+  border-radius: 1px !important;
+  background-color: $tertiary !important;
+  color: $stable !important;
+  border-color: $tertiary !important;
 }
 
 .input-label-itin {
@@ -597,8 +632,9 @@ textarea::-webkit-input-placeholder {
     padding-left: 15px;
     min-height: 20px;
     background-color: #e9e9e9 !important;
+  
     color: #222;
-    font-weight: 500;
+    font-weight: 500 !important;
     border: 1px solid #ddd;
     /*border-radius: 4px 4px 0 0;*/
 }
@@ -606,6 +642,28 @@ textarea::-webkit-input-placeholder {
 .event-list-item {
   padding: 8px 2px !important;
 }
+
+.button.button-tertiary {
+  border-color: transparent;
+  background-color: $tertiaryDark;
+  color: #fff;
+}
+
+.button.button-tertiary.activated {
+  border-color: transparent;
+  background-color: $tertiary;
+}
+
+.button.button-tertiary.active {
+  border-color: transparent;
+  background-color: $tertiary;
+}
+
+
+.button.button-tertiary:hover {
+  color: white !important;
+}
+
 
 .scroll {
   height: 100%;
@@ -645,7 +703,7 @@ textarea::-webkit-input-placeholder {
 }
 
 .icon-list {
-  color: $secondaryAccent;
+  color: $tertiary;
 }
 
 .button-secondary {
@@ -682,23 +740,27 @@ textarea::-webkit-input-placeholder {
 
 
 .list-dow {
+  color: $textHeader !important;
   font-family: 'Libre Franklin', sans-serif !important;
   font-size: 20px;
   font-weight: 600;
 }
 
 .list-date {
+  color: $textHeader !important;
 /*  font-family: 'Libre Franklin', sans-serif !important;*/
   font-size: 16px;
 }
 
 .list-venue {
+  color: $textHeader !important;
 /*  font-family: 'Libre Franklin', sans-serif !important;*/
   font-size: 16px;
   
 }
 
 .list-city {
+  color: $textHeader !important;
 /*  font-family: 'Libre Franklin', sans-serif !important;*/
   font-size: 16px;
   font-weight: 600;
@@ -849,7 +911,7 @@ textarea::-webkit-input-placeholder {
     -moz-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
     span {
-      background: #007AFF;
+      background: $tertiary;
       display: inline-block;
       color: white;
       padding: 10px;
@@ -904,7 +966,7 @@ textarea::-webkit-input-placeholder {
   span {
     color: black;
     padding-right: 16px;
-    background-color: #C7C7CC;
+    background-color: #E4BA6B;
     -webkit-mask-box-image: url("data:image/svg+xml;charset=utf-8,<svg height='35' viewBox='0 0 96 70' width='48' xmlns='http://www.w3.org/2000/svg'><path d='m84 35c1 7-5 37-42 35-37 2-43-28-42-35-1-7 5-37 42-35 37-2 43 28 42 35z'/><path d='m96 70c-6-2-12-10-12-19v-16l-14 27s8 8 26 8z'/></svg>")50% 56% 46% 42%;
   }
 }
@@ -933,6 +995,11 @@ textarea::-webkit-input-placeholder {
   padding-right: 1px !important;
   padding-left: 1px !important;
   font-size: 28px !important;
+}
+
+
+.button-bar.bar-dark > .button {
+  border-color: $secondaryDark !important;
 }
 
 .messageName {
@@ -996,7 +1063,16 @@ textarea::-webkit-input-placeholder {
 }
 
 
-
+.tabs-grey > .tabs,
+.tabs.tabs-grey {
+  border-color: #111;
+  background-color: $grey;
+  background-image: linear-gradient(0deg, $grey, $grey 50%, transparent 50%);
+  color: #fff; }
+  .tabs-dark > .tabs .tab-item .badge,
+  .tabs.tabs-dark .tab-item .badge {
+    background-color: #fff;
+    color: $grey; }
 
 
 

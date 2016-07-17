@@ -1,5 +1,5 @@
 
-<ion-view view-title="Today">
+<ion-view class="today-bg" view-title="Today">
 <ion-content class="padding" scroll="false">
   <div class="spinner" ng-if="thisGroup.access === true" ng-hide="loaded && itinsLoaded && weatherLoaded">
   <ion-spinner></ion-spinner>
@@ -84,9 +84,9 @@
         <div class="row" style="margin-bottom: 15px;">
           <div class="col col-50 col-offset-25">
             <div class="button-bar">
-              <a ng-click="yelpShowFood()" class="button button-secondary button-yelp"><i class="icon ion-pizza"></i></a>
-              <a ng-click="yelpShowEntertainment()" class="button button-secondary button-yelp"><i class="icon ion-film-marker"></i></a>
-              <a ng-click="yelpShowEmergency()" class="button button-outline button-stable button-emergency button-yelp"><i class="icon ion-medkit"></i></a>
+              <a ng-click="yelpShowFood()" class="button button-tertiary button-yelp" ng-class="{active: yelpShow.food}"><i class="icon ion-pizza"></i></a>
+              <a ng-click="yelpShowEntertainment()" class="button button-tertiary button-yelp" ng-class="{active: yelpShow.entertainment}"><i class="icon ion-film-marker"></i></a>
+              <a ng-click="yelpShowEmergency()" class="button button-tertiary button-yelp" ng-class="{active: yelpShow.emergency}"><i class="icon ion-medkit"></i></a>
             </div>
           </div>
         </div>
