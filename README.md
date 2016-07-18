@@ -8,7 +8,7 @@ Wireframe PDF: https://roadwarrior.herokuapp.com/RoadWarrior.pdf
 
 Installation: use "git clone" to copy to your computer and then open in your preferred browser.
 
-Technologies used: AngularJS, Ionic, Firebase, AJAX, HTML5, CSS3, Javascript, moment.js.
+Technologies used: AngularJS, Ionic, Cordova, Firebase, AJAX, HTML5, CSS3, Javascript, moment.js.
 
 
 Room for improvement: 
