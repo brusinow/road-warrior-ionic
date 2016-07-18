@@ -23,8 +23,14 @@
   <ion-slides ng-if="thisGroup.access === true && event" options="options" slider="data.slider">
     <ion-slide-page disable-scroll="false">
                <div class="postLoad" ng-show="loaded && itinsLoaded && weatherLoaded"> 
+               <div class="row no-margin">
+               <div class="col text-left no-padding">
+                <button ng-if="thisGroup.level === 'admin'" style="margin-bottom: 0px; margin-left: 5px;" ng-click="newItin(event)" class="button button-small button-tertiary-light"><i class="ion ion-edit"></i> Edit Event</button>
+                </div>
+                </div>
                   <div class="row">
-                  <div  class="col col-67">
+                  <div class="col col-67">
+
                   <h4 class="no-margin header-font">{{day_of_week}}</h4>
                   <h4 class="no-margin header-font">{{now_formatted_date}}</h4>
                   <h4 ng-if="event" class="no-margin header-font-heavy">{{event.venue}}</h4>
@@ -37,7 +43,7 @@
                   </div>
                 </div>
                 <div ng-hide="itins.length === 0" style="padding-top:14px;" >
-               <!--  <button ng-if="thisGroup.level === 'admin'" class="button button-small button-assertive"><i class="ion ion-plus"></i> Add an Itinerary Item</button> -->
+                <button ng-if="thisGroup.level === 'admin'" ng-click="newItin(event)" class="col col-33 text-center button button-small button-tertiary-light custom-tab"><i class="ion ion-plus"></i> Add Item</button>
                 <ion-scroll direction="y" style="height: 337px;">
                 <ion-list>
                

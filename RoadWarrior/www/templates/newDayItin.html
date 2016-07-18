@@ -1,14 +1,9 @@
 <ion-view view-title="New Itin">
   <ion-content class="padding" scroll="false">
-  <form name="myForm" ng-submit="submitNewItin(selectedEvent.select)" novalidate>
+  <h3 class="center-text">{{event.longDate}}</h3>
+  <h4 class="center-text">{{event.cityState}}</h4>
+  <form name="myForm" ng-submit="submitNewItin(event)" novalidate>
   <div class="list">  
-    <label ng-class="{'valError': submitted && myForm.date.$error.required}" class = "item item-input-itin item-select item-select-itin">
-      <div class = "input-label-itin">
-        Choose Event:
-      </div>
-      <select name="date" ng-model="selectedEvent.select" ng-options='(event.longDate + " - " + event.cityState) for event in events | orderBy: orderByDate' required>
-      </select>
-    </label>
     <div class="item-time">
     <div class="row">
       <div class="col col-50">

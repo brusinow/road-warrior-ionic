@@ -470,8 +470,7 @@ angular.module('roadWarrior.services', [])
   var itinRef = firebase.database().ref('itins');
 
   return {
-    createItinItem: function($scope){
-      console.log("What is selected date at beginning of service? ",$scope.selectedEvent.select);
+    createItinItem: function($scope, event){
       if ($scope.nextDay){
         $scope.itin.nextDay = true;
         if ($scope.itin.startTimeUnix){
@@ -484,7 +483,7 @@ angular.module('roadWarrior.services', [])
         $scope.itin.nextDay = false;
       }
       $scope.itin.groupId = $scope.thisGroup.groupId;
-      $scope.itin.eventId = $scope.selectedEvent.select.eventId;
+      $scope.itin.eventId = event.eventId;
       console.log("itin object is: ",$scope.itin);
       var newItinEntry = {};
       var newItinRef = itinRef.push();

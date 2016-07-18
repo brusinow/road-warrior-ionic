@@ -179,6 +179,12 @@ angular.module('roadWarrior.controllers', [])
     }
 
 
+    $scope.newItin = function(event){
+      sendDataService.set(event);
+      $state.go("tab.today-newItin");
+    }
+
+
 
     //********** for itin item accordions ***************
 

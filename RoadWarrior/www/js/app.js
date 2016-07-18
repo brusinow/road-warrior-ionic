@@ -158,6 +158,19 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
       "currentAuth": authRequire
     }
     })
+     .state('tab.today-newItin', {
+      url: '/today/newDayItin',
+      cache: false,
+      views: {
+        'tab-today': {
+          templateUrl: 'templates/newDayItin.html',
+          controller: 'NewDayItinCtrl'
+        }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
+    })
 
   .state('tab.list', {
       url: '/list',

@@ -128,11 +128,10 @@ angular.module('roadWarrior.controllers')
     };
 
 
-  $scope.submitNewItin = function() {
+  $scope.submitNewItin = function(event) {
   
     $scope.submitted = true;
-     itineraryService.createItinItem($scope);
-     console.log("What is selected date after service? ",$scope.selectedEvent.select);
+     itineraryService.createItinItem($scope, event);
      $state.go("tab.account");
   };
 
@@ -663,6 +662,100 @@ angular.module('roadWarrior.controllers')
   // };
 
 }])
+
+
+.controller('NewDayItinCtrl', ['$scope', '$http','$firebaseArray','$firebaseObject','$ionicHistory', 'EditItin', 'sendDataService', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $firebaseObject, $ionicHistory, EditItin, sendDataService, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+    $scope.event = sendDataService.get();
+
+
+    $scope.submitted = false;
+    console.log("submitted is ",$scope.submitted);
+
+
+    $scope.itin = {
+      nextDay: false
+    }
+
+     ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){})
+  
+ 
+    // $scope.toggleSwitch = function(startTimeUnix){
+    //   if (startTimeUnix >= 86400){
+    //     return true;
+    //   } else {
+    //     return false
+    //   }
+    // }
+
+    $scope.nextDayToggle = function() {
+          console.log('testToggle changed to ' + $scope.itin.nextDay);
+    };
+
+
+
+    $scope.submitNewItin = function(event) {
+    $scope.submitted = true;
+     itineraryService.createItinItem($scope, event);
+     $ionicHistory.goBack();
+    };
+
+
+
+    var ipObj2 = {
+      callback: function (val) {      //Mandatory
+        if (typeof (val) === 'undefined') {
+          console.log('Time not selected');
+        } else {
+          $scope.itin.startTimeUnix = val;
+          console.log("startTime Unix: ",$scope.itin.startTimeUnix);
+          $scope.itin.startTime = helperService.timeFormat($scope, val);
+          console.log("converted time? ",$scope.itin.startTime);
+
+        }
+      },
+      inputTime: 50400,   //Optional
+      format: 12,         //Optional
+      step: 15,           //Optional
+      setLabel: 'Set'    //Optional
+    };
+
+    var ipObj3 = {
+      callback: function (val) {      //Mandatory
+        if (typeof (val) === 'undefined') {
+          console.log('Time not selected');
+        } else {
+          $scope.itin.endTimeUnix = val;
+          console.log("val is: ",$scope.itin.endTimeUnix);
+          $scope.itin.endTime = helperService.timeFormat($scope, val);
+          console.log("converted time? ",$scope.itin.endTime);
+          var selectedTime = new Date(val * 1000);
+          console.log("selected time is: ",selectedTime);
+          console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), 'H :', selectedTime.getUTCMinutes(), 'M');
+        }
+    },
+    inputTime: 50400,   //Optional
+    format: 12,         //Optional
+    step: 15,           //Optional
+    setLabel: 'Set'    //Optional
+  };
+
+    $scope.openStartTimePicker = function(){
+      ionicTimePicker.openTimePicker(ipObj2);
+    };
+
+    $scope.openEndTimePicker = function(){
+      ionicTimePicker.openTimePicker(ipObj3);
+    };
+
+
+  // $scope.submitNewItin = function() {
+  //   console.log($scope.selectedEvent.select.eventId);
+  //    itineraryService.createItinItem($scope);
+  //    $state.go("tab.account");
+  // };
+
+}])
+
 
 .controller('PendingUserCtrl', ['$scope', '$http','$firebaseArray','$firebaseObject','currentAuth','Profile','GetSetActiveGroup','ActiveGroup', '$state', function($scope, $http,$firebaseArray,$firebaseObject,currentAuth,Profile,GetSetActiveGroup,ActiveGroup, $state){
   

@@ -19,6 +19,8 @@ $royal:                           #886aea !default;
 
 $stable:                          #f8f8f8 !default;
 $orangeTint:                      #fffcf7 !default;
+$orangeTintMed:                   #fff2de !default;
+$orangeTintDark:                  #ffe9c4 !default;
 $dark:                            #c42644 !default;
 $grey:                            #484041 !default;
 $assertive:                       #ef4e3a  !default;
@@ -527,11 +529,17 @@ textarea::-webkit-input-placeholder {
 }
 
 .edit-button {
-  font-size: 17px !important;
-  border-radius: 1px !important;
+  font-size: 14px !important;
+/*  border-radius: 1px !important;*/
   background-color: $tertiary !important;
   color: $stable !important;
   border-color: $tertiary !important;
+}
+
+.custom-tab {
+  padding: 2px 4px 1px !important; 
+  margin-left: 4px !important;
+  border-radius: 4px 4px 0 0 !important;
 }
 
 .input-label-itin {
@@ -607,7 +615,7 @@ textarea::-webkit-input-placeholder {
 
 
 .list .item.item-accordion {
-  background-color: $stable;
+  background-color: $orangeTintMed;
   font-size: 13px;
   line-height: 14px;
   height: 50px;
@@ -631,16 +639,23 @@ textarea::-webkit-input-placeholder {
     padding-bottom: 7px !important;
     padding-left: 15px;
     min-height: 20px;
-    background-color: #e9e9e9 !important;
+    background-color: $orangeTintDark !important;
   
     color: #222;
     font-weight: 500 !important;
-    border: 1px solid #ddd;
+    border: 1px solid $orangeTintDark;
     /*border-radius: 4px 4px 0 0;*/
 }
 
+
 .event-list-item {
   padding: 8px 2px !important;
+}
+
+.button.button-tertiary-light {
+  border-color: transparent;
+  background-color: $tertiary;
+  color: #fff;
 }
 
 .button.button-tertiary {
