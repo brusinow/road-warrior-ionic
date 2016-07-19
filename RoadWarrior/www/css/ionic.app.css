@@ -313,7 +313,7 @@ textarea::-webkit-input-placeholder {
   color: #777777;
   position: absolute;
   right: 10px;
-  top: 62px; }
+  top: 58px; }
 
 .weather-forecast-list {
   color: #777777;
@@ -417,7 +417,6 @@ textarea::-webkit-input-placeholder {
 
 .custom-tab {
   padding: 2px 4px 1px !important;
-  margin-left: 4px !important;
   border-radius: 4px 4px 0 0 !important; }
 
 .input-label-itin {
@@ -512,9 +511,6 @@ textarea::-webkit-input-placeholder {
   border: 1px solid #ffe9c4;
   /*border-radius: 4px 4px 0 0;*/ }
 
-/*.item {
-  border-color: #ffdfab !important;
-}*/
 .event-list-item {
   padding: 8px 2px !important; }
 
@@ -572,7 +568,7 @@ textarea::-webkit-input-placeholder {
   padding: 0 48px 0 8px !important; }
 
 .icon-list {
-  color: #64b6b0; }
+  color: #428c86; }
 
 .button-secondary {
   background-color: #c42644 !important;
