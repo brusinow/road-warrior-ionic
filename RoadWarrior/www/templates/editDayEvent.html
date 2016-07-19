@@ -1,0 +1,31 @@
+<ion-view view-title="Edit Event">
+   <ion-scroll direction="y" class="has-header padding">
+        <div class="list">        
+          <div class="list"> 
+            <label class="item item-input">
+             <span class="input-label">Date: </span>
+            <input ng-model="event.longDate" style="padding-top: 0px;" type="text" ng-readonly="true" ng-click="openDatePicker()">
+          </label>     
+          <label class="item item-input">
+            <input ng-model="event.venue" type="text" placeholder="Venue/Event Name">
+          </label>
+          <label class="item item-input">
+           
+            <input ng-model="event.cityState" type="text" placeholder="City">
+          </label>
+           <button type="button" class="col col-50 col-offset-25 button button-small button-block button-outline button-dark" ng-click="openPopover($event, selection.mySelect)">Get Address Suggestion</button>
+          <label  class="item item-input">
+            <input ng-model="event.address" type="text" placeholder="Complete Address">
+          </label>
+
+          
+         
+          <label class="item item-input">
+            <textarea ng-model="event.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
+          </label> 
+          
+         <button class="col col-50 col-offset-25 button button-small button-block button-dark" ng-click ="updateEvents()">Submit</button>
+        </div>    
+       
+      </ion-scroll>
+</ion-view>

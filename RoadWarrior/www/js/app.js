@@ -83,16 +83,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
       "currentAuth": authWait
     }
   })
-
-  //  .state('logoLoad', {
-  //   cache: false,
-  //   url: '/logoLoad',
-  //   templateUrl: 'templates/logoLoad.html',
-  //   resolve: {
-  //     "currentAuth": authWait
-  //   }
-  // })
-
   .state('groups', {
     cache: false,
     url: '/groups',
@@ -152,6 +142,19 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
         'tab-today': {
           templateUrl: 'templates/editItin.html',
           controller: 'EditItinCtrl'
+        }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
+    })
+    .state('tab.today-editDayEvent', {
+      url: '/today/editDayEvent',
+      cache: false,
+      views: {
+        'tab-today': {
+          templateUrl: 'templates/editDayEvent.html',
+          controller: 'EditDayEventCtrl'
         }
       },
       resolve: {

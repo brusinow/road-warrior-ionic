@@ -286,7 +286,7 @@ angular.module('roadWarrior.services', [])
 })
 
 
-.factory('eventsService', ['ActiveGroup','GetSetActiveGroup', function(ActiveGroup, GetSetActiveGroup) {
+.factory('eventsService', ['ActiveGroup','GetSetActiveGroup','$firebaseObject', function(ActiveGroup, GetSetActiveGroup, $firebaseObject) {
     // var eventsRef = new Firebase('https://roadwarrior.firebaseio.com/events');
     var eventsRef = firebase.database().ref('events');
 
@@ -461,7 +461,69 @@ angular.module('roadWarrior.services', [])
                 }
             }   
           })
-        }   
+        },
+        getOneEvent: function(eventId) {
+          var thisEventRef = firebase.database().ref('events/'+eventId)
+          return $firebaseObject(thisEventRef);
+        },
+        editOneEvent: function($scope){        
+          if ($scope.event.address){
+          console.log("GEOCODING!!!!!!!!!!!");
+            this.geocoder = new google.maps.Geocoder();
+              this.geocoder.geocode({ 'address': $scope.event.address }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {               
+                  $scope.event.lat = results[0].geometry.location.lat();
+                  $scope.event.lng = results[0].geometry.location.lng();
+                  $scope.event.address = results[0].formatted_address;
+                  var latlng = {lat: $scope.event.lat, lng: $scope.event.lng};
+                    this.geocoder = new google.maps.Geocoder();
+                    this.geocoder.geocode({'location': latlng}, function(results, status) {
+                      if (status === google.maps.GeocoderStatus.OK) {
+                        for (var ac = 0; ac < results[0].address_components.length; ac++) {
+                        var component = results[0].address_components[ac];
+                          switch(component.types[0]) {
+                            case 'locality':
+                              $scope.event.city = component.long_name;
+                            break;
+                            case 'administrative_area_level_1':
+                              $scope.event.state = component.short_name;
+                            break;
+                          }
+                        };
+                        $scope.event.cityState = $scope.event.city+", "+$scope.event.state;
+                        console.log("event to be submitted: ",$scope.event);
+                        $scope.event.$save().then(function(ref) {
+                        });
+                      }
+                    })
+                } 
+              });
+      
+
+
+
+            } else {
+                  console.log("GEOCODING!!!!!!!!!!!");
+                if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+                    this.geocoder.geocode({ 'address': $scope.event.cityState }, function (results, status) {
+                      if (status == google.maps.GeocoderStatus.OK) {
+                        $scope.event.lat = results[0].geometry.location.lat();
+                        $scope.event.lng = results[0].geometry.location.lng();               
+                        $scope.event.$save().then(function(ref) {
+                        });
+                                             
+
+                      } else {
+                          alert("Sorry, this search produced no results.");
+                      }
+                }); 
+
+
+              
+            }   
+        
+
+          }   
       }
     }
 ])

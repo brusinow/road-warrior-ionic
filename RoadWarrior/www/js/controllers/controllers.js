@@ -31,6 +31,12 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
     }
 
 
+    $scope.editEvent = function(event){
+      sendDataService.set(event);
+      $state.go("tab.today-editDayEvent")
+    }
+
+
     $scope.newItin = function(event){
       sendDataService.set(event);
       $state.go("tab.today-newItin");
