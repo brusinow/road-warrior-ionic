@@ -14,7 +14,18 @@ angular.module('roadWarrior.controllers')
     console.log("nextDay is ",data.itin.nextDay);
    
   
- 
+    $scope.deleteItin = function(thisItin){
+      var itinRef = firebase.database().ref('itins/'+thisItin.$id);
+      itinRef.remove()
+      .then(function() {
+      console.log("Remove succeeded.");
+      $ionicHistory.goBack();
+      })
+      .catch(function(error) {
+      console.log("Remove failed: " + error.message)
+      });
+
+    }
     // $scope.toggleSwitch = function(startTimeUnix){
     //   if (startTimeUnix >= 86400){
     //     return true;
@@ -131,9 +142,10 @@ angular.module('roadWarrior.controllers')
 
 
 .controller('NewDayItinCtrl', ['$scope', '$http','$firebaseArray','$firebaseObject','$ionicHistory', 'EditItin', 'sendDataService', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $firebaseObject, $ionicHistory, EditItin, sendDataService, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+    
+
+
     $scope.event = sendDataService.get();
-
-
     $scope.submitted = false;
     console.log("submitted is ",$scope.submitted);
 
@@ -152,6 +164,12 @@ angular.module('roadWarrior.controllers')
     //     return false
     //   }
     // }
+   
+
+    
+    
+
+
 
     $scope.nextDayToggle = function() {
           console.log('testToggle changed to ' + $scope.itin.nextDay);
