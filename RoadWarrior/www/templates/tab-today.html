@@ -28,6 +28,7 @@
                 <button ng-if="thisGroup.level === 'admin'" style="margin-bottom: 0px; margin-left: 5px;" ng-click="editEvent(event)" class="button button-small button-tertiary-light"><i class="ion ion-edit"></i> Edit Event</button>
                 </div>
                 </div>
+                 <div ng-if="thisGroup.level !== 'admin'" style="padding-top: 6px;"></div>
                   <div class="day-header row">
                   <div class="col col-67">
 
@@ -42,10 +43,10 @@
                     <h4 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h4>
                   </div>
                 </div>
-                <div ng-if="thisGroup.level !== 'admin'" style="padding-top: 14px;"></div>
+                <div ng-if="thisGroup.level !== 'admin'" style="padding-top: 18px;"></div>
                 <div ng-hide="itins.length === 0">
                 <button ng-if="thisGroup.level === 'admin'" ng-click="newItin(event)" class="col col-50 col-offset-25 button button-small button-tertiary-light custom-tab"><i class="ion ion-plus"></i> Add Item</button>
-                <ion-scroll direction="y" style="height: 337px;">
+                <ion-scroll direction="y" style="height: 329px;">
                 <ion-list>
                
                 <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
@@ -68,7 +69,7 @@
             </ion-scroll>
             </div>
              <!-- When there are is an event but no itinerary items -->
-             <div class="no-itins center-text" ng-show="itins.length === 0">
+             <div class="no-itins center-text" ng-show="itins.length === 0 && loaded">
               <div class="cat-time"></div>
               <h3 class="no-margin">Your itinerary is empty.</h3>
               <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2>

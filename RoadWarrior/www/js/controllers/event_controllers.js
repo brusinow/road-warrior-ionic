@@ -202,11 +202,10 @@ angular.module('roadWarrior.controllers')
    var ipObj1 = {
       callback: function (val) {  //Mandatory
         console.log('Return value from the datepicker popup is : ',val);
-        $scope.selection.mySelect.unixDate = val;
-        $scope.selection.mySelect.dayOfWeek = moment(val).format('dddd');
-        $scope.selection.mySelect.date = moment(val).format('MM-DD-YYYY');
-        $scope.selection.mySelect.longDate = moment(val).format('MMMM Do, YYYY');
-        console.log("day is: ",$scope.selection.mySelect.date);
+        $scope.event.unixDate = val;
+        $scope.event.dayOfWeek = moment(val).format('dddd');
+        $scope.event.date = moment(val).format('MM-DD-YYYY');
+        $scope.event.longDate = moment(val).format('MMMM Do, YYYY');
       },
       disabledDates: [            //Optional
         new Date(2016, 2, 16),

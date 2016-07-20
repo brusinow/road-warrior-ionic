@@ -1,9 +1,11 @@
 <ion-view view-title="Edit Event">
    <ion-scroll direction="y" class="has-header padding">
-        <div class="list">        
+   <h3 class="text-center small-margin header-font-heavy">{{event.longDate}}</h3>
+  <h4 class="text-center small-margin header-font">{{event.cityState}}</h4>
+        <div style="margin-top: 15px;"class="list">        
           <div class="list"> 
-            <label class="item item-input">
-             <span class="input-label">Date: </span>
+            <label class="item item-input date-input">
+             <span class="input-label date-input-label">Date: </span>
             <input ng-model="event.longDate" style="padding-top: 0px;" type="text" ng-readonly="true" ng-click="openDatePicker()">
           </label>     
           <label class="item item-input">
@@ -13,7 +15,7 @@
            
             <input ng-model="event.cityState" type="text" placeholder="City">
           </label>
-           <button type="button" class="button button-small button-block button-outline button-dark" ng-click="openPopover($event, event)">Get Address Suggestion</button>
+           <button type="button" class="button button-block button-small button-clear button-dark" ng-click="openPopover($event, event)">Get Address Suggestion</button>
           <label  class="item item-input">
             <input ng-model="event.address" type="text" placeholder="Complete Address">
           </label>
@@ -24,8 +26,8 @@
             <textarea ng-model="event.details" name="info" rows="5" id="venue-info" placeholder="Venue Information"></textarea>
           </label> 
           
-         <button class="button button-block button-tertiary-light" ng-click ="updateEvents()">Submit</button>
-          <button class="button button-block button-dark" ng-click ="showConfirm()">Delete Item</button>  
+         <button class="button button-block button-tertiary-light" ng-click ="updateEvents()">Update</button>
+          <button class="button button-block button-dark" ng-click ="showConfirm()"><i class="ion ion-close-circled"></i> Delete Event</button>  
         </div>    
         
       </ion-scroll>

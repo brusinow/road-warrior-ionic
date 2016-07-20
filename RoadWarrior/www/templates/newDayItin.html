@@ -1,8 +1,9 @@
 <ion-view view-title="New Itin">
   <ion-content class="padding" scroll="false">
-  <h3 class="center-text">{{event.longDate}}</h3>
-  <h4 class="center-text">{{event.cityState}}</h4>
-  <form name="myForm" ng-submit="submitNewItin(event)" novalidate>
+  <h3 class="center-text small-margin header-font-heavy">{{event.longDate}}</h3>
+  <h4 class="center-text small-margin header-font">{{event.cityState}}</h4>
+
+  <form class="form-spacing" name="myForm" ng-submit="submitNewItin(event)" novalidate>
   <div class="list">  
     <div class="item-time">
     <div class="row">

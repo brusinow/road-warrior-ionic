@@ -89,6 +89,11 @@ $royal:                           #886aea !default;
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important; }
 
+/*textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], 
+input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], 
+input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+  font-size: 16px !important;
+}*/
 .bar.bar-dark {
   border-color: #c42644 !important;
   background-image: linear-gradient(0deg, #c42644, #c42644 50%, transparent 50%) !important; }
@@ -195,6 +200,12 @@ ion-view.pane {
 .no-margin {
   margin: 0px; }
 
+.small-margin {
+  margin: 4px !important; }
+
+.form-spacing {
+  margin-top: 25px !important; }
+
 .center-text {
   text-align: center; }
 
@@ -203,9 +214,6 @@ ion-view.pane {
 
 .text-right {
   text-align: right; }
-
-.med-red {
-  color: #CC4141; }
 
 .platform-ios .popover-arrow {
   display: none; }
@@ -237,9 +245,15 @@ ion-view.pane {
   /* border-bottom-color: $orangeTint !important;
   border-top-color: $orangeTint !important;*/ }
 
+.date-input-label {
+  max-width: 24% !important; }
+
+.date-input input {
+  max-width: 74% !important; }
+
 .input-label {
   display: table;
-  padding: 7px 10px 7px 0px;
+  padding: 7px 3px 7px 0px !important;
   max-width: 200px;
   width: 35%;
   color: #444 !important;
@@ -247,7 +261,13 @@ ion-view.pane {
   font-weight: bold !important; }
 
 .item-input-time {
-  padding: 6px 0 5px 8px !important; }
+  padding: 6px 5px 5px 4px !important;
+  overflow: hidden !important; }
+
+.item-input-time input {
+  padding: 3px 3px 5px 3px !important;
+  background-color: #f8f8f8 !important;
+  max-width: 100px !important; }
 
 /*.item {
   background-color: $lightAccent !important;
@@ -415,6 +435,7 @@ textarea::-webkit-input-placeholder {
 
 .edit-button {
   font-size: 14px !important;
+  max-height: 16px !important;
   /*  border-radius: 1px !important;*/
   background-color: #64b6b0 !important;
   color: #f8f8f8 !important;
@@ -816,7 +837,7 @@ textarea::-webkit-input-placeholder {
 .messages.other span {
   color: black;
   padding-right: 16px;
-  background-color: #E4BA6B;
+  background-color: #d6d6d6;
   -webkit-mask-box-image: url("data:image/svg+xml;charset=utf-8,<svg height='35' viewBox='0 0 96 70' width='48' xmlns='http://www.w3.org/2000/svg'><path d='m84 35c1 7-5 37-42 35-37 2-43-28-42-35-1-7 5-37 42-35 37-2 43 28 42 35z'/><path d='m96 70c-6-2-12-10-12-19v-16l-14 27s8 8 26 8z'/></svg>") 50% 56% 46% 42%; }
 
 .item-input-wrapper {

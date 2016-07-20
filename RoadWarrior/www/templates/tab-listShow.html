@@ -16,7 +16,8 @@
                 <button ng-if="thisGroup.level === 'admin'" style="margin-bottom: 0px; margin-left: 5px;" ng-click="editEvent(event)" class="button button-small button-tertiary-light"><i class="ion ion-edit"></i> Edit Event</button>
                 </div>
                 </div>
-        <div class="row">
+        <div ng-if="thisGroup.level !== 'admin'" style="padding-top: 6px;"></div>
+        <div class="row day-header">
           <div  class="col col-67">
             <h4 class="no-margin header-font">{{event.weekDay}}</h4>
             <h4 class="no-margin header-font">{{event.longDate}}</h4>
@@ -28,9 +29,10 @@
             <h4 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.high}}<span>°</span> / <i class="wi wi-direction-down"></i> {{weatherData.low}}<span>°</span></h4>
           </div>
         </div>
-        <div ng-if="itins.length !== 0" style="padding-top:14px;" >
+        <div ng-if="thisGroup.level !== 'admin'" style="padding-top: 18px;"></div>
+        <div ng-if="itins.length !== 0">
             <button ng-if="thisGroup.level === 'admin'" ng-click="newItin(event)" class="col col-50 col-offset-25 button button-small button-tertiary-light custom-tab"><i class="ion ion-plus"></i> Add Item</button>
-          <ion-scroll direction="y" style="height: 379px;">
+          <ion-scroll direction="y" style="height: 329px;">
             <ion-list>
               <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
                 <ion-item class="item-itin no-padding" ng-class="{active: isItinShown(itin)}">
