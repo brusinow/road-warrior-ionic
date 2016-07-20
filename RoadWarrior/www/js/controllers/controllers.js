@@ -153,8 +153,8 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
       $scope.weatherCall = function(lat, lng){
         Yahoo.getYahooData(lat,lng).then(function(data){
           if (data){
-            $scope.weatherLoaded = true;
             $scope.weatherData = data;
+             $scope.weatherLoaded = true;
           }
         }).catch(function(data){
             console.log("You have no weather data. ",data);

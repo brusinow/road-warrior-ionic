@@ -28,7 +28,7 @@
                 <button ng-if="thisGroup.level === 'admin'" style="margin-bottom: 0px; margin-left: 5px;" ng-click="editEvent(event)" class="button button-small button-tertiary-light"><i class="ion ion-edit"></i> Edit Event</button>
                 </div>
                 </div>
-                  <div class="row">
+                  <div class="day-header row">
                   <div class="col col-67">
 
                   <h4 class="no-margin header-font">{{day_of_week}}</h4>
@@ -36,13 +36,14 @@
                   <h4 ng-if="event" class="no-margin header-font-heavy">{{event.venue}}</h4>
                   <h4 ng-if="event" class="no-margin header-font">{{event.cityState}}</h4>
                   </div>
-                  <div ng-show="weatherData.condition.temp" class="weather-box col col-33">
+                  <div ng-show="weatherData.condition.temp && weatherData.condition.code && weatherLoaded && loaded" class="weather-box col col-33">
                     <span class="weather-image"><i class="wi wi-yahoo-{{weatherData.condition.code}}"></i></span>
                     <h3 class="weather-main-temp center-text">{{weatherData.condition.temp}}<span ng-show="weatherData">°</span></h3>
                     <h4 class="weather-forecast center-text"><i class="wi wi-direction-up"></i> {{weatherData.forecast[0].high}}<span ng-show="weatherData">°</span> / <i class="wi wi-direction-down"></i> {{weatherData.forecast[0].low}}<span ng-show="weatherData">°</span></h4>
                   </div>
                 </div>
-                <div ng-hide="itins.length === 0" style="padding-top:14px;" >
+                <div ng-if="thisGroup.level !== 'admin'" style="padding-top: 14px;"></div>
+                <div ng-hide="itins.length === 0">
                 <button ng-if="thisGroup.level === 'admin'" ng-click="newItin(event)" class="col col-50 col-offset-25 button button-small button-tertiary-light custom-tab"><i class="ion ion-plus"></i> Add Item</button>
                 <ion-scroll direction="y" style="height: 337px;">
                 <ion-list>
@@ -86,8 +87,8 @@
     </ion-slide-page>
     <ion-slide-page ng-show="event.lng && event.lat">
     <div ng-if="yelpLoading()">
-      <h5 class="center-text no-margin">Powered by <img class="yelp-logo" src="img/yelp.png"></h5>
-        <h4 class="center-text no-margin header-font-heavy">What's Nearby</h4>
+      <h4 class="center-text no-margin">Powered by <img class="yelp-logo" src="img/yelp.png"></h4>
+        <h3 class="center-text no-margin header-font-heavy">What's Nearby</h3>
         <div class="row" style="margin-bottom: 15px;">
           <div class="col col-50 col-offset-25">
             <div class="button-bar">

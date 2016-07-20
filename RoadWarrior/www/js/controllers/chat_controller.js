@@ -50,7 +50,12 @@ angular.module('roadWarrior.controllers')
 
     ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
     $scope.posts = chatMessages($scope.thisGroup.groupId);
-    $scope.showChat = true;
+    $scope.posts.$loaded()
+    .then(function(){
+    // $ionicScrollDelegate.scrollBottom();
+    $scope.showChat = true;  
+    })
+    
     $scope.posts.$watch(scrollBottom);
   });
 

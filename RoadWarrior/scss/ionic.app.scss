@@ -29,6 +29,7 @@ $secondaryDark:                  #981F25 !default;
 $secondaryAccent:                #d5677c !default;
 $tertiary:                        #64b6b0 !default;
 $tertiaryLight:                   #a2d3cf !default;
+$tertiaryExtraLight:              #abd7d3 !default;
 $tertiaryDark:                   #428c86 !default;
 $textHeader:                      #444 !default;
 $accentColor:                       #ff8532 !default;  
@@ -367,12 +368,15 @@ textarea::-webkit-input-placeholder {
  color:    #777 !important;
 }
 
+.day-header {
+  padding-bottom: 0 !important;
+}
 
 .weather-box {
-  height: 90px;
+  height: 100px;
   position: relative;
   right: 0px;
-  top: 3px;
+  top: 0px;
 }
 
 .wi {
@@ -432,7 +436,7 @@ textarea::-webkit-input-placeholder {
   }
 }*/
 .yelp-logo {
-  width: 35px !important;
+  width: 45px !important;
   vertical-align: bottom;
 }
 
@@ -517,7 +521,8 @@ textarea::-webkit-input-placeholder {
 .itin-time {
   text-align: right;
   font-weight: 300 !important;
-  font-size: 14px;
+  font-size: 15px;
+  padding-right: 0px !important;
 }
 
 .button-group {
@@ -635,8 +640,8 @@ textarea::-webkit-input-placeholder {
 }
 
 .item-divider {
-    padding-top: 7px !important;
-    padding-bottom: 7px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
     padding-left: 15px;
     min-height: 20px;
     background-color: $orangeTintDark !important;
@@ -658,8 +663,14 @@ textarea::-webkit-input-placeholder {
   color: #fff;
 }
 
-.button.button-tertiary-light:visited {
+.button.button-tertiary-light.activated {
+  background-color: $tertiaryLight !important;
+  border-color: transparent;
   color: #fff;
+}
+
+.button.button-tertiary-light:visited, .button.button-tertiary-light:hover {
+  color: #fff !important;
 }
 
 .button.button-tertiary {
@@ -681,6 +692,11 @@ textarea::-webkit-input-placeholder {
 
 .button.button-tertiary:hover {
   color: white !important;
+}
+
+.button.button-dark.activated {
+  background-color: $secondaryAccent !important;
+  border-color: $secondaryAccent !important;
 }
 
 

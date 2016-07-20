@@ -10,8 +10,18 @@ angular.module('roadWarrior.controllers')
     console.log("This group: ",$scope.thisGroup);
     var eventRef = firebase.database().ref('events');
     $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId));
+    $scope.events.$loaded()
+    .then(function(){
+      $scope.loaded = true; 
+    })  
+  }).catch(function(){
+    console.log("no active group");
     $scope.loaded = true;
   })
+
+   $scope.newEvent = function(){
+      $state.go("tab.list-newEvent");
+    }
               
 
   $scope.viewDay = function(event){
@@ -35,6 +45,13 @@ angular.module('roadWarrior.controllers')
       sendDataService.set(event);
       $state.go("tab.list-editDayEvent")
     }
+
+    $scope.newItin = function(event){
+      sendDataService.set(event);
+      $state.go("tab.list-newItin");
+    }
+
+
 
     $scope.editItin = function(itin, event){
       var eventWithItin = {

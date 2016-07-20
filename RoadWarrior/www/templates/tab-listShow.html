@@ -29,6 +29,7 @@
           </div>
         </div>
         <div ng-if="itins.length !== 0" style="padding-top:14px;" >
+            <button ng-if="thisGroup.level === 'admin'" ng-click="newItin(event)" class="col col-50 col-offset-25 button button-small button-tertiary-light custom-tab"><i class="ion ion-plus"></i> Add Item</button>
           <ion-scroll direction="y" style="height: 379px;">
             <ion-list>
               <div ng-repeat="itin in itins | orderBy: 'startTimeUnix' track by $id($index)">
@@ -50,6 +51,7 @@
               <div class="cat-time"></div>
               <h3 class="no-margin">Your itinerary is empty.</h3>
               <h2 class="no-margin header-font-heavy">ROADIE FRIDAY!</h2> 
+                 <button ng-if="thisGroup.level === 'admin'" ng-click="newItin(event)" class="col col-50 col-offset-25 button button-small button-tertiary-light"><i class="ion ion-plus"></i> Add Item</button> 
            </div>
       </div>            
     </ion-slide-page>

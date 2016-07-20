@@ -25,7 +25,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
 
 
 
-.run(['$ionicPlatform', '$rootScope', '$state','$cordovaStatusbar', function($ionicPlatform, $rootScope, $state, $cordovaStatusbar) {
+.run(['$ionicPlatform','$rootScope','$state','$cordovaStatusbar', function($ionicPlatform, $rootScope, $state, $cordovaStatusbar) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -199,6 +199,32 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
       "currentAuth": authRequire
     }
     })
+    .state('tab.list-newItin', {
+      url: '/list/newDayItin',
+      cache: false,
+      views: {
+        'tab-list': {
+          templateUrl: 'templates/newDayItin.html',
+          controller: 'NewDayItinCtrl'
+        }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
+    })
+    .state('tab.list-newEvent', {
+    url: '/list/newEvent',
+    cache: false,
+    views: {
+      'tab-list': {
+        templateUrl: 'templates/newEvent.html',
+        controller: 'NewEventCtrl'
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
     .state('tab.list-editItin', {
       url: '/list/editItin',
       cache: false,

@@ -1,7 +1,7 @@
 angular.module('roadWarrior.controllers')
 
 
-.controller('EditItinCtrl', ['$scope', '$http','$firebaseArray','$firebaseObject','$ionicHistory', 'EditItin', 'sendDataService', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $firebaseObject, $ionicHistory, EditItin, sendDataService, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('EditItinCtrl', ['$scope', '$http','$firebaseArray','$firebaseObject','$ionicHistory','$ionicPopup', 'EditItin', 'sendDataService', 'currentAuth','Profile','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $firebaseObject, $ionicHistory, $ionicPopup, EditItin, sendDataService, currentAuth, Profile, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
     
     var data = sendDataService.get();
     console.log("what is data? ",data);
@@ -77,7 +77,25 @@ angular.module('roadWarrior.controllers')
      
     }
 
-    
+
+
+
+     $scope.showConfirm = function(itin) {
+   var confirmPopup = $ionicPopup.confirm({
+     title: 'Are you sure you want to delete this item?',
+     template: 'This can not be undone.'
+   });
+
+   confirmPopup.then(function(res) {
+     if(res) {
+       console.log('You are sure');
+         $scope.deleteItin(itin);
+       $ionicHistory.goBack();
+     } else {
+       console.log('You are not sure');
+     }
+   });
+ }; 
 
 
 
@@ -166,13 +184,14 @@ angular.module('roadWarrior.controllers')
     // }
    
 
-    
-    
-
-
-
+    $scope.nextDay = false; 
     $scope.nextDayToggle = function() {
-          console.log('testToggle changed to ' + $scope.itin.nextDay);
+          if ($scope.nextDay == false) {
+              $scope.nextDay = true;
+          } else {
+              $scope.nextDay = false;
+            }
+          console.log('testToggle changed to ' + $scope.nextDay);
     };
 
 

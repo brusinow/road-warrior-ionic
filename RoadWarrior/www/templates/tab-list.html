@@ -8,6 +8,7 @@
 
     <div class="postLoad" ng-show="events.length > 0 && thisGroup.access === true && loaded">
       <ion-list class="event-list">
+       <button type="button" ng-click="newEvent()" class="button button-block button-tertiary-light"><i class="icon ion-plus"></i> Add an Event</button>
         <ion-item class="event-list-item" ng-repeat="event in events | tooOld | orderBy: 'unixDate'" ng-click="viewDay(event)">
           <div class="row">
             <div class="col col-50">
@@ -26,7 +27,7 @@
     <div class="postLoad" ng-if="thisGroup.access === false">
     <h3>Your attempt to join this group is still pending - Talk to your administrator.</h3>
     </div>
-       <div class="no-group-cat center-text postLoad" ng-if="!thisGroup.level">
+       <div class="no-group-cat center-text postLoad" ng-if="!thisGroup.level && loaded">
                 <div class="cat-time-no-event"></div>
                   <h3 class="no-margin header-font-heavy">You have no active group.</h3> 
                 </div>

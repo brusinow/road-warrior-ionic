@@ -1,6 +1,6 @@
 angular.module('roadWarrior.controllers')
 
-.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','Popover','currentAuth', 'Profile','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, Popover, currentAuth, Profile, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('NewEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory','$ionicLoading','Popover','currentAuth', 'Profile','FirebaseEnv','ActiveGroup', 'eventsService','itineraryService','moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, $ionicLoading, Popover, currentAuth, Profile, FirebaseEnv, ActiveGroup, eventsService, itineraryService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
   var ENV = FirebaseEnv();
 
   $scope.event = {};
@@ -23,7 +23,7 @@ angular.module('roadWarrior.controllers')
     $scope.submitted = true;
     console.log("submitted after click is ",$scope.submitted);
     eventsService.createEvent($scope);
-    $state.go("tab.account");
+    $ionicHistory.goBack(); 
   };
 
 
@@ -105,7 +105,7 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('EditDayEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','Popover','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','sendDataService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, Popover, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, sendDataService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('EditDayEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','Popover','FirebaseEnv','ActiveGroup', 'eventsService','itineraryService','sendDataService', 'moment', '$state','$ionicPopover','ionicDatePicker','$ionicPopup', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, Popover, FirebaseEnv, ActiveGroup, eventsService, itineraryService, sendDataService, moment, $state, $ionicPopover, ionicDatePicker, $ionicPopup){
    var ENV = FirebaseEnv();
   var data = sendDataService.get();
   console.log("what is data? ",data);
@@ -125,6 +125,31 @@ angular.module('roadWarrior.controllers')
     eventsService.editOneEvent($scope);
      $ionicHistory.goBack();   
   }
+
+
+  $scope.showConfirm = function() {
+   var confirmPopup = $ionicPopup.confirm({
+     title: 'Are you sure you want to delete this event?',
+     template: 'This can not be undone.'
+   });
+
+   confirmPopup.then(function(res) {
+     if(res) {
+       console.log('You are sure');
+       $scope.event.$remove().then(function(ref) {
+        $ionicHistory.nextViewOptions({
+          disableBack: true
+        });
+        $state.go("tab.list");
+  // data has been deleted locally and in the database
+        }, function(error) {
+      console.log("Error:", error);
+        });
+     } else {
+       console.log('You are not sure');
+     }
+   });
+ };
 
   
 
@@ -211,7 +236,7 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('EditEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','Popover','FirebaseEnv','GetSetActiveGroup','ActiveGroup', 'eventsService','itineraryService','helperService', 'moment', '$state','$ionicModal','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, Popover, FirebaseEnv, GetSetActiveGroup, ActiveGroup, eventsService, itineraryService, helperService, moment, $state, $ionicModal, $ionicPopover, ionicDatePicker, ionicTimePicker){
+.controller('EditEventCtrl', ['$scope', '$http','$firebaseArray','$ionicHistory', 'currentAuth','Profile','Popover','FirebaseEnv','ActiveGroup', 'eventsService','itineraryService','moment', '$state','$ionicPopover','ionicDatePicker','ionicTimePicker', function($scope, $http, $firebaseArray, $ionicHistory, currentAuth, Profile, Popover, FirebaseEnv, ActiveGroup, eventsService, itineraryService, moment, $state, $ionicPopover, ionicDatePicker, ionicTimePicker){
    var ENV = FirebaseEnv();
   var eventsRef = firebase.database().ref('events');
   var userGroupsRef = firebase.database().ref("users/"+currentAuth.uid+"/groups");
