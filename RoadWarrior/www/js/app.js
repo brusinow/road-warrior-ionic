@@ -212,6 +212,19 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
       "currentAuth": authRequire
     }
     })
+    .state('tab.list-editDayEvent', {
+      url: '/list/editDayEvent',
+      cache: false,
+      views: {
+        'tab-list': {
+          templateUrl: 'templates/editDayEvent.html',
+          controller: 'EditDayEventCtrl'
+        }
+      },
+      resolve: {
+      "currentAuth": authRequire
+    }
+    })
 
    
 

@@ -31,6 +31,10 @@ angular.module('roadWarrior.controllers')
       console.log("this group loaded");
     });
 
+     $scope.editEvent = function(event){
+      sendDataService.set(event);
+      $state.go("tab.list-editDayEvent")
+    }
 
     $scope.editItin = function(itin, event){
       var eventWithItin = {

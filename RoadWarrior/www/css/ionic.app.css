@@ -520,6 +520,9 @@ textarea::-webkit-input-placeholder {
   background-color: #64b6b0;
   color: #fff; }
 
+.button.button-tertiary-light:visited {
+  color: #fff; }
+
 .button.button-tertiary {
   border-color: transparent;
   background-color: #428c86;

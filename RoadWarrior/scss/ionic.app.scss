@@ -658,6 +658,10 @@ textarea::-webkit-input-placeholder {
   color: #fff;
 }
 
+.button.button-tertiary-light:visited {
+  color: #fff;
+}
+
 .button.button-tertiary {
   border-color: transparent;
   background-color: $tertiaryDark;

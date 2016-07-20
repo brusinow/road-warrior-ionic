@@ -114,31 +114,7 @@ angular.module('roadWarrior.controllers')
   .then(function(){
     console.log("event is ",$scope.event);
   })
-  // var thisEventRef = firebase.database().ref('events/'+data.event.$id);
-  // var userGroupsRef = firebase.database().ref("users/"+currentAuth.uid+"/groups");
-  // $scope.selection = {};
-
-
-  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-      // $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId));
-      // $scope.events.$loaded()
-      // .then(function(){
-      //   console.log("what is events? ",$scope.events); 
-      })
-
-
-
-      // $scope.oldEvents = $firebaseArray(eventsRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId))
-      // $scope.oldEvents.$loaded()
-      // .then(function(){
-      //   console.log("what is oldEvents? ",$scope.oldEvents); 
-      // })
-     
-
-
-      
-  
-
+  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup");
 
 
   $scope.whatSelected = function(){
@@ -150,8 +126,7 @@ angular.module('roadWarrior.controllers')
      $ionicHistory.goBack();   
   }
 
-
-   
+  
 
    $ionicPopover.fromTemplateUrl('templates/popover.html', {
     scope: $scope
@@ -177,10 +152,10 @@ angular.module('roadWarrior.controllers')
 
   $scope.selectAddressVenue = function(result){
     console.log("result of click is: ",result);
-    $scope.selection.mySelect.address = result.formatted_address;
-    console.log("event address is: ",$scope.selection.mySelect.address);
-    $scope.selection.mySelect.venue = result.name;
-    console.log("venue is: ",$scope.selection.mySelect.venue);
+    $scope.event.address = result.formatted_address;
+    console.log("event address is: ",$scope.event.address);
+    $scope.event.venue = result.name;
+    console.log("venue is: ",$scope.event.venue);
     $scope.popover.hide();
     console.log("popover should be closed");
   }
@@ -307,10 +282,10 @@ angular.module('roadWarrior.controllers')
 
   $scope.selectAddressVenue = function(result){
     console.log("result of click is: ",result);
-    $scope.event.address = result.formatted_address;
-    console.log("event address is: ",$scope.event.address);
-    $scope.event.venue = result.name;
-    console.log("venue is: ",$scope.event.venue);
+    $scope.selection.mySelect.address = result.formatted_address;
+    console.log("event address is: ",$scope.selection.mySelect.address);
+    $scope.selection.mySelect.venue = result.name;
+    console.log("venue is: ",$scope.selection.mySelect.venue);
     $scope.popover.hide();
     console.log("popover should be closed");
   }
