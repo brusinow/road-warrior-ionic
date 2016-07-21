@@ -1,19 +1,26 @@
 <ion-view view-title="Chats">
   <ion-content>
     <ion-list>
-      <ion-item ng-click="toMain()" class="item-remove-animate item-avatar item-icon-right" type="item-text-wrap">
+      <ion-item ng-click="toMain()" class="item-remove-animate item-icon-right" type="item-text-wrap">
+        <h4 class="no-margin header-font-heavy text-left chat-name-header">Main</h4>
         <h2>{{main[0].user}}</h2>
-        <p>{{main[0].message}}</p>
+        <p ng-if="main[0].message">{{main[0].message}}</p>
+        <p ng-if="main[0].img">Attachment: 1 image</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
-       <ion-item ng-click="toShow()" class="item-remove-animate item-avatar item-icon-right" type="item-text-wrap">
+       <ion-item ng-click="toShow()" class="item-remove-animate item-icon-right" type="item-text-wrap">
+       <h4 class="no-margin header-font-heavy text-left chat-name-header">Show Related</h4>
         <h2>{{show[0].user}}</h2>
-        <p>{{show[0].message}}</p>
+         <p ng-if="show[0].message">{{show[0].message}}</p>
+        <p ng-if="show[0].img">Attachment: 1 image</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
-       <ion-item ng-click="toFun()" class="item-remove-animate item-avatar item-icon-right" type="item-text-wrap">
+       <ion-item ng-click="toFun()" class="item-remove-animate item-icon-right" type="item-text-wrap">
+       <h4 class="no-margin header-font-heavy text-left chat-name-header">Fun</h4>
+        <h2 ng-if="!fun[0]">No messages yet.</h2>
         <h2>{{fun[0].user}}</h2>
-        <p>{{fun[0].message}}</p>
+         <p ng-if="fun[0].message">{{fun[0].message}}</p>
+        <p ng-if="fun[0].img">Attachment: 1 image</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>

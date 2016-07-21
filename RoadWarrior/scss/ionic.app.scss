@@ -1135,7 +1135,17 @@ textarea::-webkit-input-placeholder {
     background-color: #fff;
     color: $grey; }
 
+.chat-name-header {
+  display: inline-block;
+  padding: 2px 4px; 
+  border: 1px solid $dark;
+  color: $dark !important;
+  border-radius: 2px;
+}
 
+/*.chat-list{
+  height: 94px !important;
+}*/
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;

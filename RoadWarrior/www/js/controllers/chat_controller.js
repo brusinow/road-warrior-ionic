@@ -32,11 +32,12 @@ angular.module('roadWarrior.controllers')
 
   $scope.postDate = {};
   $scope.showTime = false;
-  // $scope.showChat = false;
+  $scope.showChat = false;
 
   $scope.posts = posts;
   $scope.posts.$loaded().then(function(){
-   $ionicScrollDelegate.scrollBottom(); 
+   $ionicScrollDelegate.scrollBottom(true); 
+    $scope.showChat = true;
   })
   
   

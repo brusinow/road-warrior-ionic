@@ -280,6 +280,7 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
     })
     .state('tab.chats-main', {
       url: '/chats/main',
+      cache: true,
       views: {
         'tab-chats': {
           templateUrl: 'templates/tab-chatsTopic.html',

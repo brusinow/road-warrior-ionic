@@ -917,6 +917,13 @@ textarea::-webkit-input-placeholder {
   background-color: #fff;
   color: #484041; }
 
+.chat-name-header {
+  display: inline-block;
+  padding: 2px 4px;
+  border: 1px solid #c42644;
+  color: #c42644 !important;
+  border-radius: 2px; }
+
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
