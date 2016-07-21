@@ -2,19 +2,54 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('ChatsCtrl', function($scope, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, moment) {
-   
+
+.controller('ChatsCtrl', function($scope, thisGroup, main, show, fun, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
+  $scope.main = main;
+  $scope.show = show;
+  $scope.fun = fun;
+  console.log("what is main? ",main);
+   console.log("what is show? ",show);
+    console.log("what is fun? ",fun);
+  $scope.thisGroup = thisGroup;
+  console.log("what is test? ",$scope.thisGroup);
+
+  $scope.toMain = function(){
+    $state.go("tab.chats-main");
+  }
+  $scope.toShow = function(){
+    $state.go("tab.chats-show");
+  }
+  $scope.toFun = function(){
+    $state.go("tab.chats-fun");
+  }
+})
+
+
+
+.controller('ChatsTopicCtrl', function($scope, thisGroup, posts, profile, chatName, chatMessages, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state, moment) {
+ 
+  $scope.chatName = chatName;
+
   $scope.postDate = {};
   $scope.showTime = false;
-  $scope.showChat = false;
-  console.log($scope.showTime);
+  // $scope.showChat = false;
+
+  $scope.posts = posts;
+  $scope.posts.$loaded().then(function(){
+   $ionicScrollDelegate.scrollBottom(); 
+  })
+  
+  
+  $scope.posts.$watch(scrollBottom);
+  $scope.profile = profile;
+
 
   function scrollBottom() {
     $ionicScrollDelegate.$getByHandle('chat').scrollBottom();
   }
 
   function addPost(message, img) {
-    chatMessages($scope.thisGroup.groupId).$add({
+    $scope.posts.$add({
       message: message ? message : null,
       img: img ? img : null,
       timestamp: new Date().getTime(),
@@ -43,22 +78,10 @@ angular.module('roadWarrior.controllers')
     $ionicScrollDelegate.resize();
   };
 
-    Profile(currentAuth.uid).$bindTo($scope, "profile").then(function(){
-    $scope.myId = $scope.profile.$id;
-    })
-
-
-    ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-    $scope.posts = chatMessages($scope.thisGroup.groupId);
-    $scope.posts.$loaded()
-    .then(function(){
-    // $ionicScrollDelegate.scrollBottom();
-    $scope.showChat = true;  
-    })
     
-    $scope.posts.$watch(scrollBottom);
-  });
 
+
+   
 
   
 

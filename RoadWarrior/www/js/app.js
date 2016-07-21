@@ -251,9 +251,6 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
       "currentAuth": authRequire
     }
     })
-
-   
-
   .state('tab.chats', {
       url: '/chats',
       views: {
@@ -263,19 +260,97 @@ angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.con
         }
       },
       resolve: {
-      "currentAuth": authRequire
-    }
+        currentAuth: authRequire,
+        thisGroup: function(ActiveGroup, currentAuth){
+          return ActiveGroup(currentAuth.uid).$loaded();
+        },
+        main: function($firebaseArray, thisGroup){
+          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/main');
+          return $firebaseArray(chatRef.limitToLast(1)).$loaded();
+        },
+        show: function($firebaseArray, thisGroup){
+          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/showRelated');
+          return $firebaseArray(chatRef.limitToLast(1)).$loaded();
+        },
+        fun: function($firebaseArray, thisGroup){
+          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/fun');
+          return $firebaseArray(chatRef.limitToLast(1)).$loaded();
+        }
+      }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+    .state('tab.chats-main', {
+      url: '/chats/main',
       views: {
         'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+          templateUrl: 'templates/tab-chatsTopic.html',
+          controller: 'ChatsTopicCtrl'
         }
       },
       resolve: {
-      "currentAuth": authRequire
+        currentAuth: authRequire,
+        thisGroup: function(ActiveGroup, currentAuth){
+          return ActiveGroup(currentAuth.uid).$loaded();
+        },
+        posts: function($firebaseArray, thisGroup){     
+          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/main');
+          return $firebaseArray(chatRef.limitToLast(100)).$loaded();    
+        },
+        profile: function(Profile, currentAuth){
+          return Profile(currentAuth.uid).$loaded();
+        },
+        chatName: function(){
+          return "Main";
+        }
+    }
+    })
+    .state('tab.chats-show', {
+      url: '/chats/show',
+      views: {
+        'tab-chats': {
+          templateUrl: 'templates/tab-chatsTopic.html',
+          controller: 'ChatsTopicCtrl'
+        }
+      },
+      resolve: {
+        currentAuth: authRequire,
+        thisGroup: function(ActiveGroup, currentAuth){
+          return ActiveGroup(currentAuth.uid).$loaded();
+        },
+        posts: function($firebaseArray, thisGroup){     
+          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/showRelated');
+          return $firebaseArray(chatRef.limitToLast(100)).$loaded();    
+        },
+        profile: function(Profile, currentAuth){
+          return Profile(currentAuth.uid).$loaded();
+        },
+        chatName: function(){
+          return "Show Related";
+        }
+    }
+    })
+    .state('tab.chats-fun', {
+      url: '/chats/fun',
+      views: {
+        'tab-chats': {
+          templateUrl: 'templates/tab-chatsTopic.html',
+          controller: 'ChatsTopicCtrl'
+        }
+      },
+      resolve: {
+        currentAuth: authRequire,
+        thisGroup: function(ActiveGroup, currentAuth){
+          return ActiveGroup(currentAuth.uid).$loaded();
+        },
+        posts: function($firebaseArray, thisGroup){     
+          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/fun');
+          return $firebaseArray(chatRef.limitToLast(100)).$loaded();    
+        },
+        profile: function(Profile, currentAuth){
+          return Profile(currentAuth.uid).$loaded();
+        },
+        chatName: function(){
+          return "Fun";
+        }
     }
     })
 
