@@ -18,7 +18,8 @@ $royal:                           #886aea !default;
 
 
 $stable:                          #f8f8f8 !default;
-$orangeTint:                      #fffcf7 !default;
+$orangeTintLight:                 #fffcf7 !default;
+$orangeTint:                      #fff5e3 !default;
 $orangeTintMed:                   #fff2de !default;
 $orangeTintDark:                  #ffe9c4 !default;
 $dark:                            #c42644 !default;
@@ -257,11 +258,10 @@ background: $orangeTint;
 }
 
 .logo-large {
-  max-width: 500px;
+  display: block;
   width: 90%;
-  margin-left:5%;
-  margin-bottom: 15px;
-  margin-top:25%;
+  max-width: 500px;
+  margin: 25% auto 15px auto;
 }
 
 .no-margin {
@@ -321,7 +321,7 @@ background: $orangeTint;
 
 .item-itin {
   margin: -1px 3px !important;
-  background-color: white !important;
+  background-color: $orangeTintLight !important;
  /* border-bottom-color: $orangeTint !important;
   border-top-color: $orangeTint !important;*/
 }
@@ -452,19 +452,9 @@ textarea::-webkit-input-placeholder {
     top: 54px;
     
 }
-/*.button-yelp {
-  padding: 0 !important;
-  height: 30px !important;
-  width: 30px !important;
-  min-height: 25px !important;
-  min-width: 25px !important;
-  font-size:12px !important;
-  line-height: 12px !important;
-
-  i {
-    font-size: 100px;
-  }
-}*/
+.button-yelp {
+  color: $orangeTintLight !important;
+}
 .yelp-logo {
   width: 45px !important;
   vertical-align: bottom;
@@ -686,6 +676,11 @@ textarea::-webkit-input-placeholder {
 
 .event-list-item {
   padding: 8px 2px !important;
+  background-color: $orangeTintLight !important;
+}
+
+.account-list-item {
+  background-color: $orangeTintLight !important;
 }
 
 .button.button-tertiary-light {

@@ -182,20 +182,19 @@ div.spinner {
   height: 85px !important; }
 
 ion-view.pane {
-  background: #fffcf7; }
+  background: #fff5e3; }
 
 .chat-bg {
   background: #f8f8f8 !important; }
 
 .setup-bg {
-  background: #fffcf7 !important; }
+  background: #fff5e3 !important; }
 
 .logo-large {
-  max-width: 500px;
+  display: block;
   width: 90%;
-  margin-left: 5%;
-  margin-bottom: 15px;
-  margin-top: 25%; }
+  max-width: 500px;
+  margin: 25% auto 15px auto; }
 
 .no-margin {
   margin: 0px; }
@@ -241,7 +240,7 @@ ion-view.pane {
 
 .item-itin {
   margin: -1px 3px !important;
-  background-color: white !important;
+  background-color: #fffcf7 !important;
   /* border-bottom-color: $orangeTint !important;
   border-top-color: $orangeTint !important;*/ }
 
@@ -345,19 +344,9 @@ textarea::-webkit-input-placeholder {
   right: 0px;
   top: 54px; }
 
-/*.button-yelp {
-  padding: 0 !important;
-  height: 30px !important;
-  width: 30px !important;
-  min-height: 25px !important;
-  min-width: 25px !important;
-  font-size:12px !important;
-  line-height: 12px !important;
+.button-yelp {
+  color: #fffcf7 !important; }
 
-  i {
-    font-size: 100px;
-  }
-}*/
 .yelp-logo {
   width: 45px !important;
   vertical-align: bottom; }
@@ -538,7 +527,11 @@ textarea::-webkit-input-placeholder {
   /*border-radius: 4px 4px 0 0;*/ }
 
 .event-list-item {
-  padding: 8px 2px !important; }
+  padding: 8px 2px !important;
+  background-color: #fffcf7 !important; }
+
+.account-list-item {
+  background-color: #fffcf7 !important; }
 
 .button.button-tertiary-light {
   border-color: transparent;
