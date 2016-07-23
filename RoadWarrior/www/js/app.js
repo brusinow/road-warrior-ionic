@@ -7,7 +7,7 @@ var authRequire = ["Auth", function(Auth) { return Auth.$requireSignIn(); }]
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('roadWarrior', ['ionic', 'firebase','ngMessages','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter','ngCordova'])
+angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessages','roadWarrior.controllers','roadWarrior.services','ui.bootstrap','angularMoment','ionic-datepicker','ionic-timepicker','angular-toArrayFilter','ngCordova'])
 
 
 

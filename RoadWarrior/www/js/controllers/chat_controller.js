@@ -133,12 +133,10 @@ angular.module('roadWarrior.controllers')
 
 function takeARealPicture(cameraIndex){
     navigator.camera.getPicture(onSuccess, onFail, {
-      quality: 50,
+      quality: 75,
       sourceType: cameraIndex === 2 ? 2 : 1,
       cameraDirection: cameraIndex,
-      destinationType: Camera.DestinationType.FILE_URI,
-      targetWidth: 1920,
-      targetHeight: 1920,
+      destinationType: Camera.DestinationType.DATA_URL,
       saveToPhotoAlbum: false
     });
 
@@ -151,16 +149,46 @@ function takeARealPicture(cameraIndex){
       var storageRef = firebase.storage().ref(thisGroup.groupId);
       var photoId = (Math.random()*1e32).toString(36);
 
-    var getFileBlob = function(url, cb) {
-      console.log("get file blob");
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        xhr.responseType = "blob";
-        xhr.addEventListener('load', function() {
-            cb(xhr.response);
-        });
-        xhr.send();
-    };
+
+
+    function getFileBlob(base64Data, contentType, cb) {
+        contentType = contentType || '';
+        var sliceSize = 1024;
+        var byteCharacters = atob(base64Data);
+        var bytesLength = byteCharacters.length;
+        var slicesCount = Math.ceil(bytesLength / sliceSize);
+        var byteArrays = new Array(slicesCount);
+
+        for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+            var begin = sliceIndex * sliceSize;
+            var end = Math.min(begin + sliceSize, bytesLength);
+
+            var bytes = new Array(end - begin);
+            for (var offset = begin, i = 0 ; offset < end; ++i, ++offset) {
+                bytes[i] = byteCharacters[offset].charCodeAt(0);
+            }
+            byteArrays[sliceIndex] = new Uint8Array(bytes);
+        }
+        var blob = new Blob(byteArrays, { type: contentType });
+        cb(blob);
+    }
+
+
+
+
+
+
+
+    // var getFileBlob = function(url, cb) {
+    //   console.log("get file blob");
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open("GET", url);
+    //     xhr.responseType = "blob";
+    //     xhr.addEventListener('load', function() {
+    //         cb(xhr.response);
+    //     });
+    //     xhr.send();
+    // };
 
     // function decodeFromBase64(input) {
     //   input = input.replace(/\s/g, '');
@@ -176,7 +204,7 @@ function takeARealPicture(cameraIndex){
 
     var getFileObject = function(filePathOrUrl, cb) {
         console.log("get file object");
-        getFileBlob(filePathOrUrl, function(blob) {
+        getFileBlob(filePathOrUrl,'image/jpeg', function(blob) {
           console.log("getFileBlob callback")
             cb(blobToFile(blob, photoId+'.jpg'));
         });
@@ -186,7 +214,7 @@ function takeARealPicture(cameraIndex){
 
     getFileObject(imageData, function(fileObject) {
         console.log("made it to callback");
-        var uploadTask = storageRef.child(thisGroup.groupId+'/'+photoId+'.jpg').put(fileObject);
+        var uploadTask = storageRef.child(photoId+'.jpg').put(fileObject);
 
         uploadTask.on('state_changed', function(snapshot) {
             console.log(snapshot);
@@ -195,6 +223,7 @@ function takeARealPicture(cameraIndex){
         }, function() {
             var downloadURL = uploadTask.snapshot.downloadURL;
             console.log(downloadURL);
+            addPost(null, downloadURL);
             // handle image here
         });
     });
