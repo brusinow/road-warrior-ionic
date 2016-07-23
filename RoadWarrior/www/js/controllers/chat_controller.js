@@ -136,7 +136,7 @@ function takeARealPicture(cameraIndex){
       quality: 50,
       sourceType: cameraIndex === 2 ? 2 : 1,
       cameraDirection: cameraIndex,
-      destinationType: Camera.DestinationType.DATA_URL,
+      destinationType: Camera.DestinationType.FILE_URI,
       targetWidth: 1920,
       targetHeight: 1920,
       saveToPhotoAlbum: false
@@ -151,12 +151,15 @@ function takeARealPicture(cameraIndex){
       var storageRef = firebase.storage().ref(thisGroup.groupId);
       var photoId = (Math.random()*1e32).toString(36);
 
-    var getFileBlob = function(dataURI, cb) {
-        console.log("get file blob");
-        var binary = atob(dataURI.split(',')[1]), array = [];
-        for(var i = 0; i < binary.length; i++) array.push(binary.charCodeAt(i));
-        return new Blob([new Uint8Array(array)], {type:mime});
-        cb(blob);  
+    var getFileBlob = function(url, cb) {
+      console.log("get file blob");
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.responseType = "blob";
+        xhr.addEventListener('load', function() {
+            cb(xhr.response);
+        });
+        xhr.send();
     };
 
     // function decodeFromBase64(input) {
