@@ -57,10 +57,10 @@ angular.module('roadWarrior.controllers')
     $ionicScrollDelegate.$getByHandle('chat').scrollBottom();
   }
 
-  function addPost(message, img) {
+  function addPost(message, url) {
     $scope.posts.$add({
       message: message ? message : null,
-      img: img ? img : null,
+      img: url ? url : null,
       timestamp: new Date().getTime(),
       user: $scope.profile.name,
       userId: $scope.profile.$id 
@@ -117,31 +117,110 @@ angular.module('roadWarrior.controllers')
       }
     });
 
-    function takeARealPicture(cameraIndex) {
-      var options = {
-        quality: 50,
-        sourceType: cameraIndex === 2 ? 2 : 1,
-        cameraDirection: cameraIndex,
-        destinationType: Camera.DestinationType.DATA_URL,
-        encodingType: Camera.EncodingType.JPEG,
-        targetWidth: 500,
-        targetHeight: 600,
-        saveToPhotoAlbum: false
-      };
-      $cordovaCamera.getPicture(options).then(function(imageData) {
-        var photo = 'data:image/jpeg;base64,' + imageData;
-        addPost(null, photo);
-      }, function(err) {
-        // error
-        console.error(err);
-        takeAFakePicture();
-      });
+
+
+    function dataURItoBlob(dataURI) {
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  
+
+  // Old code
+  // var bb = new BlobBuilder();
+  // bb.append(ab);
+  // return bb.getBlob(mimeString);
+}
+
+
+function takeARealPicture(cameraIndex){
+    navigator.camera.getPicture(onSuccess, onFail, {
+      quality: 50,
+      sourceType: cameraIndex === 2 ? 2 : 1,
+      cameraDirection: cameraIndex,
+      destinationType: Camera.DestinationType.DATA_URL,
+      targetWidth: 1920,
+      targetHeight: 1920,
+      saveToPhotoAlbum: false
+    });
+
+     var onFail = function(){
+      console.log("STUFF FAILED");
     }
+
+    function onSuccess(imageData) {
+      console.log("starting camera actions");
+      var storageRef = firebase.storage().ref(thisGroup.groupId);
+      var photoId = (Math.random()*1e32).toString(36);
+
+    var getFileBlob = function(dataURI, cb) {
+        console.log("get file blob");
+        var binary = atob(dataURI.split(',')[1]), array = [];
+        for(var i = 0; i < binary.length; i++) array.push(binary.charCodeAt(i));
+        return new Blob([new Uint8Array(array)], {type:mime});
+        cb(blob);  
+    };
+
+    // function decodeFromBase64(input) {
+    //   input = input.replace(/\s/g, '');
+    //   return input;
+    // }
+
+    var blobToFile = function(blob, name) {
+        console.log("blob to file");
+        blob.lastModifiedDate = new Date();
+        blob.name = name;
+        return blob;
+    };
+
+    var getFileObject = function(filePathOrUrl, cb) {
+        console.log("get file object");
+        getFileBlob(filePathOrUrl, function(blob) {
+          console.log("getFileBlob callback")
+            cb(blobToFile(blob, photoId+'.jpg'));
+        });
+    };
+
+
+
+    getFileObject(imageData, function(fileObject) {
+        console.log("made it to callback");
+        var uploadTask = storageRef.child(thisGroup.groupId+'/'+photoId+'.jpg').put(fileObject);
+
+        uploadTask.on('state_changed', function(snapshot) {
+            console.log(snapshot);
+        }, function(error) {
+            console.log("error here? ",error);
+        }, function() {
+            var downloadURL = uploadTask.snapshot.downloadURL;
+            console.log(downloadURL);
+            // handle image here
+        });
+    });
+
+}
+}
+
+
+
+
+
+
+
 
     function takeAFakePicture() {
       addPost(null, $cordovaCamera.getPlaceholder());
     }
   };
+
+
+
+
+
+
+
+
+
+
+
 
     $ionicModal.fromTemplateUrl('templates/image-modal.html', {
       scope: $scope,
