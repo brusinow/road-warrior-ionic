@@ -468,6 +468,9 @@ textarea::-webkit-input-placeholder {
   position: relative;
   top: 40px; }
 
+#chat-list .item {
+  background-color: #fffcf7 !important; }
+
 .cat-time {
   display: inline-block;
   background: url("../img/cat-dj.jpg") center center;

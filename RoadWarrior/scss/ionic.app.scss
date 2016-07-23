@@ -608,6 +608,11 @@ textarea::-webkit-input-placeholder {
   top: 40px;
 }
 
+#chat-list .item {
+  background-color: $orangeTintLight !important;
+}
+
+
 .cat-time {
   display: inline-block;
   background: url("../img/cat-dj.jpg") center center;
@@ -1143,9 +1148,6 @@ textarea::-webkit-input-placeholder {
   border-radius: 2px;
 }
 
-/*.chat-list{
-  height: 94px !important;
-}*/
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;

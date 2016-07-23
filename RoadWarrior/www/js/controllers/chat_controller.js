@@ -4,24 +4,32 @@ angular.module('roadWarrior.controllers')
 
 
 .controller('ChatsCtrl', function($scope, thisGroup, main, show, fun, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
-  $scope.main = main;
-  $scope.show = show;
-  $scope.fun = fun;
-  console.log("what is main? ",main);
-   console.log("what is show? ",show);
-    console.log("what is fun? ",fun);
-  $scope.thisGroup = thisGroup;
-  console.log("what is test? ",$scope.thisGroup);
+  
+  $scope.chats = {
+    main: {
+      data: main,
+      title: "Main",
+      toChat: function(){
+        $state.go("tab.chats-main");
+      }
+    },
+    show: {
+      data: show,
+      title: "Show Related",
+      toChat: function(){
+        $state.go("tab.chats-show");
+      }
+    },
+    fun: {
+      data: fun,
+      title: "Fun",
+      toChat: function(){
+        $state.go("tab.chats-fun");
+      }
+    }
+  }
 
-  $scope.toMain = function(){
-    $state.go("tab.chats-main");
-  }
-  $scope.toShow = function(){
-    $state.go("tab.chats-show");
-  }
-  $scope.toFun = function(){
-    $state.go("tab.chats-fun");
-  }
+
 })
 
 
