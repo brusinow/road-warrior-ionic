@@ -94,6 +94,19 @@ input[type="date"], input[type="month"], input[type="time"], input[type="week"],
 input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
   font-size: 16px !important;
 }*/
+.bar-header {
+  height: 50px !important; }
+
+.has-header {
+  top: 50px !important; }
+
+.bar .title {
+  top: 11px !important;
+  height: 40px !important; }
+
+.bar .button.back-button, .bar button.back-button {
+  top: 9px !important; }
+
 .bar.bar-dark {
   border-color: #c42644 !important;
   background-image: linear-gradient(0deg, #c42644, #c42644 50%, transparent 50%) !important; }

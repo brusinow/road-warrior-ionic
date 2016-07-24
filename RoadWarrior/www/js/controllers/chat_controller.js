@@ -3,28 +3,31 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('ChatsCtrl', function($scope, thisGroup, main, show, fun, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
-  
+.controller('ChatsCtrl', function($scope, thisGroup, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
+  Profile(currentAuth.uid).$bindTo($scope, "profile");
+
+
+
   $scope.chats = {
     main: {
-      data: main,
+      data: chatMessages(thisGroup.groupId,'main',1),
       title: "Main",
       toChat: function(){
-        $state.go("tab.chats-main");
+      $state.go("tab.chats-main");
       }
     },
     show: {
-      data: show,
+      data: chatMessages(thisGroup.groupId,'show',1),
       title: "Show Related",
       toChat: function(){
-        $state.go("tab.chats-show");
+      $state.go("tab.chats-show");
       }
     },
     fun: {
-      data: fun,
+      data: chatMessages(thisGroup.groupId,'fun',1),
       title: "Fun",
       toChat: function(){
-        $state.go("tab.chats-fun");
+      $state.go("tab.chats-fun");
       }
     }
   }
@@ -34,27 +37,26 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('ChatsTopicCtrl', function($scope, thisGroup, posts, profile, chatName, chatMessages, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state, moment) {
- 
+.controller('ChatsTopicCtrl', function($scope, $q, thisGroup, chatName, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state, moment) {
+  Profile(currentAuth.uid).$bindTo($scope, "profile");
   $scope.chatName = chatName;
 
   $scope.postDate = {};
   $scope.showTime = false;
-  $scope.showChat = false;
 
-  $scope.posts = posts;
-  $scope.posts.$loaded().then(function(){
-   $ionicScrollDelegate.scrollBottom(true); 
-    $scope.showChat = true;
+  $scope.posts = chatMessages(thisGroup.groupId,chatName.lowerCase,100);
+  $scope.posts.$loaded().then(function(){  
+    $timeout(function() {
+        $ionicScrollDelegate.scrollBottom(true);
+    }, 600);
   })
   
   
   $scope.posts.$watch(scrollBottom);
-  $scope.profile = profile;
 
 
   function scrollBottom() {
-    $ionicScrollDelegate.$getByHandle('chat').scrollBottom();
+    $ionicScrollDelegate.$getByHandle('chat').scrollBottom(true);
   }
 
   function addPost(message, url) {
@@ -126,8 +128,11 @@ angular.module('roadWarrior.controllers')
 
 
 function takeARealPicture(cameraIndex){
+    $scope.postId = "";
     navigator.camera.getPicture(onSuccess, onFail, {
-      quality: 50,
+      quality: 75,
+      targetWidth: 1000,
+      targetHeight: 1000,
       sourceType: cameraIndex === 2 ? 2 : 1,
       cameraDirection: cameraIndex,
       destinationType: Camera.DestinationType.DATA_URL,
@@ -193,15 +198,16 @@ function takeARealPicture(cameraIndex){
         }, function(error) {
             console.log("error here? ",error);
         }, function() {
-            var rec = $scope.posts.$getRecord($scope.postId)
-            console.log("what is rec? ",rec);
-            var downloadURL = uploadTask.snapshot.downloadURL;
-            rec.firebase = downloadURL;
-            $scope.posts.$save(rec).then(function(ref) {
-              ref.key === rec.$id; // true
-            });
-            
-            // handle image here
+            $timeout(function () {
+              var rec = $scope.posts.$getRecord($scope.postId)
+              console.log("what is rec? ",rec);
+              var downloadURL = uploadTask.snapshot.downloadURL;
+              rec.firebase = downloadURL;
+              $scope.posts.$save(rec).then(function(ref) {
+                console.log("update saved to message object");
+                ref.key === rec.$id; // true
+              });
+            }, 1000);
         });
     });
 

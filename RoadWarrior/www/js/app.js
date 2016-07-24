@@ -263,18 +263,6 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         currentAuth: authRequire,
         thisGroup: function(ActiveGroup, currentAuth){
           return ActiveGroup(currentAuth.uid).$loaded();
-        },
-        main: function($firebaseArray, thisGroup){
-          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/main');
-          return $firebaseArray(chatRef.limitToLast(1)).$loaded();
-        },
-        show: function($firebaseArray, thisGroup){
-          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/showRelated');
-          return $firebaseArray(chatRef.limitToLast(1)).$loaded();
-        },
-        fun: function($firebaseArray, thisGroup){
-          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/fun');
-          return $firebaseArray(chatRef.limitToLast(1)).$loaded();
         }
       }
     })
@@ -292,13 +280,6 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         thisGroup: function(ActiveGroup, currentAuth){
           return ActiveGroup(currentAuth.uid).$loaded();
         },
-        posts: function($firebaseArray, thisGroup){     
-          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/main');
-          return $firebaseArray(chatRef.limitToLast(100)).$loaded();    
-        },
-        profile: function(Profile, currentAuth){
-          return Profile(currentAuth.uid).$loaded();
-        },
         chatName: function(){
           var name = {
             formatted: "Main",
@@ -306,10 +287,18 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
           }
           return name;
         }
-    }
+      }
     })
+
+// media: function($firebaseArray, thisGroup, chatName){
+//           var mediaRef = firebase.database().ref('media/'+thisGroup.groupId+'/'+chatName.lowerCase);
+//           return $firebaseArray(mediaRef).$loaded(); 
+//         },
+
+
     .state('tab.chats-show', {
       url: '/chats/show',
+      cache: true,
       views: {
         'tab-chats': {
           templateUrl: 'templates/tab-chatsTopic.html',
@@ -321,30 +310,18 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         thisGroup: function(ActiveGroup, currentAuth){
           return ActiveGroup(currentAuth.uid).$loaded();
         },
-         chatName: function(){
+        chatName: function(){
           var name = {
             formatted: "Show Related",
             lowerCase: "show"
           }
           return name;
-        },
-        posts: function($firebaseArray, thisGroup, chatName){     
-          console.log("is chatName here? ",chatName);
-          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/'+chatName.lowerCase);
-          return $firebaseArray(chatRef.limitToLast(100)).$loaded();    
-        },
-        media: function($firebaseArray, thisGroup, chatName){
-          var mediaRef = firebase.database().ref('media/'+thisGroup.groupId+'/'+chatName.lowerCase);
-          return $firebaseArray(mediaRef).$loaded(); 
-        },
-        profile: function(Profile, currentAuth){
-          return Profile(currentAuth.uid).$loaded();
-        }
-        
-    }
+        } 
+      }
     })
     .state('tab.chats-fun', {
       url: '/chats/fun',
+      cache: true,
       views: {
         'tab-chats': {
           templateUrl: 'templates/tab-chatsTopic.html',
@@ -355,13 +332,6 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         currentAuth: authRequire,
         thisGroup: function(ActiveGroup, currentAuth){
           return ActiveGroup(currentAuth.uid).$loaded();
-        },
-        posts: function($firebaseArray, thisGroup){     
-          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/fun');
-          return $firebaseArray(chatRef.limitToLast(100)).$loaded();    
-        },
-        profile: function(Profile, currentAuth){
-          return Profile(currentAuth.uid).$loaded();
         },
         chatName: function(){
           var name = {

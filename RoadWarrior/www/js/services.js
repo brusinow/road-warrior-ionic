@@ -24,20 +24,11 @@ angular.module('roadWarrior.services', [])
 
 
 
-.factory("chatMessages", ["$firebaseArray", function($firebaseArray) {
-  return { 
-    main: function(groupId){
-      var chatRef = firebase.database().ref('messages/'+groupId+'/main')
-      return $firebaseArray(chatRef.limitToLast(100));
-    },
-    show: function(groupId){
-      var chatRef = firebase.database().ref('messages/'+groupId+'/showRelated')
-      return $firebaseArray(chatRef.limitToLast(100));
-    },
-    fun: function(groupId){
-      var chatRef = firebase.database().ref('messages/'+groupId+'/fun')
-      return $firebaseArray(chatRef.limitToLast(100));
-    }
+.factory("chatMessages", ["$firebaseArray", 
+  function($firebaseArray) {
+  return function(groupId, topic, messageNumber){
+      var chatRef = firebase.database().ref('messages/'+groupId+'/'+topic);
+      return $firebaseArray(chatRef.limitToLast(messageNumber));
   }
 }])
 

@@ -136,6 +136,25 @@ input[type="url"], input[type="search"], input[type="tel"], input[type="color"] 
   font-size: 16px !important;
 }*/
 
+.bar-header {
+  height: 50px !important;
+}
+
+.has-header {
+  top: 50px !important;
+}
+
+
+
+.bar .title {
+  top: 11px !important;
+  height: 40px !important;
+}
+
+.bar .button.back-button, .bar button.back-button {
+  top: 9px !important;
+}
+
 
 .bar.bar-dark {
   border-color: $dark !important;
