@@ -300,7 +300,11 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
           return Profile(currentAuth.uid).$loaded();
         },
         chatName: function(){
-          return "Main";
+          var name = {
+            formatted: "Main",
+            lowerCase: "main"
+          }
+          return name;
         }
     }
     })
@@ -317,16 +321,26 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         thisGroup: function(ActiveGroup, currentAuth){
           return ActiveGroup(currentAuth.uid).$loaded();
         },
-        posts: function($firebaseArray, thisGroup){     
-          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/showRelated');
+         chatName: function(){
+          var name = {
+            formatted: "Show Related",
+            lowerCase: "show"
+          }
+          return name;
+        },
+        posts: function($firebaseArray, thisGroup, chatName){     
+          console.log("is chatName here? ",chatName);
+          var chatRef = firebase.database().ref('messages/'+thisGroup.groupId+'/'+chatName.lowerCase);
           return $firebaseArray(chatRef.limitToLast(100)).$loaded();    
+        },
+        media: function($firebaseArray, thisGroup, chatName){
+          var mediaRef = firebase.database().ref('media/'+thisGroup.groupId+'/'+chatName.lowerCase);
+          return $firebaseArray(mediaRef).$loaded(); 
         },
         profile: function(Profile, currentAuth){
           return Profile(currentAuth.uid).$loaded();
-        },
-        chatName: function(){
-          return "Show Related";
         }
+        
     }
     })
     .state('tab.chats-fun', {
@@ -350,7 +364,11 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
           return Profile(currentAuth.uid).$loaded();
         },
         chatName: function(){
-          return "Fun";
+          var name = {
+            formatted: "Fun",
+            lowerCase: "fun"
+          }
+          return name;
         }
     }
     })

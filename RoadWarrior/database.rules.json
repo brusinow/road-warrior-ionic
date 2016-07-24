@@ -36,6 +36,10 @@
     "messages": {
       ".read": true,
       ".write": true
+    },
+    "media": {
+      ".read": true,
+      ".write": true
     }
   }
 }

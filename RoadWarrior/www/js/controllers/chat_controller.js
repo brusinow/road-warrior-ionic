@@ -64,8 +64,14 @@ angular.module('roadWarrior.controllers')
       timestamp: new Date().getTime(),
       user: $scope.profile.name,
       userId: $scope.profile.$id 
+    }).then(function(ref){
+      $scope.postId = ref.key;
+      console.log("what is post id? ",ref.key);
     });
   }
+
+
+
   $scope.data = {};
   var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
   $scope.inputUp = function() {
@@ -119,21 +125,9 @@ angular.module('roadWarrior.controllers')
 
 
 
-    function dataURItoBlob(dataURI) {
-  // convert base64 to raw binary data held in a string
-  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-  
-
-  // Old code
-  // var bb = new BlobBuilder();
-  // bb.append(ab);
-  // return bb.getBlob(mimeString);
-}
-
-
 function takeARealPicture(cameraIndex){
     navigator.camera.getPicture(onSuccess, onFail, {
-      quality: 75,
+      quality: 50,
       sourceType: cameraIndex === 2 ? 2 : 1,
       cameraDirection: cameraIndex,
       destinationType: Camera.DestinationType.DATA_URL,
@@ -146,9 +140,10 @@ function takeARealPicture(cameraIndex){
 
     function onSuccess(imageData) {
       console.log("starting camera actions");
-      var storageRef = firebase.storage().ref(thisGroup.groupId);
+      var storageRef = firebase.storage().ref(thisGroup.groupId+'/'+$scope.chatName.lowerCase);
       var photoId = (Math.random()*1e32).toString(36);
-
+      var photo = 'data:image/jpeg;base64,' + imageData;
+      addPost(null, photo);
 
 
     function getFileBlob(base64Data, contentType, cb) {
@@ -173,28 +168,6 @@ function takeARealPicture(cameraIndex){
         cb(blob);
     }
 
-
-
-
-
-
-
-    // var getFileBlob = function(url, cb) {
-    //   console.log("get file blob");
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open("GET", url);
-    //     xhr.responseType = "blob";
-    //     xhr.addEventListener('load', function() {
-    //         cb(xhr.response);
-    //     });
-    //     xhr.send();
-    // };
-
-    // function decodeFromBase64(input) {
-    //   input = input.replace(/\s/g, '');
-    //   return input;
-    // }
-
     var blobToFile = function(blob, name) {
         console.log("blob to file");
         blob.lastModifiedDate = new Date();
@@ -215,15 +188,19 @@ function takeARealPicture(cameraIndex){
     getFileObject(imageData, function(fileObject) {
         console.log("made it to callback");
         var uploadTask = storageRef.child(photoId+'.jpg').put(fileObject);
-
         uploadTask.on('state_changed', function(snapshot) {
-            console.log(snapshot);
+            console.log("snapshot is ",snapshot);
         }, function(error) {
             console.log("error here? ",error);
         }, function() {
+            var rec = $scope.posts.$getRecord($scope.postId)
+            console.log("what is rec? ",rec);
             var downloadURL = uploadTask.snapshot.downloadURL;
-            console.log(downloadURL);
-            addPost(null, downloadURL);
+            rec.firebase = downloadURL;
+            $scope.posts.$save(rec).then(function(ref) {
+              ref.key === rec.$id; // true
+            });
+            
             // handle image here
         });
     });
