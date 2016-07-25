@@ -37,7 +37,7 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('ChatsTopicCtrl', function($scope, $q, thisGroup, chatName, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state, moment) {
+.controller('ChatsTopicCtrl', function($scope, $q, thisGroup, chatName, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state,$ionicPopover, moment) {
   Profile(currentAuth.uid).$bindTo($scope, "profile");
   $scope.chatName = chatName;
 
@@ -215,16 +215,64 @@ function takeARealPicture(cameraIndex){
 }
 
 
-
-
-
-
-
-
     function takeAFakePicture() {
       addPost(null, $cordovaCamera.getPlaceholder());
     }
   };
+
+
+
+  $scope.downloadImage = function(url){
+  var fileURL = "cdvfile://localhost/persistent/file.jpg";
+
+  var fileTransfer = new FileTransfer();
+  var uri = url;
+  console.log("what is URI? ",uri);
+
+  fileTransfer.download(
+    uri,
+    fileURL,
+    function(entry) {
+        console.log("download complete: " + entry.toURL());
+    },
+    function(error) {
+        console.log("download error source " + error.source);
+        console.log("download error target " + error.target);
+        console.log("download error code" + error.code);
+    }
+  );
+}
+
+
+  $ionicPopover.fromTemplateUrl('templates/img-popover.html', {
+    scope: $scope
+  }).then(function(popover) {
+    $scope.popover = popover;
+  });
+
+
+  $scope.openPopover = function($event, url) {
+    console.log("ON HOLD!!!");
+    $scope.url = {'value' : url};
+    $scope.popover.show($event);
+  };
+  $scope.closePopover = function() {
+    $scope.popover.hide();
+  };
+  //Cleanup the popover when we're done with it!
+  $scope.$on('$destroy', function() {
+    $scope.popover.remove();
+  });
+  // Execute action on hide popover
+  $scope.$on('popover.hidden', function() {
+    // Execute action
+  });
+  // Execute action on remove popover
+  $scope.$on('popover.removed', function() {
+    // Execute action
+  });
+
+
 
 
 
@@ -271,6 +319,7 @@ function takeARealPicture(cameraIndex){
     $scope.imageSrc = '';
 
     $scope.showImage = function(src) {
+      console.log("show image");
       $scope.imageSrc = src;
       $scope.openModal();
     }

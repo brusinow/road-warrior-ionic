@@ -501,3 +501,5 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
             return value + (tail || '…');
         };
     });
+
+

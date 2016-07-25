@@ -1,7 +1,9 @@
 <ion-view class="chat-bg" view-title="{{chatName.formatted}}">
-
- <ion-content delegate-handle="chat" id="chat-list" on-hold="showTime = !showTime"
-  class="content-stable mh-padding">
+<ion-nav-buttons side="right">
+  <button class="button button-icon icon ion-images nav-button-media"></button>
+</ion-nav-buttons>
+ <ion-content delegate-handle="chat" id="chat-list" on-swipe-left="showTime = true" on-swipe-right="showTime = false"
+  class="content-stable mh-padding chat-related">
 
     <div ng-repeat="post in posts track by $index" >
     <div class="chat-date" ng-if="sameDay(post.timestamp, posts[$index-1].timestamp)">{{post.timestamp | toDate}}</div>
@@ -11,7 +13,7 @@
     <div ng-class="{other:post.user !== profile.name}" class="messages">
       <div class="message slide-right" ng-class="{'slide-right': !showTime, '': showTime}">
         <span ng-if="post.message">{{post.message}}</span>
-        <img ng-if="post.img" ng-click="showImage(post.img)" ng-src="{{post.img}}" class="post-img" />
+        <img ng-if="post.img" on-hold="openPopover($event, post.firebase)" ng-click="showImage(post.img)" ng-src="{{post.img}}" class="post-img" />
       </div>
 
       <div class="time slide-right" ng-class="{'slide-right': !showTime, '': showTime}">
