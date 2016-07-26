@@ -94,12 +94,13 @@ input[type="date"], input[type="month"], input[type="time"], input[type="week"],
 input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
   font-size: 16px !important;
 }*/
-.bar-header {
-  height: 55px !important; }
+/*.bar-header {
+  height: 55px !important;
+}
 
 .has-header {
-  top: 55px !important; }
-
+  top: 55px !important;
+}*/
 /*.bar .title {
   top: 13px !important;
   height: 40px !important;

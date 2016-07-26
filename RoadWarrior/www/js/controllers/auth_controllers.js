@@ -53,6 +53,7 @@ $scope.signup = function() {
 }])
 
 .controller('LoginCtrl', ['$scope', '$ionicHistory', 'Auth', 'currentAuth', '$state', function($scope, $ionicHistory, Auth, currentAuth, $state){
+console.log("Is this thing on?");
 
 $scope.goToSignup = function(){
   $state.go("signup");

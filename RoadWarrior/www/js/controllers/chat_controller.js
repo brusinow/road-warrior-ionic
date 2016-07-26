@@ -37,10 +37,13 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('ChatsTopicCtrl', function($scope, $q, thisGroup, chatName, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state,$ionicPopover, moment) {
+.controller('ChatsTopicCtrl', function($scope, $q, thisGroup, chatName, chatMessages, chatMedia, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state,$ionicPopover, moment) {
+
   Profile(currentAuth.uid).$bindTo($scope, "profile");
   $scope.chatName = chatName;
 
+  $scope.images = chatMedia(thisGroup.groupId, chatName.lowerCase);
+  $scope.thisPhoto = '';
   $scope.postDate = {};
   $scope.showTime = false;
 
@@ -69,6 +72,8 @@ angular.module('roadWarrior.controllers')
     }).then(function(ref){
       $scope.postId = ref.key;
       console.log("what is post id? ",ref.key);
+
+
     });
   }
 
@@ -147,8 +152,8 @@ function takeARealPicture(cameraIndex){
       console.log("starting camera actions");
       var storageRef = firebase.storage().ref(thisGroup.groupId+'/'+$scope.chatName.lowerCase);
       var photoId = (Math.random()*1e32).toString(36);
-      var photo = 'data:image/jpeg;base64,' + imageData;
-      addPost(null, photo);
+      $scope.thisPhoto = 'data:image/jpeg;base64,' + imageData;
+      addPost(null, $scope.thisPhoto);
 
 
     function getFileBlob(base64Data, contentType, cb) {
@@ -203,6 +208,13 @@ function takeARealPicture(cameraIndex){
               console.log("what is rec? ",rec);
               var downloadURL = uploadTask.snapshot.downloadURL;
               rec.firebase = downloadURL;
+              $scope.images.$add({
+                jpeg: $scope.thisPhoto,
+                download: downloadURL,
+                messageRef: $scope.postId
+              }).then(function(ref){
+                console.log("database ref for media saved");
+              });
               $scope.posts.$save(rec).then(function(ref) {
                 console.log("update saved to message object");
                 ref.key === rec.$id; // true
@@ -274,17 +286,6 @@ function takeARealPicture(cameraIndex){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     $ionicModal.fromTemplateUrl('templates/image-modal.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -292,36 +293,41 @@ function takeARealPicture(cameraIndex){
       $scope.modal = modal;
     });
 
-    $scope.openModal = function() {
+    $ionicModal.fromTemplateUrl('templates/allChatPhotos-modal.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modalPhoto = modal;
+    });
+
+    $scope.openModal = function(index) {
+      if (index === 1){
       $scope.modal.show();
+      } else if (index === 2){
+      $scope.modalPhoto.show();
+      }
     };
 
-    $scope.closeModal = function() {
+    $scope.closeModal = function(index) {
+       if (index === 1){
       $scope.modal.hide();
+      } else if (index === 2){
+      $scope.modalPhoto.hide();
+      }
     };
 
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function() {
       $scope.modal.remove();
-    });
-    // Execute action on hide modal
-    $scope.$on('modal.hide', function() {
-      // Execute action
-    });
-    // Execute action on remove modal
-    $scope.$on('modal.removed', function() {
-      // Execute action
-    });
-    $scope.$on('modal.shown', function() {
-      console.log('Modal is shown!');
+      $scope.modalPhoto.remove();
     });
 
     $scope.imageSrc = '';
 
-    $scope.showImage = function(src) {
+    $scope.showImage = function(src, index) {
       console.log("show image");
       $scope.imageSrc = src;
-      $scope.openModal();
+      $scope.openModal(index);
     }
   
 

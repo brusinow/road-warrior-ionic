@@ -32,6 +32,14 @@ angular.module('roadWarrior.services', [])
   }
 }])
 
+.factory("chatMedia", ["$firebaseArray", 
+  function($firebaseArray) {
+  return function(groupId, topic){
+    var mediaGroupRef = firebase.database().ref('media/'+groupId+'/'+topic);
+    return $firebaseArray(mediaGroupRef);
+  }
+}])
+
 
 
 
