@@ -7,7 +7,7 @@ angular.module('roadWarrior.controllers')
   
   Profile(currentAuth.uid).$bindTo($scope, "profile");
 
-
+  $scope.loaded = [];
 
   $scope.chats = {
     main: {
@@ -33,13 +33,27 @@ angular.module('roadWarrior.controllers')
     }
   }
 
+  $scope.chats.main.data.$loaded().then(function(){
+    $scope.loaded.push(true);
+  })
+
+  $scope.chats.show.data.$loaded().then(function(){
+    $scope.loaded.push(true);
+  })
+
+$scope.chats.fun.data.$loaded().then(function(){
+    $scope.loaded.push(true);
+  })
+
+
+
 
 })
 
 
 
 .controller('ChatsTopicCtrl', function($scope, $q, thisGroup, chatName, chatMessages, chatMedia, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state,$ionicPopover, moment) {
-
+  $scope.chatLoaded = false;
   Profile(currentAuth.uid).$bindTo($scope, "profile");
   $scope.chatName = chatName;
 
@@ -48,8 +62,11 @@ angular.module('roadWarrior.controllers')
   $scope.postDate = {};
   $scope.showTime = false;
 
+  $scope.saveSuccess = false;
+
   $scope.posts = chatMessages(thisGroup.groupId,chatName.lowerCase,100);
-  $scope.posts.$loaded().then(function(){  
+  $scope.posts.$loaded().then(function(){
+  $scope.chatLoaded = true;  
     $timeout(function() {
         $ionicScrollDelegate.scrollBottom(true);
     }, 600);
@@ -275,7 +292,7 @@ function takeARealPicture(cameraIndex){
       $scope.modal = modal;
     });
 
-    $ionicModal.fromTemplateUrl('templates/allChatPhotos-modal.html', {
+    $ionicModal.fromTemplateUrl('templates/chat-image-modal.html', {
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
@@ -328,68 +345,45 @@ function takeARealPicture(cameraIndex){
     }
 
 
-
-
-
-
-
-
-
-
-
-
-// !! Assumes variable fileURL contains a valid URL to a path on the device,
-//    for example, cdvfile://localhost/persistent/path/to/downloads/
-
 $scope.downloadImage = function(url){ 
 $scope.closePopover();  
-var random = Math.random().toString(36).slice(2)
-var fileURL = "cdvfile://localhost/persistent/"+random+".jpg";
-// var fileURL = "file:///var/mobile/Containers/Data/Application/C501686A-4F42-46F1-B5E9-A21611B71241/Documents/"+random+".jpg";
+  var random = Math.random().toString(36).slice(2)
+  var fileURL = "cdvfile://localhost/persistent/"+random+".jpg";
+  // var fileURL = "file:///var/mobile/Containers/Data/Application/C501686A-4F42-46F1-B5E9-A21611B71241/Documents/"+random+".jpg";
 
-var fileTransfer = new FileTransfer();
-var uri = url;
+  var fileTransfer = new FileTransfer();
+  var uri = url;
 
-fileTransfer.download(
-    uri,
-    fileURL,
-    function(entry) {
-        console.log("download complete: " + entry.toURL());
-          var isIOS = ionic.Platform.isIOS();
-          var isAndroid = ionic.Platform.isAndroid();
-          var nativePathToJpegImage = entry.toURL();
-        window.cordova.plugins.imagesaver.saveImageToGallery(nativePathToJpegImage, onSaveImageSuccess, onSaveImageError);                                   
-          function onSaveImageSuccess() {
-            console.log('--------------success');
-          }                                     
-          function onSaveImageError(error) {
-            console.log('--------------error: ' + error);
-          }
-    },
-    function(error) {
-        console.log("download error source " + error.source);
-        console.log("download error target " + error.target);
-        console.log("download error code" + error.code);
-    },
-    true
-);
-
-
+    fileTransfer.download(
+        uri,
+        fileURL,
+        function(entry) {
+            console.log("download complete: " + entry.toURL());
+              var isIOS = ionic.Platform.isIOS();
+              var isAndroid = ionic.Platform.isAndroid();
+              var nativePathToJpegImage = entry.toURL();
+            window.cordova.plugins.imagesaver.saveImageToGallery(nativePathToJpegImage, onSaveImageSuccess, onSaveImageError);                                   
+              function onSaveImageSuccess() {
+                $scope.saveSuccess = true;
+                $scope.$apply();
+                console.log("save success is ",$scope.saveSuccess);
+                console.log('--------------success');
+                $timeout(function() {
+                  $scope.saveSuccess = false;
+                  console.log("now it's ",$scope.saveSuccess);
+                }, 3000);
+              }                                     
+              function onSaveImageError(error) {
+                console.log('--------------error: ' + error);
+              }
+        },
+        function(error) {
+            console.log("download error source " + error.source);
+            console.log("download error target " + error.target);
+            console.log("download error code" + error.code);
+        },
+        true
+    );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 });

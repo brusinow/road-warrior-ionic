@@ -22,6 +22,12 @@ $royal:                           #886aea !default;
 .yelp.ng-hide-remove {
   animation: .2s fadein linear; }
 
+.good-alert.ng-hide-remove {
+  animation: .2s fadein linear; }
+
+.good-alert.ng-hide-add {
+  animation: .5s fadeout linear; }
+
 /*Red is: #931622*/
 /* The starting CSS styles for the enter animation */
 .fade.ng-enter {
@@ -61,34 +67,34 @@ $royal:                           #886aea !default;
 
 @keyframes fadeout {
   from {
-    opacity: 0; }
+    opacity: 1; }
   to {
-    opacity: 1; } }
+    opacity: 0; } }
 
 @-moz-keyframes fadeout {
   /* Firefox */
   from {
-    opacity: 0; }
+    opacity: 1; }
   to {
-    opacity: 1; } }
+    opacity: 0; } }
 
 @-webkit-keyframes fadeout {
   /* Safari and Chrome */
   from {
-    opacity: 0; }
+    opacity: 1; }
   to {
-    opacity: 1; } }
+    opacity: 0; } }
 
 @-o-keyframes fadeout {
   /* Opera */
   from {
-    opacity: 0; }
+    opacity: 1; }
   to {
-    opacity: 1; } }
+    opacity: 0; } }
 
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important; }
-
+/*[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}*/
 /*textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], 
 input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], 
 input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {

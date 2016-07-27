@@ -23,7 +23,9 @@ angular.module('roadWarrior.controllers')
     $scope.submitted = true;
     console.log("submitted after click is ",$scope.submitted);
     eventsService.createEvent($scope);
-    $ionicHistory.goBack(); 
+    if (eventSubmitted){
+        $ionicHistory.goBack();
+      }
   };
 
 
@@ -123,7 +125,9 @@ angular.module('roadWarrior.controllers')
 
   $scope.updateEvents = function(){
     eventsService.editOneEvent($scope);
-     $ionicHistory.goBack();   
+    if (eventSubmitted){
+        $ionicHistory.goBack();
+      }  
   }
 
 

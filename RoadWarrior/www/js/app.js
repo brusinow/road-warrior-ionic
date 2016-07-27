@@ -290,10 +290,6 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
       }
     })
 
-// media: function($firebaseArray, thisGroup, chatName){
-//           var mediaRef = firebase.database().ref('media/'+thisGroup.groupId+'/'+chatName.lowerCase);
-//           return $firebaseArray(mediaRef).$loaded(); 
-//         },
 
 
     .state('tab.chats-show', {

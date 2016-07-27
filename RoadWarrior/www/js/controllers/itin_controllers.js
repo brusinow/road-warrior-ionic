@@ -199,7 +199,9 @@ angular.module('roadWarrior.controllers')
     $scope.submitNewItin = function(event) {
     $scope.submitted = true;
      itineraryService.createItinItem($scope, event);
-     $ionicHistory.goBack();
+      if (itinSubmitted){
+        $ionicHistory.goBack();
+      }
     };
 
 

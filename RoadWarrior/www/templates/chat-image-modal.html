@@ -1,0 +1,21 @@
+<ion-modal-view>
+   <ion-header-bar class="bar-dark">
+      <h1 class = "title">{{chatName.formatted}}</h1>
+      <button ng-click="closeModal(2)" class="button button-icon icon ion-close-circled"></button>
+   </ion-header-bar>
+    
+   <ion-content class="padding">
+      <div ng-show="saveSuccess" class="alert alert-success text-center good-alert" role="alert">image was saved to camera roll.</div>
+      <div class="row" ng-repeat="image in images" ng-if="$index % 3 === 0">
+        <div ng-click="showImage(images[$index].jpeg, 1)" on-hold="openPopover($event, images[$index].firebase)" class="col col-33" ng-if="$index < images.length">
+            <img ng-src="{{images[$index].jpeg}}" width="100%" />
+        </div>
+        <div ng-click="showImage(images[$index+1].jpeg, 1)" on-hold="openPopover($event, images[$index+1].firebase)" class="col col-33" ng-if="$index + 1 < images.length">
+            <img ng-src="{{images[$index + 1].jpeg}}" width="100%" />
+        </div>
+        <div ng-click="showImage(images[$index+2].jpeg, 1)" on-hold="openPopover($event, images[$index+2].firebase)" class="col col-33" ng-if="$index + 2 < images.length">
+            <img ng-src="{{images[$index + 2].jpeg}}" width="100%" />
+        </div>
+    </div>     
+    </ion-content>
+</ion-modal-view>

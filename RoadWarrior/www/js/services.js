@@ -327,6 +327,7 @@ angular.module('roadWarrior.services', [])
         })
       },
       createEvent: function($scope){
+          $scope.eventSubmitted = false;
           angular.forEach($scope.events, function(childData) {
             if ($scope.event.date === childData.date){
               $scope.eventExists = true;
@@ -365,7 +366,8 @@ angular.module('roadWarrior.services', [])
                         $scope.event.eventId = eventId;
                         console.log("new event to be submitted: ",$scope.event);
                         newEventEntry[eventId] = $scope.event;
-                        eventsRef.update(newEventEntry);                          
+                        eventsRef.update(newEventEntry); 
+                        $scope.eventSubmitted = true;                         
                         } else {
                           console.log('No first geocode results.');
                         }
@@ -391,6 +393,7 @@ angular.module('roadWarrior.services', [])
                     $scope.event.eventId = eventId;
                     newEventEntry[eventId] = $scope.event;
                     eventsRef.update(newEventEntry); 
+                    $scope.eventSubmitted = true;
                   } else {
                       alert("Sorry, this search produced no results.");
                   }
@@ -474,7 +477,8 @@ angular.module('roadWarrior.services', [])
           var thisEventRef = firebase.database().ref('events/'+eventId)
           return $firebaseObject(thisEventRef);
         },
-        editOneEvent: function($scope){        
+        editOneEvent: function($scope){   
+        $scope.eventSubmitted = false;     
           if ($scope.event.address){
           console.log("GEOCODING!!!!!!!!!!!");
             this.geocoder = new google.maps.Geocoder();
@@ -501,6 +505,7 @@ angular.module('roadWarrior.services', [])
                         $scope.event.cityState = $scope.event.city+", "+$scope.event.state;
                         console.log("event to be submitted: ",$scope.event);
                         $scope.event.$save().then(function(ref) {
+                          $scope.eventSubmitted = true; 
                         });
                       }
                     })
@@ -518,6 +523,7 @@ angular.module('roadWarrior.services', [])
                         $scope.event.lat = results[0].geometry.location.lat();
                         $scope.event.lng = results[0].geometry.location.lng();               
                         $scope.event.$save().then(function(ref) {
+                          $scope.eventSubmitted = true; 
                         });
                                              
 
@@ -541,6 +547,7 @@ angular.module('roadWarrior.services', [])
 
   return {
     createItinItem: function($scope, event){
+      $scope.itinSubmitted = false;
       if ($scope.nextDay){
         $scope.itin.nextDay = true;
         if ($scope.itin.startTimeUnix){
@@ -561,7 +568,7 @@ angular.module('roadWarrior.services', [])
       $scope.itin.id = itinId;
       newItinEntry[itinId] = $scope.itin;
       itinRef.update(newItinEntry);
-      
+      $scope.itinSubmitted = true;
       // $scope.newItinModal.hide();
     },
     getItinItems: function($scope, eventId){

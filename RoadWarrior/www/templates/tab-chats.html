@@ -1,6 +1,9 @@
 <ion-view view-title="Chats">
   <ion-content class="padding">
-      <ion-list>
+   <div class="spinner" ng-hide="loaded.length === 3">
+  <ion-spinner></ion-spinner>
+  </div>
+      <ion-list class="postLoad" ng-show="loaded.length === 3">
        <div class="item item-divider">
         Default Chat Groups
       </div>
