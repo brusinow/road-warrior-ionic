@@ -24,7 +24,9 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "ionic-plugin-deploy",
-    "cordova-plugin-camera"
+    "cordova-plugin-camera",
+    "cordova-plugin-save-image",
+    "cordova-plugin-file-transfer"
   ],
   "cordovaPlatforms": [
     "android",

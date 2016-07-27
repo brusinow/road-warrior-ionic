@@ -4,6 +4,7 @@ angular.module('roadWarrior.controllers')
 
 
 .controller('ChatsCtrl', function($scope, thisGroup, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
+  
   Profile(currentAuth.uid).$bindTo($scope, "profile");
 
 
@@ -210,7 +211,7 @@ function takeARealPicture(cameraIndex){
               rec.firebase = downloadURL;
               $scope.images.$add({
                 jpeg: $scope.thisPhoto,
-                download: downloadURL,
+                firebase: downloadURL,
                 messageRef: $scope.postId
               }).then(function(ref){
                 console.log("database ref for media saved");
@@ -234,26 +235,6 @@ function takeARealPicture(cameraIndex){
 
 
 
-  $scope.downloadImage = function(url){
-  var fileURL = "cdvfile://localhost/persistent/file.jpg";
-
-  var fileTransfer = new FileTransfer();
-  var uri = url;
-  console.log("what is URI? ",uri);
-
-  fileTransfer.download(
-    uri,
-    fileURL,
-    function(entry) {
-        console.log("download complete: " + entry.toURL());
-    },
-    function(error) {
-        console.log("download error source " + error.source);
-        console.log("download error target " + error.target);
-        console.log("download error code" + error.code);
-    }
-  );
-}
 
 
   $ionicPopover.fromTemplateUrl('templates/img-popover.html', {
@@ -266,6 +247,7 @@ function takeARealPicture(cameraIndex){
   $scope.openPopover = function($event, url) {
     console.log("ON HOLD!!!");
     $scope.url = {'value' : url};
+    console.log("url is ",$scope.url);
     $scope.popover.show($event);
   };
   $scope.closePopover = function() {
@@ -344,6 +326,65 @@ function takeARealPicture(cameraIndex){
         }
       }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+// !! Assumes variable fileURL contains a valid URL to a path on the device,
+//    for example, cdvfile://localhost/persistent/path/to/downloads/
+
+$scope.downloadImage = function(url){ 
+$scope.closePopover();  
+var random = Math.random().toString(36).slice(2)
+var fileURL = "cdvfile://localhost/persistent/"+random+".jpg";
+// var fileURL = "file:///var/mobile/Containers/Data/Application/C501686A-4F42-46F1-B5E9-A21611B71241/Documents/"+random+".jpg";
+
+var fileTransfer = new FileTransfer();
+var uri = url;
+
+fileTransfer.download(
+    uri,
+    fileURL,
+    function(entry) {
+        console.log("download complete: " + entry.toURL());
+          var isIOS = ionic.Platform.isIOS();
+          var isAndroid = ionic.Platform.isAndroid();
+          var nativePathToJpegImage = entry.toURL();
+        window.cordova.plugins.imagesaver.saveImageToGallery(nativePathToJpegImage, onSaveImageSuccess, onSaveImageError);                                   
+          function onSaveImageSuccess() {
+            console.log('--------------success');
+          }                                     
+          function onSaveImageError(error) {
+            console.log('--------------error: ' + error);
+          }
+    },
+    function(error) {
+        console.log("download error source " + error.source);
+        console.log("download error target " + error.target);
+        console.log("download error code" + error.code);
+    },
+    true
+);
+
+
+}
+
+
+
+
+
+
+
+
+
 
 
 

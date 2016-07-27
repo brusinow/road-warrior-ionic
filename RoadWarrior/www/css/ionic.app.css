@@ -233,23 +233,23 @@ ion-view.pane {
 .text-right {
   text-align: right; }
 
-.event-related .platform-ios .popover-arrow {
-  display: none; }
+/*.event-related .platform-ios .popover-arrow {
+    display: none;
+}
 
 .event-related .platform-ios .popover-arrow:after {
-  display: none; }
+    display: none;
+}
 
 .event-related .platform-ios .popover {
-  max-width: 100%;
-  background-color: white;
-  width: 92%;
-  border-radius: 0px !important;
-  top: 20% !important;
-  left: 4% !important; }
-
-.chat-related .popover {
-  height: 30px !important; }
-
+ max-width: 100%;
+ background-color: white;
+ width: 92%;
+ border-radius: 0px !important;
+ top:20% !important;
+ left:4% !important;
+}
+*/
 .no-padding {
   padding: 0px !important; }
 

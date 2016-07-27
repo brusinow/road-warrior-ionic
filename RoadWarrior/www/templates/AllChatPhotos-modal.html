@@ -1,24 +1,26 @@
 <ion-modal-view>
    <ion-header-bar>
-      <h1 class = "title">"{{chatName.formatted}}" Topic Media</h1>
+      <h1 class = "title">{{chatName.formatted}}</h1>
       <button ng-click="closeModal(2)" class="button button-clear button-dark ion-ios-close-outline"> Close</button>
    </ion-header-bar>
     
    <ion-content class="padding">
       
       <div class="row" ng-repeat="image in images" ng-if="$index % 4 === 0">
-        <div class="col col-25" ng-if="$index < images.length">
+        <div ng-click="showImage(images[$index].jpeg, 1)" on-hold="openPopover($event, images[$index].firebase)" class="col col-25" ng-if="$index < images.length">
             <img ng-src="{{images[$index].jpeg}}" width="100%" />
         </div>
-        <div class="col col-25" ng-if="$index + 1 < images.length">
+        <div ng-click="showImage(images[$index+1].jpeg, 1)" on-hold="openPopover($event, images[$index+1].firebase)" class="col col-25" ng-if="$index + 1 < images.length">
             <img ng-src="{{images[$index + 1].jpeg}}" width="100%" />
         </div>
-        <div class="col col-25" ng-if="$index + 2 < images.length">
+        <div ng-click="showImage(images[$index+2].jpeg, 1)" on-hold="openPopover($event, images[$index+2].firebase)" class="col col-25" ng-if="$index + 2 < images.length">
             <img ng-src="{{images[$index + 2].jpeg}}" width="100%" />
         </div>
-        <div class="col col-25" ng-if="$index + 3 < images.length">
+        <div ng-click="showImage(images[$index+3].jpeg, 1)" on-hold="openPopover($event, images[$index+3].firebase)" class="col col-25" ng-if="$index + 3 < images.length">
             <img ng-src="{{images[$index + 3].jpeg}}" width="100%" />
         </div>
     </div>     
     </ion-content>
 </ion-modal-view>
+
+ ng-click="showImage(post.img, 1)"
