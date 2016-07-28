@@ -154,8 +154,8 @@ function takeARealPicture(cameraIndex){
     $scope.postId = "";
     navigator.camera.getPicture(onSuccess, onFail, {
       quality: 75,
-      targetWidth: 1000,
-      targetHeight: 1000,
+      targetWidth: 2000,
+      targetHeight: 2000,
       sourceType: cameraIndex === 2 ? 2 : 1,
       cameraDirection: cameraIndex,
       destinationType: Camera.DestinationType.DATA_URL,
