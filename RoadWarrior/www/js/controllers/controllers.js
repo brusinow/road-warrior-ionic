@@ -232,7 +232,11 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
             console.log("events loaded: ",$scope.events);
               if ($scope.events.length === 0){
                 console.log("you have no events. None at all.");
+                $scope.loaded = true;
+                $scope.itinsLoaded = true;
+                $scope.weatherLoaded = true;
                 $scope.noToday = true;
+                
               } else {      
                     for (i=0; i < $scope.events.length; i++){
                       if ($scope.events[i].date === $scope.todayDate){ 

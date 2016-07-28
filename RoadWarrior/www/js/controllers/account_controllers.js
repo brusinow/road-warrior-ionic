@@ -37,10 +37,15 @@ angular.module('roadWarrior.controllers')
       $state.go("tab.account-newItin");
     }
 
-
-    $scope.newGroup = function(){
+     $scope.newGroup = function(){
       $state.go("newGroup");
     }
+
+     $scope.joinGroup = function(){
+      $state.go("joinGroup");
+    }
+
+
 
     $scope.switchGroup = function(group){
       GetSetActiveGroup.set(group, currentAuth.uid);

@@ -154,7 +154,7 @@ angular.module('roadWarrior.services', [])
     obj.access = data.access;
     obj.level = data.level;
     obj.$save().then(function(ref) {
-      ref.key() === obj.$id; // true
+     
     }, function(error) {
       console.log("Error:", error);
     });

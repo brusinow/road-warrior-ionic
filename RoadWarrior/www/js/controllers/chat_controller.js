@@ -3,47 +3,95 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('ChatsCtrl', function($scope, thisGroup, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
-  
+.controller('ChatsCtrl', function($scope, $firebaseArray, sendDataService, thisGroup, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
+  $scope.chats = [];
+  $scope.loaded = false;
+  var chatsTopicRef = firebase.database().ref('groups/'+thisGroup.groupId+"/chats");
+  $scope.topicArray = $firebaseArray(chatsTopicRef);
+
+  $scope.topicArray.$loaded().then(function(){
+    console.log("array is ",$scope.topicArray);
+    for (i=0; i<$scope.topicArray.length; i++){
+      console.log("this topic array: ",$scope.topicArray[i].camelCase);
+    $scope.chats[i] = chatMessages(thisGroup.groupId, $scope.topicArray[i].camelCase, 1);
+    }
+    $scope.loaded = true;
+    $timeout(function() {
+        console.log("chats are ",$scope.chats);
+      }, 5000);
+   
+  })
+
   Profile(currentAuth.uid).$bindTo($scope, "profile");
 
-  $scope.loaded = [];
-
-  $scope.chats = {
-    main: {
-      data: chatMessages(thisGroup.groupId,'main',1),
-      title: "Main",
-      toChat: function(){
-      $state.go("tab.chats-main");
-      }
-    },
-    show: {
-      data: chatMessages(thisGroup.groupId,'show',1),
-      title: "Show Related",
-      toChat: function(){
-      $state.go("tab.chats-show");
-      }
-    },
-    fun: {
-      data: chatMessages(thisGroup.groupId,'fun',1),
-      title: "Fun",
-      toChat: function(){
-      $state.go("tab.chats-fun");
-      }
-    }
+  
+  
+  $scope.toChat = function(data){
+    console.log(data);
+    console.log("click");
+    sendDataService.set(data);
+    $state.go('tab.chats-topic');
   }
 
-  $scope.chats.main.data.$loaded().then(function(){
-    $scope.loaded.push(true);
-  })
 
-  $scope.chats.show.data.$loaded().then(function(){
-    $scope.loaded.push(true);
-  })
 
-$scope.chats.fun.data.$loaded().then(function(){
-    $scope.loaded.push(true);
-  })
+
+
+  // $scope.chats = {
+  //   main: {
+  //     data: chatMessages(thisGroup.groupId,'main',1),
+  //     title: "Main",
+  //     toChat: function(){
+  //     $state.go("tab.chats-main");
+  //     }
+  //   },
+  //   show: {
+  //     data: chatMessages(thisGroup.groupId,'show',1),
+  //     title: "Show Related",
+  //     toChat: function(){
+  //     
+  //     }
+  //   },
+  //   fun: {
+  //     data: chatMessages(thisGroup.groupId,'fun',1),
+  //     title: "Fun",
+  //     toChat: function(){
+  //     $state.go("tab.chats-fun");
+  //     }
+  //   }
+  // }
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   $scope.chats.main.data.$loaded().then(function(){
+//     $scope.loaded.push(true);
+//   })
+
+//   $scope.chats.show.data.$loaded().then(function(){
+//     $scope.loaded.push(true);
+//   })
+
+// $scope.chats.fun.data.$loaded().then(function(){
+//     $scope.loaded.push(true);
+//   })
 
 
 
@@ -52,19 +100,21 @@ $scope.chats.fun.data.$loaded().then(function(){
 
 
 
-.controller('ChatsTopicCtrl', function($scope, $q, thisGroup, chatName, chatMessages, chatMedia, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state,$ionicPopover, moment) {
+.controller('ChatsTopicCtrl', function($scope, $q, thisGroup, sendDataService, chatMessages, chatMedia, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout,$state,$ionicPopover, moment) {
   $scope.chatLoaded = false;
   Profile(currentAuth.uid).$bindTo($scope, "profile");
-  $scope.chatName = chatName;
+  var data = sendDataService.get();
+  console.log("data is ",data);
+  $scope.chatName = data.title;
 
-  $scope.images = chatMedia(thisGroup.groupId, chatName.lowerCase);
+  $scope.images = chatMedia(thisGroup.groupId, data.camelCase);
   $scope.thisPhoto = '';
   $scope.postDate = {};
   $scope.showTime = false;
 
   $scope.saveSuccess = false;
 
-  $scope.posts = chatMessages(thisGroup.groupId,chatName.lowerCase,100);
+  $scope.posts = chatMessages(thisGroup.groupId,data.camelCase,100);
   $scope.posts.$loaded().then(function(){
   $scope.chatLoaded = true;  
     $timeout(function() {

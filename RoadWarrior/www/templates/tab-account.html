@@ -29,6 +29,16 @@
         <select class="account-list-item" ng-model="selected"  ng-change="switchGroup(selected)" ng-options='group.name for group in groups'>
         </select>
       </label> 
+       <ion-item ng-click="newGroup()"class="item-icon-right account-list-item">
+        Create New Group
+        <i class="current-value"></i>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+       <ion-item ng-click="joinGroup()"class="item-icon-right account-list-item">
+        Join Existing Group
+        <i class="current-value"></i>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
       <button type="button" class="button button-block button-dark" ng-click="logout()"><span style="font-weight: 600;">Log Out</span></button>
     <!--   <ion-item >
         Log out

@@ -1,21 +1,21 @@
 <ion-view view-title="Chats">
   <ion-content class="padding">
-   <div class="spinner" ng-hide="loaded.length === 3">
+   <div class="spinner" ng-hide="loaded">
   <ion-spinner></ion-spinner>
   </div>
-      <ion-list class="postLoad" ng-show="loaded.length === 3">
+      <ion-list class="postLoad" ng-show="loaded">
        <div class="item item-divider">
         Default Chat Groups
       </div>
       <div id="chat-list">
-        <ion-item ng-click="chat.toChat()" class="chat-list-item item-icon-right item-avatar" ng-repeat="chat in chats" type="item-text-wrap">
+        <ion-item ng-click="toChat(topicArray[$index])" class="chat-list-item item-icon-right item-avatar" ng-repeat="chat in chats" type="item-text-wrap">
           <div class="text-left">
-            <h3 class="no-margin header-font-heavy chat-name-header">{{chat.title}}</h3>
+            <h3 class="no-margin header-font-heavy chat-name-header">{{topicArray[$index].title}}</h3>
           </div>
-          <h2 ng-if="!chat.data[0]">No messages yet.</h2>
-          <h2>{{chat.data[0].user}}</h2>
-          <p ng-if="chat.data[0].message">{{chat.data[0].message}}</p>
-          <p ng-if="chat.data[0].img">Attachment: 1 image</p>
+          <h2 ng-if="!chat[0]">No messages yet.</h2>
+          <h2>{{chat[0].user}}</h2>
+          <p ng-if="chat[0].message">{{chat[0].message}}</p>
+          <p ng-if="chat[0].img">Attachment: 1 image</p>
           <i class="icon ion-chevron-right icon-accessory"></i>
         </ion-item>
         </div>

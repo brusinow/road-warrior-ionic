@@ -130,6 +130,7 @@ angular.module('roadWarrior.controllers')
       var groupId = newGroupRef.key;
       var memberEntry = {};
       var adminEntry = {};
+      var defaultChats = {};
       var searchGroup = $scope.group.name;
       memberEntry[currentAuth.uid] = {
         "name": $scope.profile.name,
@@ -144,9 +145,26 @@ angular.module('roadWarrior.controllers')
         "groupId": groupId
       }
       console.log("what is adminEntry? ",adminEntry)
+      var chatsRef = firebase.database().ref('groups/'+groupId+"chats");
+      defaultChats[chatsRef.push().key] = {
+        "title": 'Main',
+        "camelCase": 'main',
+        "groupId": groupId
+      };
+      defaultChats[chatsRef.push().key] = {
+        "title": 'Show Related',
+        "camelCase": 'showRelated',
+        "groupId": groupId  
+      };
+      defaultChats[chatsRef.push().key] = {
+        "title": 'Fun',
+        "camelCase": 'fun',
+        "groupId": groupId  
+      };
       newGroupRef.set({
         "name": searchGroup,
-        "members": memberEntry
+        "members": memberEntry,
+        "chats": defaultChats
       })
       var userGroupEntry = {};
       activeGroupEntry = {

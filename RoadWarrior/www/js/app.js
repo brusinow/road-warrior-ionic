@@ -266,8 +266,8 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         }
       }
     })
-    .state('tab.chats-main', {
-      url: '/chats/main',
+    .state('tab.chats-topic', {
+      url: '/chats/showTopic',
       cache: true,
       views: {
         'tab-chats': {
@@ -279,64 +279,8 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         currentAuth: authRequire,
         thisGroup: function(ActiveGroup, currentAuth){
           return ActiveGroup(currentAuth.uid).$loaded();
-        },
-        chatName: function(){
-          var name = {
-            formatted: "Main",
-            lowerCase: "main"
-          }
-          return name;
         }
       }
-    })
-
-
-
-    .state('tab.chats-show', {
-      url: '/chats/show',
-      cache: true,
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chatsTopic.html',
-          controller: 'ChatsTopicCtrl'
-        }
-      },
-      resolve: {
-        currentAuth: authRequire,
-        thisGroup: function(ActiveGroup, currentAuth){
-          return ActiveGroup(currentAuth.uid).$loaded();
-        },
-        chatName: function(){
-          var name = {
-            formatted: "Show Related",
-            lowerCase: "show"
-          }
-          return name;
-        } 
-      }
-    })
-    .state('tab.chats-fun', {
-      url: '/chats/fun',
-      cache: true,
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chatsTopic.html',
-          controller: 'ChatsTopicCtrl'
-        }
-      },
-      resolve: {
-        currentAuth: authRequire,
-        thisGroup: function(ActiveGroup, currentAuth){
-          return ActiveGroup(currentAuth.uid).$loaded();
-        },
-        chatName: function(){
-          var name = {
-            formatted: "Fun",
-            lowerCase: "fun"
-          }
-          return name;
-        }
-    }
     })
 
   .state('tab.account', {
@@ -422,7 +366,35 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
     resolve: {
       "currentAuth": authRequire
     }
-  });
+  })
+
+   .state('tab.account-newGroup', {
+    cache: false,
+    url: '/account/newGroup',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/newGroup.html',
+        controller: 'NewGroupsCtrl'
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+    .state('tab.account-joinGroup', {
+    cache: false,
+    url: '/account/newGroup',
+    views: {
+      'tab-account': {
+        templateUrl: 'templates/joinGroup.html',
+        controller: 'JoinGroupsCtrl'
+      }
+    },
+    resolve: {
+      "currentAuth": authRequire
+    }
+  })
+
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/today');
