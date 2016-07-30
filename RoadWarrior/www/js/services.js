@@ -287,6 +287,21 @@ angular.module('roadWarrior.services', [])
             dayOfWeek: function(unixTime){
               var day = moment(unixTime).format('dddd');
               return day;
+            },
+            camelCase: function(string){
+              var array = string.split(" ");
+              if (array.length === 1){
+                return string.toLowerCase();
+              } else {
+                array[0] = array[0].toLowerCase();
+                for (i = 1;i<array.length;i++){
+                  array[i] = array[i].toLowerCase();
+                  var wordArray = array[i].split('');
+                  wordArray[0] = wordArray[0].toUpperCase();
+                  array[i] = wordArray.join('');
+                }
+              return array.join('');
+              }
             }
             
 

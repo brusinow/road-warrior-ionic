@@ -1,0 +1,15 @@
+<ion-modal-view>
+     <ion-header-bar class="bar-dark">
+      <button ng-click="closeModal()" class="button button-icon icon ion-close-circled"></button>
+      <h1 class = "title">Add Topic</h1>
+      <button ng-click="addTopic(topic)" class="button button-icon icon ion-checkmark-circled"></button>
+   </ion-header-bar>
+    <ion-content overflow-scroll="true" padding="'false'" scroll="false" class="has-header">
+        <!-- show if there is no current user -->
+        <h4 style="margin-top:30%; margin-bottom: 15%" class="center-text header-font-heavy">Create a chat topic here.</h4>
+                <label class="item item-input">
+                    <span class="input-label">Topic</span>
+                    <input type="text" ng-model="topic.name" placeholder="Topic Name">
+                </label>   
+    </ion-content>
+</ion-modal-view>

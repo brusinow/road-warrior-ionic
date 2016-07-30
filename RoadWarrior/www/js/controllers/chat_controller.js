@@ -3,14 +3,16 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('ChatsCtrl', function($scope, $firebaseArray, sendDataService, thisGroup, chatMessages, Profile, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
+.controller('ChatsCtrl', function($scope, $firebaseArray, sendDataService, thisGroup, chatMessages, Profile, helperService, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
   $scope.chats = [];
   $scope.loaded = false;
+  $scope.topic = {};
   var chatsTopicRef = firebase.database().ref('groups/'+thisGroup.groupId+"/chats");
   $scope.topicArray = $firebaseArray(chatsTopicRef);
 
   $scope.topicArray.$loaded().then(function(){
     console.log("array is ",$scope.topicArray);
+    $scope.$watch('topicArray', function(newValue, oldValue){    
     for (i=0; i<$scope.topicArray.length; i++){
       console.log("this topic array: ",$scope.topicArray[i].camelCase);
     $scope.chats[i] = chatMessages(thisGroup.groupId, $scope.topicArray[i].camelCase, 1);
@@ -19,12 +21,11 @@ angular.module('roadWarrior.controllers')
     $timeout(function() {
         console.log("chats are ",$scope.chats);
       }, 5000);
-   
+   })
   })
 
   Profile(currentAuth.uid).$bindTo($scope, "profile");
 
-  
   
   $scope.toChat = function(data){
     console.log(data);
@@ -33,67 +34,36 @@ angular.module('roadWarrior.controllers')
     $state.go('tab.chats-topic');
   }
 
+  $scope.addTopic = function(topic){
+    var newTopic = {
+      title: topic.name,
+      camelCase: helperService.camelCase(topic.name),
+      groupId: thisGroup.groupId
+    }
+    chatsTopicRef.push(newTopic);
+    $scope.modal.hide();
+  }
 
+  $ionicModal.fromTemplateUrl('templates/new-topic-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
 
+      $scope.openModal = function() {
+      $scope.modal.show();
+      };
 
+      $scope.closeModal = function() {
+      $scope.modal.hide();
+      } 
 
-  // $scope.chats = {
-  //   main: {
-  //     data: chatMessages(thisGroup.groupId,'main',1),
-  //     title: "Main",
-  //     toChat: function(){
-  //     $state.go("tab.chats-main");
-  //     }
-  //   },
-  //   show: {
-  //     data: chatMessages(thisGroup.groupId,'show',1),
-  //     title: "Show Related",
-  //     toChat: function(){
-  //     
-  //     }
-  //   },
-  //   fun: {
-  //     data: chatMessages(thisGroup.groupId,'fun',1),
-  //     title: "Fun",
-  //     toChat: function(){
-  //     $state.go("tab.chats-fun");
-  //     }
-  //   }
-  // }
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   $scope.chats.main.data.$loaded().then(function(){
-//     $scope.loaded.push(true);
-//   })
-
-//   $scope.chats.show.data.$loaded().then(function(){
-//     $scope.loaded.push(true);
-//   })
-
-// $scope.chats.fun.data.$loaded().then(function(){
-//     $scope.loaded.push(true);
-//   })
-
-
+    //Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.modal.remove();
+      $scope.modalPhoto.remove();
+    });
 
 
 })

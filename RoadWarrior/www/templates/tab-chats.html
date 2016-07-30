@@ -5,7 +5,10 @@
   </div>
       <ion-list class="postLoad" ng-show="loaded">
        <div class="item item-divider">
-        Chat Groups
+        Chat Topics
+        <button ng-click="openModal()" class="button button-small button-dark">
+          Add Chat Topic
+        </button>
       </div>
       <div id="chat-list">
         <ion-item ng-click="toChat(topicArray[$index])" class="chat-list-item item-icon-right item-avatar" ng-repeat="chat in chats" type="item-text-wrap">
