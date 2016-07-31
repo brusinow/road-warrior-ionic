@@ -1,6 +1,6 @@
 angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
 
-.controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','FirebaseEnv', 'itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, FirebaseEnv, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
+.controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','FirebaseEnv','thisGroup', 'itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, FirebaseEnv, thisGroup, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
   
   $scope.yelpLoadList = [];
     $scope.disconnected = false;
@@ -10,7 +10,7 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
     $scope.itinsLoaded = false;
     $scope.noToday = false;
     $scope.weatherData = {};
-
+    $scope.backup = {};
 
     $scope.yelpShow = {
       "food": true,
@@ -33,6 +33,11 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
 
     Profile(currentAuth.uid).$bindTo($scope, "profile");
 
+    var allGroupItins = itineraryService.getAllGroupItins(thisGroup.groupId);
+    allGroupItins.$loaded().then(function(){
+      console.log("Group itins: ",allGroupItins);
+    })
+
 
 
 
@@ -48,9 +53,9 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
         $scope.disconnected = false;
 
 
-      ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+  
         // console.log("$scope.thisGroup.groupId: ",$scope.thisGroup.groupId);
-        $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').equalTo($scope.thisGroup.groupId))
+        $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').equalTo(thisGroup.groupId))
         $scope.events.$loaded()
           .then(function(){
             $scope.$watch('events', function(newValue, oldValue){    
@@ -128,7 +133,7 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
 
             },true);                    
           });
-        });
+
 
 
 
@@ -141,7 +146,7 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
         con.onDisconnect().remove();
         lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
         } else {
-          //what to do if not connected
+          console.log("we are not connected!!!!!!!!!!!!!!")
           $scope.disconnected = true;
         }
       });

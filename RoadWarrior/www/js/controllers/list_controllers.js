@@ -2,22 +2,24 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'sendDataService', 'ActiveGroup', 'itineraryService', 'helperService','MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, ActiveGroup, itineraryService, helperService, MyYelpAPI, $state, $http, $q, moment,Yahoo){
+.controller ('ListCtrl', ['$scope','$firebaseArray', 'currentAuth', 'thisGroup', 'sendDataService', 'ActiveGroup', 'itineraryService', 'helperService','MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, thisGroup, sendDataService, ActiveGroup, itineraryService, helperService, MyYelpAPI, $state, $http, $q, moment,Yahoo){
   $scope.loaded = false;
-
-
-  ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-    console.log("This group: ",$scope.thisGroup);
-    var eventRef = firebase.database().ref('events');
-    $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt($scope.thisGroup.groupId).endAt($scope.thisGroup.groupId));
-    $scope.events.$loaded()
+  $scope.thisGroup = thisGroup;
+  var eventRef = firebase.database().ref('events');
+  if ($scope.thisGroup){
+  $scope.events = $firebaseArray(eventRef.orderByChild('groupId').startAt(thisGroup.groupId).endAt(thisGroup.groupId));
+  $scope.groupItins = itineraryService.getAllGroupItins(thisGroup.groupId);
+  $scope.groupItins.$loaded().then(function(){
+    console.log("what are itins? ",$scope.groupItins);
+  });
+  $scope.events.$loaded()
     .then(function(){
       $scope.loaded = true; 
     })  
-  }).catch(function(){
+  } else {
     console.log("no active group");
     $scope.loaded = true;
-  })
+  }
 
    $scope.newEvent = function(){
       $state.go("tab.list-newEvent");
@@ -31,11 +33,15 @@ angular.module('roadWarrior.controllers')
 }])
 
 
-.controller ('ListShowCtrl', ['$scope', '$firebaseArray','currentAuth', 'sendDataService', 'itineraryService', 'helperService', 'ActiveGroup', 'MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, sendDataService, itineraryService, helperService, ActiveGroup, MyYelpAPI, $state, $http, $q, moment,Yahoo){
+.controller ('ListShowCtrl', ['$scope', '$firebaseArray','currentAuth', 'thisGroup', 'sendDataService', 'itineraryService', 'helperService', 'ActiveGroup', 'MyYelpAPI', '$state', '$http','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, thisGroup, sendDataService, itineraryService, helperService, ActiveGroup, MyYelpAPI, $state, $http, $q, moment,Yahoo){
     $scope.loaded = false;
     $scope.weatherLoaded = false;
     $scope.itinsLoaded = false;
     $scope.weatherData = {};
+    $scope.groupItins = itineraryService.getAllGroupItins(thisGroup.groupId);
+      $scope.groupItins.$loaded().then(function(){
+      console.log("what are itins? ",$scope.groupItins);
+    });
 
     ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
       console.log("this group loaded");
@@ -110,7 +116,13 @@ angular.module('roadWarrior.controllers')
 
 
 
-    var lat = $scope.event.lat;
+
+
+  var connectedRef = firebase.database().ref('.info/connected');
+  connectedRef.on('value', function(snap) {
+  if (snap.val() === true) {
+
+        var lat = $scope.event.lat;
     var lng = $scope.event.lng;
     if (lat && lng){
     Yahoo.getYahooData(lat,lng).then(function(data){
@@ -135,6 +147,29 @@ angular.module('roadWarrior.controllers')
    } else {
     $scope.weatherLoaded = true;
    }
+
+
+
+
+  } else {
+    // if not connected
+    $scope.weatherLoaded = true;
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     $scope.data = {};
     $scope.$watch('data.slider', function(nv, ov) {

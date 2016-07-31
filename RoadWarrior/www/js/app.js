@@ -131,7 +131,10 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
       }
     },
     resolve: {
-      "currentAuth": authRequire
+      "currentAuth": authRequire,
+      thisGroup: function(ActiveGroup, currentAuth){
+          return ActiveGroup(currentAuth.uid).$loaded();
+      }
     }
   })
      
@@ -184,7 +187,10 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         }
       },
       resolve: {
-      "currentAuth": authRequire
+      "currentAuth": authRequire,
+      thisGroup: function(ActiveGroup, currentAuth){
+          return ActiveGroup(currentAuth.uid).$loaded();
+      }
     }
     })
       .state('tab.listShow', {
@@ -196,7 +202,10 @@ angular.module('roadWarrior', ['ionic','ionic.service.core', 'firebase','ngMessa
         }
       },
       resolve: {
-      "currentAuth": authRequire
+      "currentAuth": authRequire,
+      thisGroup: function(ActiveGroup, currentAuth){
+          return ActiveGroup(currentAuth.uid).$loaded();
+      }
     }
     })
     .state('tab.list-newItin', {

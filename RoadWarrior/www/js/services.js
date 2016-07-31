@@ -134,8 +134,7 @@ angular.module('roadWarrior.services', [])
 .factory("EditItin", ["$firebaseObject",
   function($firebaseObject) {
     return function(id) {
-      var itinRef = firebase.database().ref('itins/'+id)
-      // var itinRef = new Firebase('https://roadwarrior.firebaseio.com/itins/'+id);
+      var itinRef = firebase.database().ref('itins/'+id);
       return $firebaseObject(itinRef);
     }
   }
@@ -557,7 +556,7 @@ angular.module('roadWarrior.services', [])
     }
 ])
 
-.factory('itineraryService', function() {
+.factory('itineraryService', function($firebaseArray) {
   var itinRef = firebase.database().ref('itins');
 
   return {
@@ -591,14 +590,12 @@ angular.module('roadWarrior.services', [])
         $scope.todayItins = itins.val();
         console.log(itins.val());
       });
+    },
+    getAllGroupItins: function(groupId){
+      var query = itinRef.orderByChild('groupId').startAt(groupId).endAt(groupId);
+      return $firebaseArray(query);
     }
-
-
-
-
-  };
-
-
+  }
 
 })
 
