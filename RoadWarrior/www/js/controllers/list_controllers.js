@@ -85,6 +85,7 @@ angular.module('roadWarrior.controllers')
 
   var itinsRef = firebase.database().ref('itins');
   $scope.event = sendDataService.get();
+  console.log("event: ",$scope.event);
   $scope.event.weekDay = moment($scope.event.unixDate).format('dddd');
   $scope.loaded = true;
   console.log("loaded is ",$scope.loaded)
@@ -92,6 +93,7 @@ angular.module('roadWarrior.controllers')
   $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id));
   $scope.itins.$loaded()
   .then(function(){
+    console.log("itins: ",$scope.itins);
     $scope.itinsLoaded = true;
     console.log("itins are ",$scope.itinsLoaded)
   });

@@ -5,14 +5,26 @@ angular.module('roadWarrior.controllers')
 
 .controller('ChatsCtrl', function($scope, $firebaseArray, sendDataService, thisGroup, chatMessages, Profile, helperService, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
   $scope.chats = [];
+  $scope.disconnected = false;
   $scope.loaded = false;
   $scope.topic = {};
   var chatsTopicRef = firebase.database().ref('groups/'+thisGroup.groupId+"/chats");
+  var myConnectionsRef = firebase.database().ref('users/'+currentAuth.uid+'/connections');
+// stores the timestamp of my last disconnect (the last time I was seen online)
+  var lastOnlineRef = firebase.database().ref('users/'+currentAuth.uid+'/lastOnline');
+
+  var connectedRef = firebase.database().ref('.info/connected');
+  connectedRef.on('value', function(snap) {
+  if (snap.val() === true) {
+  $scope.disconnected = false;
   $scope.topicArray = $firebaseArray(chatsTopicRef);
 
   $scope.topicArray.$loaded().then(function(){
     console.log("array is ",$scope.topicArray);
-    $scope.$watch('topicArray', function(newValue, oldValue){    
+    $scope.$watch('topicArray', function(newValue, oldValue){
+    console.log("rerun of watch!!");
+    console.log("old value: ",oldValue);
+    console.log("new value: ",newValue);    
     for (i=0; i<$scope.topicArray.length; i++){
       console.log("this topic array: ",$scope.topicArray[i].camelCase);
     $scope.chats[i] = chatMessages(thisGroup.groupId, $scope.topicArray[i].camelCase, 1);
@@ -21,10 +33,27 @@ angular.module('roadWarrior.controllers')
     $timeout(function() {
         console.log("chats are ",$scope.chats);
       }, 5000);
-   })
+   }, true)
   })
 
   Profile(currentAuth.uid).$bindTo($scope, "profile");
+
+
+
+
+    var con = myConnectionsRef.push(true);
+
+    // when I disconnect, remove this device
+    con.onDisconnect().remove();
+
+    // when I disconnect, update the last time I was seen online
+    lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+  } else {
+    $scope.disconnected = true;
+    $scope.loaded = true;
+  }
+});
+ 
 
   
   $scope.toChat = function(data){
@@ -41,7 +70,9 @@ angular.module('roadWarrior.controllers')
       groupId: thisGroup.groupId
     }
     chatsTopicRef.push(newTopic);
-    $scope.modal.hide();
+    $scope.modal.hide().then(function () {
+      // $state.go('tab.chats',{},{reload: true});
+    });
   }
 
   $ionicModal.fromTemplateUrl('templates/new-topic-modal.html', {

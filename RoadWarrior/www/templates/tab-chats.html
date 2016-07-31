@@ -3,7 +3,7 @@
    <div class="spinner" ng-hide="loaded">
   <ion-spinner></ion-spinner>
   </div>
-      <ion-list class="postLoad" ng-show="loaded">
+      <ion-list class="postLoad" ng-show="loaded && !disconnected">
        <div class="item item-divider">
         Chat Topics
         <button ng-click="openModal()" class="button button-small button-dark">
@@ -23,6 +23,9 @@
         </ion-item>
         </div>
       </ion-list>
+      <div ng-show="disconnected && loaded">
+      <h3>Chats will be available when you reconnect to the network.</h3>
+      </div>
   </ion-content>
 </ion-view>
 

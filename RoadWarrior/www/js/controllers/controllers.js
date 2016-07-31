@@ -1,10 +1,9 @@
 angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
 
 .controller('TodayCtrl', ['$scope','$firebaseArray', 'currentAuth','FirebaseEnv', 'itineraryService','GetSetActiveGroup','ActiveGroup', 'helperService', 'sendDataService', 'Profile','MyYelpAPI', '$state','$q', 'moment','Yahoo', function($scope, $firebaseArray, currentAuth, FirebaseEnv, itineraryService, GetSetActiveGroup, ActiveGroup, helperService, sendDataService, Profile, MyYelpAPI, $state, $q, moment,Yahoo){
-
-    $scope.navTitle = '<img class="nav-title" src="img/bus-invert.png">'
-    $scope.yelpLoadList = [];
-
+  
+  $scope.yelpLoadList = [];
+    $scope.disconnected = false;
     $scope.loaded = false;
     $scope.foundToday = false;
     $scope.weatherLoaded = false;
@@ -18,6 +17,152 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
       "entertainment": false,
       "emergency": false
     }
+
+
+        // console.log("this group id is: ",thisGroup.groupId);
+    var usersRef = firebase.database().ref('users');
+    var eventsRef = firebase.database().ref('events');
+    var itinsRef = firebase.database().ref('itins');
+
+    
+    // $scope.event = {};
+    $scope.todayDate = moment().format('MM-DD-YYYY');
+    $scope.now_formatted_date = moment().format('MMMM Do, YYYY');
+    $scope.day_of_week = moment().format('dddd');
+
+
+    Profile(currentAuth.uid).$bindTo($scope, "profile");
+
+
+
+
+
+  var myConnectionsRef = firebase.database().ref('users/'+currentAuth.uid+'/connections');
+  var lastOnlineRef = firebase.database().ref('users/'+currentAuth.uid+'/lastOnline');
+  var connectedRef = firebase.database().ref('.info/connected');
+    connectedRef.on('value', function(snap) {
+      console.log("what is snap? ",snap.val());
+      if (snap.val() === true) {
+        console.log("we're connected!!!!!!!");
+        var con = myConnectionsRef.push(true);
+        $scope.disconnected = false;
+
+
+      ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
+        // console.log("$scope.thisGroup.groupId: ",$scope.thisGroup.groupId);
+        $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').equalTo($scope.thisGroup.groupId))
+        $scope.events.$loaded()
+          .then(function(){
+            $scope.$watch('events', function(newValue, oldValue){    
+            console.log("old value of events list: ",oldValue);   
+            console.log("new value of events list: ",newValue);      
+              $scope.events = newValue;
+              $scope.foundToday = false;
+              $scope.loaded = false;
+              $scope.weatherLoaded = false;
+              $scope.itinsLoaded = false;
+              $scope.noToday = false;
+              $scope.weatherData = {};
+            console.log("events loaded: ",$scope.events);
+              if ($scope.events.length === 0){
+                console.log("you have no events. None at all.");
+                $scope.loaded = true;
+                $scope.itinsLoaded = true;
+                $scope.weatherLoaded = true;
+                $scope.noToday = true;
+                
+              } else {      
+                    for (i=0; i < $scope.events.length; i++){
+                      if ($scope.events[i].date === $scope.todayDate){ 
+                            $scope.event = $scope.events[i]; 
+                            $scope.foundToday = true;
+                            $scope.loaded = true;
+                            console.log("loaded is ",$scope.loaded);
+                                $scope.$watch('event', function(newEvent, oldEvent) {
+                                console.log("Old value is ",oldEvent);  
+                                console.log("New value is ",newEvent);
+                                console.log("API CALLS!!!!!!!!!!!!!!");
+                                if ($scope.event.lat && $scope.event.lng){
+                                console.log("LOCATION SPECIFIC TASKS HERE!!!!!!!")
+                                var lat = $scope.event.lat;
+                                var lng = $scope.event.lng;
+                                $scope.weatherCall(lat,lng);
+                                $scope.yelpCall();
+                                } else {
+                                  console.log("NO LOCATION STUFF!!!!!")
+                                $scope.weatherLoaded = true;
+                                console.log("weather loaded is ",$scope.weatherLoaded);
+                                } 
+                                },true);
+
+                        $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
+                        $scope.itins.$loaded()
+                        .then(function(){
+                          // console.log("itins are ",$scope.itins);
+                          if ($scope.itins.length > 0){
+                            $scope.itinsLoaded = true;
+                            // console.log("itins result is ",$scope.result.itins);
+                            
+                          } else {
+                            console.log("you have no itins for this day.")
+                            $scope.itinsLoaded = true;
+                            console.log("itins loaded is ",$scope.itinsLoaded);
+                          }
+                        }).catch(function(data){
+                          console.log("no itins data came back. ",data);
+                        });
+                        break;
+                      }                      
+                    }
+                     
+                          if (!$scope.foundToday){
+                          $scope.loaded = true;
+                          $scope.itinsLoaded = true;
+                          $scope.weatherLoaded = true;
+                          $scope.noToday = true;
+                          console.log("no today event!");
+                          }
+                       
+                      
+                  }    
+
+            },true);                    
+          });
+        });
+
+
+
+
+
+
+
+
+
+        con.onDisconnect().remove();
+        lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+        } else {
+          //what to do if not connected
+          $scope.disconnected = true;
+        }
+      });
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+    
 
 
     $scope.editItin = function(itin, event){
@@ -86,24 +231,6 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
       }
     }
 
-    // $scope.hideLoader = function(){
-    //   if ($scope.result.director === "noToday"){
-    //     // console.log("NO TODAY!!!");
-    //     return true;
-    //   } else if ($scope.result.director === "noItins" && $scope.result.weather){
-    //     // console.log("EVENT, BUT NO ITINS!!!");
-    //     return true;
-    //   } else if ($scope.result.weather && $scope.result.today && $scope.result.itins){
-    //      // console.log("WE HAVE A TODAY EVENT!!");
-    //     return true;
-    //   } else {
-    //     // console.log("RETURNING FALSE!?!?!?!");
-    //     // console.log("director is ",$scope.result.director);
-    //     // console.log("today result is ",$scope.result.today)
-    //     // console.log("itin results is ",$scope.result.itins);
-    //     return false;
-    //   }
-    // }
 
 
   $scope.yelpCall = function(){ 
@@ -198,103 +325,14 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
   $scope.slider = $scope.data.slider;
   })
 
-    Profile(currentAuth.uid).$bindTo($scope, "profile");
+  
     
-    
-    // console.log("this group id is: ",thisGroup.groupId);
-    var usersRef = firebase.database().ref('users');
-    var eventsRef = firebase.database().ref('events');
-    var itinsRef = firebase.database().ref('itins');
-
-    
-      // $scope.event = {};
-      $scope.todayDate = moment().format('MM-DD-YYYY');
-      $scope.now_formatted_date = moment().format('MMMM Do, YYYY');
-      $scope.day_of_week = moment().format('dddd');
     
 
     
-      ActiveGroup(currentAuth.uid).$bindTo($scope, "thisGroup").then(function(){
-        // console.log("$scope.thisGroup.groupId: ",$scope.thisGroup.groupId);
-        $scope.events = $firebaseArray(eventsRef.orderByChild('groupId').equalTo($scope.thisGroup.groupId))
-        $scope.events.$loaded()
-          .then(function(){
-            $scope.$watch('events', function(newValue, oldValue){    
-            console.log("old value of events list: ",oldValue);   
-            console.log("new value of events list: ",newValue);      
-              $scope.events = newValue;
-              $scope.foundToday = false;
-              $scope.loaded = false;
-              $scope.weatherLoaded = false;
-              $scope.itinsLoaded = false;
-              $scope.noToday = false;
-              $scope.weatherData = {};
-            console.log("events loaded: ",$scope.events);
-              if ($scope.events.length === 0){
-                console.log("you have no events. None at all.");
-                $scope.loaded = true;
-                $scope.itinsLoaded = true;
-                $scope.weatherLoaded = true;
-                $scope.noToday = true;
-                
-              } else {      
-                    for (i=0; i < $scope.events.length; i++){
-                      if ($scope.events[i].date === $scope.todayDate){ 
-                            $scope.event = $scope.events[i]; 
-                            $scope.foundToday = true;
-                            $scope.loaded = true;
-                            console.log("loaded is ",$scope.loaded);
-                                $scope.$watch('event', function(newEvent, oldEvent) {
-                                console.log("Old value is ",oldEvent);  
-                                console.log("New value is ",newEvent);
-                                console.log("API CALLS!!!!!!!!!!!!!!");
-                                if ($scope.event.lat && $scope.event.lng){
-                                console.log("LOCATION SPECIFIC TASKS HERE!!!!!!!")
-                                var lat = $scope.event.lat;
-                                var lng = $scope.event.lng;
-                                $scope.weatherCall(lat,lng);
-                                $scope.yelpCall();
-                                } else {
-                                  console.log("NO LOCATION STUFF!!!!!")
-                                $scope.weatherLoaded = true;
-                                console.log("weather loaded is ",$scope.weatherLoaded);
-                                } 
-                                },true);
 
-                        $scope.itins = $firebaseArray(itinsRef.orderByChild('eventId').startAt($scope.event.$id).endAt($scope.event.$id))
-                        $scope.itins.$loaded()
-                        .then(function(){
-                          // console.log("itins are ",$scope.itins);
-                          if ($scope.itins.length > 0){
-                            $scope.itinsLoaded = true;
-                            // console.log("itins result is ",$scope.result.itins);
-                            
-                          } else {
-                            console.log("you have no itins for this day.")
-                            $scope.itinsLoaded = true;
-                            console.log("itins loaded is ",$scope.itinsLoaded);
-                          }
-                        }).catch(function(data){
-                          console.log("no itins data came back. ",data);
-                        });
-                        break;
-                      }                      
-                    }
-                     
-                          if (!$scope.foundToday){
-                          $scope.loaded = true;
-                          $scope.itinsLoaded = true;
-                          $scope.weatherLoaded = true;
-                          $scope.noToday = true;
-                          console.log("no today event!");
-                          }
-                       
-                      
-                  }    
-
-            },true);                    
-          });
-        });
+    
+     
 
 }])
 
