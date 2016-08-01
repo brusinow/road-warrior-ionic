@@ -3,8 +3,8 @@ angular.module('roadWarrior.controllers')
 
 
 
-.controller('ChatsCtrl', function($scope, $firebaseArray, sendDataService, thisGroup, chatMessages, Profile, helperService, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment) {
-  $scope.chats = [];
+.controller('ChatsCtrl', function($scope, $firebaseArray, sendDataService, thisGroup, chatMessages, Profile, helperService, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment, $ionicPopup) {
+  // $scope.chats = [];
   $scope.disconnected = false;
   $scope.loaded = false;
   $scope.topic = {};
@@ -22,6 +22,7 @@ angular.module('roadWarrior.controllers')
   $scope.topicArray.$loaded().then(function(){
     console.log("array is ",$scope.topicArray);
     $scope.$watch('topicArray', function(newValue, oldValue){
+    $scope.chats = []; 
     console.log("rerun of watch!!");
     console.log("old value: ",oldValue);
     console.log("new value: ",newValue);    
@@ -97,7 +98,42 @@ angular.module('roadWarrior.controllers')
     });
 
 
+      $scope.deleteConfirm = function(index) {
+        console.log("what is index? ",index);
+        var thisChat = $scope.topicArray[index];
+   var confirmPopup = $ionicPopup.confirm({
+     title: 'Are you sure you want to delete this chat topic?',
+     template: 'All messages and media will be lost.'
+   });
+
+   confirmPopup.then(function(res) {
+     if(res) {
+       console.log('You are sure');
+       $scope.topicArray.$remove(thisChat).then(function(ref) {
+        // $ionicHistory.nextViewOptions({
+        //   disableBack: true
+        // });
+        // $state.go("tab.list");
+  // data has been deleted locally and in the database
+        }, function(error) {
+      console.log("Error:", error);
+        });
+     } else {
+       console.log('You are not sure');
+     }
+   });
+ };
+
+
+
+
+
+
+
 })
+
+
+
 
 
 

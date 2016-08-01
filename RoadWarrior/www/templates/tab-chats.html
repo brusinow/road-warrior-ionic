@@ -1,24 +1,24 @@
 <ion-view view-title="Chats">
-  <ion-content class="padding">
+  <ion-content id="chat-view" class="padding">
    <div class="spinner" ng-hide="loaded">
   <ion-spinner></ion-spinner>
   </div>
       <ion-list class="postLoad" ng-show="loaded && !disconnected">
-       <div class="item item-divider">
+       <div style="line-height: 24px;"class="item item-divider">
         Chat Topics
-        <button ng-click="openModal()" class="button button-small button-dark">
-          Add Chat Topic
-        </button>
+        <div ng-click="openModal()" class="button button-icon icon ion-plus-circled"></div>
       </div>
       <div id="chat-list">
-        <ion-item ng-click="toChat(topicArray[$index])" class="chat-list-item item-icon-right item-avatar" ng-repeat="chat in chats" type="item-text-wrap">
-          <div class="text-left">
-            <h3 class="no-margin header-font-heavy chat-name-header">{{topicArray[$index].title}}</h3>
+        <ion-item ng-click="toChat(topicArray[$index])" class="chat-list-item item-icon-left item-icon-right" ng-repeat="chat in chats" type="item-text-wrap">
+          <div class="row text-left">
+            <button ng-click="deleteConfirm($index); $event.stopPropagation();" class="button button-icon icon dark-icon ion-close-circled"></button>
+            <span class="no-margin header-font-heavy chat-name-header">{{topicArray[$index].title}}</span>
+             <p ng-if="!chat[0]">No messages yet.</p>
+          <p ng-if="chat[0]" style="color: #222; font-weight: bold;"class="header-font">{{chat[0].user}}: </p>
+          <p style="margin-left: 5px;" class="chat-grey-text" ng-if="chat[0].message">{{chat[0].message | cut:false:20:'...'}}</p>
+          <p style="margin-left: 5px;" class="chat-grey-text" ng-if="chat[0].img">Attachment: 1 image</p>
           </div>
-          <h2 ng-if="!chat[0]">No messages yet.</h2>
-          <h2>{{chat[0].user}}</h2>
-          <p ng-if="chat[0].message">{{chat[0].message}}</p>
-          <p ng-if="chat[0].img">Attachment: 1 image</p>
+         
           <i class="icon ion-chevron-right icon-accessory"></i>
         </ion-item>
         </div>
@@ -31,3 +31,4 @@
 
 
 
+<!-- <div ng-click="deleteConfirm($index); $event.stopPropagation();">delete</div> -->

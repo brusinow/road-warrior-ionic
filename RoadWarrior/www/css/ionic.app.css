@@ -949,12 +949,37 @@ textarea::-webkit-input-placeholder {
   color: #484041; }
 
 .chat-name-header {
-  display: inline-block;
+  display: inline;
   padding: 2px 4px;
   border: 1px solid #c42644;
   color: #c42644 !important;
-  border-radius: 2px; }
+  border-radius: 2px;
+  margin-right: 5px;
+  font-size: 16px;
+  line-height: 18px; }
 
+#chat-list p {
+  line-height: 24px; }
+
+#chat-view .item-icon-left {
+  padding-left: 44px; }
+
+#chat-view .button-icon.icon:before, #chat-view .button {
+  font-size: 24px;
+  line-height: 24px;
+  min-height: 24px;
+  min-width: 24px;
+  color: #64b6b0; }
+
+#chat-list .button-icon.icon:before, #chat-view .button {
+  font-size: 18px;
+  line-height: 18px;
+  min-height: 18px;
+  min-width: 18px; }
+
+/*.chat-grey-text {
+  line-height: 24px;
+}*/
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
