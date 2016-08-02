@@ -6,16 +6,18 @@
       <ion-list class="postLoad" ng-show="loaded && !disconnected">
        <div style="line-height: 24px;"class="item item-divider">
         Chat Topics
-        <div ng-click="openModal()" class="button button-icon icon ion-plus-circled"></div>
+        <div ng-if="thisGroup.level === 'admin'" ng-click="openModal()" class="button button-icon icon ion-plus-round"></div>
       </div>
       <div id="chat-list">
         <ion-item ng-click="toChat(topicArray[$index])" class="chat-list-item item-icon-left item-icon-right" ng-repeat="chat in chats" type="item-text-wrap">
+        <button ng-if="thisGroup.level === 'admin'" style="left: 0px;" ng-click="deleteConfirm($index); $event.stopPropagation();" class="button close-icon button-icon icon ion-trash-a"></button>
           <div class="row text-left">
-            <button ng-click="deleteConfirm($index); $event.stopPropagation();" class="button button-icon icon dark-icon ion-close-circled"></button>
-            <span class="no-margin header-font-heavy chat-name-header">{{topicArray[$index].title}}</span>
+            <div class="no-margin header-font-heavy chat-name-header"><span>{{topicArray[$index].title}}</span></div>
+          </div>
+          <div class="row text-left">
              <p ng-if="!chat[0]">No messages yet.</p>
           <p ng-if="chat[0]" style="color: #222; font-weight: bold;"class="header-font">{{chat[0].user}}: </p>
-          <p style="margin-left: 5px;" class="chat-grey-text" ng-if="chat[0].message">{{chat[0].message | cut:false:20:'...'}}</p>
+          <p style="margin-left: 5px;" class="chat-grey-text" ng-if="chat[0].message">{{chat[0].message | cut:false:14:'...'}}</p>
           <p style="margin-left: 5px;" class="chat-grey-text" ng-if="chat[0].img">Attachment: 1 image</p>
           </div>
          

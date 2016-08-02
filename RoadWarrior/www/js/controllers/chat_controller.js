@@ -5,6 +5,7 @@ angular.module('roadWarrior.controllers')
 
 .controller('ChatsCtrl', function($scope, $firebaseArray, sendDataService, thisGroup, chatMessages, Profile, helperService, currentAuth, ActiveGroup, $cordovaCamera, $ionicScrollDelegate, $ionicModal, $ionicActionSheet, $timeout, $state, moment, $ionicPopup) {
   // $scope.chats = [];
+  $scope.thisGroup = thisGroup;
   $scope.disconnected = false;
   $scope.loaded = false;
   $scope.topic = {};
@@ -72,7 +73,7 @@ angular.module('roadWarrior.controllers')
     }
     chatsTopicRef.push(newTopic);
     $scope.modal.hide().then(function () {
-      // $state.go('tab.chats',{},{reload: true});
+     $scope.topic = {};
     });
   }
 
@@ -84,6 +85,7 @@ angular.module('roadWarrior.controllers')
   });
 
       $scope.openModal = function() {
+        $scope.newTopic = {};
       $scope.modal.show();
       };
 

@@ -38,6 +38,7 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
       console.log("Group itins: ",allGroupItins);
     })
 
+    $scope.thisGroup = thisGroup;
 
 
 
