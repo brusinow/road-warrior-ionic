@@ -10,7 +10,6 @@ angular.module('roadWarrior.controllers', ['roadWarrior.services','ionic'])
     $scope.itinsLoaded = false;
     $scope.noToday = false;
     $scope.weatherData = {};
-    $scope.backup = {};
 
     $scope.yelpShow = {
       "food": true,
