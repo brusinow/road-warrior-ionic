@@ -10,6 +10,8 @@ Installation: use "git clone" to copy to your computer and then open in your pre
 
 Technologies used: AngularJS, Ionic, Cordova, Firebase, AJAX, HTML5, CSS3, Javascript, moment.js.
 
+APIs Used: Yelp, Google Places, Google Geolocation, Yahoo Weather.
+
 
 Room for improvement: 
 * desktop version (which will mostly be used by tour managers for data entry)
