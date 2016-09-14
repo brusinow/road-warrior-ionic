@@ -1,5 +1,5 @@
 # road-warrior-ionic
-######an Ionic rebuild.
+#####an Ionic rebuild.
 
 View it here: https://roadwarrior.firebaseapp.com  
 Wireframe PDF: https://roadwarrior.herokuapp.com/RoadWarrior.pdf 
@@ -14,5 +14,5 @@ Technologies used: AngularJS, Ionic, Cordova, Firebase, AJAX, HTML5, CSS3, Javas
 Room for improvement: 
 * desktop version (which will mostly be used by tour managers for data entry)
 * allowing users to connect to see when friends are playing in the same place
-* make multiple chat groups (main, show-related, and fun)
+* offline data persistence (Firebase currently only offers this for native iOS or Android development, not their web based solution)
 
