@@ -1,4 +1,4 @@
-# road-warrior-ionic
+# Road Warrior (Version2)
 #####an Ionic/Cordova/AngularJS rebuild.
 
 View it here: https://roadwarrior.firebaseapp.com  
