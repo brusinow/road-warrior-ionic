@@ -1,5 +1,5 @@
 # road-warrior-ionic
-#####an Ionic rebuild.
+#####an Ionic/Cordova/AngularJS rebuild.
 
 View it here: https://roadwarrior.firebaseapp.com  
 Wireframe PDF: https://roadwarrior.herokuapp.com/RoadWarrior.pdf 
